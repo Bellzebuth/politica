@@ -1,3 +1,42 @@
 <app-menu></app-menu>
-
-<p>profil works!</p>
+<div class="content">
+    <div class="user-info">
+        <div class="p-card card-display">
+            <img class="p-avatar p-avatar-lg pdp" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <div class="card-content">
+                <div class="p-card-title"> {{ profil.username }} </div>
+            <div class="p-card-subtitle">
+                {{ profil.firstName }}
+                {{ profil.lastName }}
+            </div>
+            <div class="p-card-content">
+                {{ profil.politicalParty }}
+            </div>
+            <div *ngIf="profil.journalist" class="p-card-footer">
+                <button pButton pRipple type="button" label="Journaliste" class="p-button-rounded p-button-success p-button-sm"></button>
+            </div>
+            <div *ngIf="!profil.journalist" class="p-card-footer">
+                <button pButton pRipple type="button" label="Utilisateur" class="p-button-rounded p-button-warning p-button-sm"></button>
+            </div>
+        </div>
+    </div>
+    <div class="p-card panel-control">
+        <h3 _ngcontent-tcu-c76="">Panneau de contrôle</h3>
+        <div class="data-controller">
+            <span>Partager mes données avec <span style="font-weight: 700;" >{{ profil.politicalParty }}</span></span>
+            <p-inputSwitch [(ngModel)]="checked1"></p-inputSwitch>
+        </div>
+        <div class="data-controller">
+            <span>Partager mes données avec <span style="font-weight: 700;" > l'ensemble des partis politique</span></span>
+            <p-inputSwitch [(ngModel)]="checked2"></p-inputSwitch>
+        </div>
+        <div class="data-controller">
+            <span>Partager mes données avec <span style="font-weight: 700;" >Politica</span></span>
+            <p-inputSwitch [(ngModel)]="checked3"></p-inputSwitch>
+        </div>
+        <div class="data-controller">
+            <span>Mode Sombre</span>
+            <p-inputSwitch [(ngModel)]="checked4"></p-inputSwitch>
+        </div>
+    </div>
+</div>

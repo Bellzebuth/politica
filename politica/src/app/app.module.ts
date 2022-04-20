@@ -21,6 +21,7 @@ import { CardModule } from 'primeng/card';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ButtonModule } from 'primeng/button';
     AutoCompleteModule,
     InputTextModule,
     ButtonModule,
+    InputSwitchModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

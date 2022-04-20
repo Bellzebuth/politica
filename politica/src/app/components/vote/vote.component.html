@@ -16,6 +16,9 @@
                 <div *ngIf="profil.journalist" class="p-card-footer">
                     <button pButton pRipple type="button" label="Journaliste" class="p-button-rounded p-button-success p-button-sm"></button>
                 </div>
+                <div *ngIf="!profil.journalist" class="p-card-footer">
+                    <button pButton pRipple type="button" label="Utilisateur" class="p-button-rounded p-button-warning p-button-sm"></button>
+                </div>
             </div>
         </div>
     </div>

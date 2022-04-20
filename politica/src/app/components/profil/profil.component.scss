@@ -1,0 +1,100 @@
+@import "../../../styles.scss";
+
+.content {
+  display: flex;
+  justify-content: center;
+}
+
+.user-info {
+  width: 50%;
+}
+
+.debate-feed {
+  width: 50%;
+}
+
+.p-card-title {
+  text-transform: uppercase;
+}
+
+.card-display {
+  display: flex;
+  margin: 5%;
+  padding: 2%;
+  margin-top: 0%;
+}
+
+.panel-control {
+  margin: 5%;
+  padding: 2%;
+  margin-top: 0%;
+}
+
+.card-content {
+  padding: 2%;
+}
+
+.footer-news-display {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.news-image {
+  width: 100%;
+}
+
+.debate-input {
+  display: flex;
+  justify-content: center;
+  margin: 1%;
+}
+
+.input-width {
+  width: 35%;
+}
+
+.p-button-politica {
+  background-color: $politica-violet-color;
+  border: $politica-violet-color;
+}
+
+.card-content {
+  padding: 0 0 0 2%;
+  width: 100%;
+}
+
+.p-card-title,
+.p-card-subtitle {
+  margin-bottom: 0;
+}
+
+.p-card-content {
+  padding: 0;
+}
+
+.p-card-footer {
+  padding: 0.5rem 0 0 0;
+  font-size: 16px;
+}
+
+.profil-information {
+  width: 40%;
+}
+
+.pdp {
+  width: 30%;
+  height: 100%;
+}
+
+.stick-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.data-controller {
+  display: flex;
+  justify-content: space-between;
+}
