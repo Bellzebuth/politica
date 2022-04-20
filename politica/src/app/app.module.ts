@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+
 //import Components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -16,6 +17,10 @@ import { Error404Component } from './utils/error404/error404.component';
 
 //import primeNG
 import { AvatarModule } from "primeng/avatar";
+import { CardModule } from 'primeng/card';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -33,7 +38,12 @@ import { AvatarModule } from "primeng/avatar";
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     AvatarModule,
+    CardModule,
+    AutoCompleteModule,
+    InputTextModule,
+    ButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
     username: String,
     lastName: String,
     firstName: String,
@@ -7,7 +7,7 @@ export interface User {
     password: String,
     politicalParty: String,
     age: Number,
-    profilePicture: String,
+    profilPicture: String,
     journalist: Boolean,
     image: String,
     indicator: Number

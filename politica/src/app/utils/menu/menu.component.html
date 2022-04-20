@@ -1,12 +1,22 @@
 <section (scroll)="onWindowScroll($event);">
-  <nav class="animated fadeInDown">
-    <div class="colorbar">
-      <div class="navbar" id="navbar">
-        <a class="navLink" routerLink="/debate"><img src="../../../assets/icons/icons8-accueil(1).svg"/></a>
-        <a class="navLink" routerLink="/news"><img src="../../../assets/icons/icons8-nouvelles(1).svg"/></a>
-        <a class="navLink" routerLink="/vote"><img src="../../../assets/icons/icons8-boîte(1).svg"/></a>
-        <a class="navLink" routerLink="/profil"><img src="../../../assets/icons/icons8-contacts(1).svg"/></a>  
-      </div>
+  <div class="colorbar">
+    <div class="empty-space">
     </div>
-  </nav>
+    <div class="menu">
+      <nav class="animated fadeInDown displaying">
+        <div class="navbar" id="navbar">
+          <a class="navLink" routerLink="/debate"><img src="../../../assets/icons/icons8-accueil(1).svg"/></a>
+          <a class="navLink" routerLink="/news"><img src="../../../assets/icons/icons8-nouvelles(1).svg"/></a>
+          <a class="navLink" routerLink="/vote"><img src="../../../assets/icons/icons8-boîte(1).svg"/></a>
+          <a class="navLink" routerLink="/profil"><img src="../../../assets/icons/icons8-contacts(1).svg"/></a> 
+        </div>   
+      </nav>
+    </div>
+    <div class="research-space">
+      <span class="p-input-icon-left span-width">
+        <i class="pi pi-search"></i>
+        <input type="text" pInputText class="p-inputtext-sm input-width" placeholder="Search" [(ngModel)]="texts" />
+      </span>
+    </div>
+  </div>
 </section>

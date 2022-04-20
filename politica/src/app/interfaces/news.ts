@@ -1,4 +1,5 @@
-export interface News {
+export interface INews {
+    _id: String,
     title: String,
     content: String,
     source: String,

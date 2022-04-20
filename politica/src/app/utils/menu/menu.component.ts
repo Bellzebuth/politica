@@ -1,4 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
+import { SelectItemGroup } from 'primeng/api/selectitemgroup';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { MenuItem, PrimeIcons } from 'primeng/api';
 
 @Component({
   selector: 'app-menu',
@@ -7,9 +10,20 @@ import { Component, OnInit, HostListener } from '@angular/core';
 })
 export class MenuComponent implements OnInit {
 
+  searchInput!: string;
+  texts: string[] = [];
+  results: string[] = [];
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+
+  search(event: { query: any; }) { /*
+    this.dnv.title.getResults(event.query).then((data: string[]) => {
+      this.results = data;
+    }); */
   }
 
   @HostListener('window:scroll', ['$event'])

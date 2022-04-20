@@ -1,2 +1,47 @@
 <app-menu></app-menu>
-<p>debate works!</p>
+<div class="debate-input">
+    <input type="text" pInputText class="p-inputtext-sm input-width" placeholder="Exprimez-vous...">  
+    <button pButton pRipple type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
+</div>
+<div class="content p-component">
+    <div class="profile">
+        <div class="stick-left">
+            <img class="p-avatar p-avatar-lg pdp" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <div class="profil-information">
+                <div class="p-card-title"> {{ profil.username }} </div>
+                <div class="p-card-subtitle"></div>
+                <div class="p-card-content">
+                    {{ profil.politicalParty }}
+                </div>
+                <div class="p-card-content">
+                    {{ profil.genre }}
+                </div>
+                <div *ngIf="profil.journalist" class="p-card-footer">
+                    <button pButton pRipple type="button" label="Journaliste" class="p-button-rounded p-button-success p-button-sm"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="debate-feed">
+        <div class="p-card card-display" *ngFor="let debate of debateList">
+            <img class="p-avatar p-avatar-lg" _ngcontent-qqs-c76="" src="../../../assets/PDP.png" />
+            <div class="card-content">
+                <div class="p-card-title"> {{ debate.id_user }} </div>
+                <div class="p-card-subtitle"></div>
+                <div class="p-card-content"> {{ debate.message }} </div>
+                <div class="p-card-footer"> {{ debate.comment.length }} <i class="pi pi-comments"></i> </div>
+            </div>
+        </div>
+    </div>
+    <div class="news">
+        <div class="p-card" *ngFor="let news of mainNews">
+            <img class="p-avatar news-image" _ngcontent-qqs-c76="" [src]="news.image" />
+            <div class="card-content">
+                <div class="p-card-header"> {{ news.title }} </div>
+                <div class="p-card-subheader"> {{ news.content }} </div>
+                <div class="p-card-footer"> {{ news.source }} </div>
+                <div class="p-card-footer"> {{ news.dateTime }} </div>
+            </div>
+        </div>
+    </div>
+</div>
