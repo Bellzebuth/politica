@@ -26,13 +26,49 @@
         </div>
     </div>
     <div class="debate-feed">
-        <div class="p-card card-display" *ngFor="let debate of debateList">
+        <div class="p-card card-container" *ngFor="let debate of debateList">
+            <div class="p-card card-display">
             <img class="p-avatar p-avatar-lg" _ngcontent-qqs-c76="" src="../../../assets/PDP.png" />
-            <div class="card-content">
-                <div class="p-card-title"> {{ debate.id_user }} </div>
-                <div class="p-card-subtitle"></div>
-                <div class="p-card-content"> {{ debate.message }} </div>
-                <div class="p-card-footer"> {{ debate.comment.length }} <i class="pi pi-comments"></i> </div>
+                <div class="card-content">
+                    <div class="p-card-title"> {{ debate.id_user }} </div>
+                    <div class="p-card-subtitle"></div>
+                    <div class="p-card-content"> {{ debate.message }} </div>
+                    <div class="p-card-footer footer-debate-display"> 
+                        <button pButton pRipple type="button" class="p-button-text"><span>{{ debate.comment.length }} <i class="pi pi-comments"></i></span></button>
+                        <button pButton pRipple type="button" class="p-button p-button-text" (click)="interest(debate._id)">
+                            <span>
+                                {{ debate.interest_score }}
+                                <i [ngClass]= "debate.liked ? 'pi pi-star-fill' : 'pi pi-star'"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-card card-display debate-comments" [ngClass]= "comment.side ? 'comment-for' : 'comment-against'" *ngFor="let comment of debate.comment">
+                <img class="p-avatar p-avatar-lg" _ngcontent-qqs-c76="" src="../../../assets/PDP.png" />
+                <div class="card-content">
+                    <div class="p-card-subtitle"> {{ comment.id_user }} </div>
+                    <div class="p-card-content"> {{ comment.content }} </div>
+                </div>
+                <div class="p-card-footer footer-debate-display"> 
+                    <button pButton pRipple type="button" class="p-button-text" (click)="onLike(debate._id, comment.id)">
+                        <span>
+                            {{ comment.score }}
+                            <i [ngClass]= "comment.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <a class="debate-comments" style="text-decoration: underline;" routerLink="/profil">Voir plus de commentaires ...</a>
+            <div class="p-card" style="display: flex; margin-top: 1%;" >
+                <input type="text" pInputText class="p-inputtext-sm input-comments" placeholder="Exprimez-vous...">
+                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: rgb(11, 167, 11); margin: 2px;">
+                    <i class="pi pi-thumbs-up"></i>
+                </button>
+                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: red; margin: 2px;">
+                    <i class="pi pi-thumbs-down"></i>
+                </button>
+                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: #841586; margin: 2px;"><i class="pi pi-send"></i></button>
             </div>
         </div>
     </div>

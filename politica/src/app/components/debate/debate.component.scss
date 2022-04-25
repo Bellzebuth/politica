@@ -15,9 +15,13 @@
 
 .card-display {
   display: flex;
+}
+
+.card-container {
   margin: 5%;
-  padding: 2%;
   margin-top: 0%;
+  padding: 0%;
+  background-color: rgb(226, 226, 226);
 }
 
 .card-content {
@@ -28,6 +32,11 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.footer-debate-display {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .news-image {
@@ -82,4 +91,43 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
+}
+
+.debate-comments {
+  padding: 1%;
+  margin: 2%;
+}
+
+.comment-for {
+  background-color: white;
+  border: solid rgb(11, 167, 11);
+  border-radius: 6px;
+}
+
+.comment-against {
+  background-color: white;
+  border: solid red;
+  border-radius: 6px;
+}
+
+.input-comments {
+  width: 100%;
+}
+
+@media screen and (width < 950px) {
+  .profile {
+    display: none;
+  }
+
+  .news {
+    display: none;
+  }
+
+  .content {
+    justify-content: center;
+  }
+
+  .debate-feed {
+    width: 95%;
+  }
 }
