@@ -1,3 +1,93 @@
-<app-menu></app-menu>
+<div class="politica">
+    <span class="title">Politica</span>
+    <span class="subtitle">Débattons du futur</span>
 
-<p>home works!</p>
+    <div class="button-group">
+        <div class="login">
+            <button pButton pRipple type="button" label="S'inscrire" class="politica-color p-button-raised p-button-text" (click)="showRegisterDialog()"></button>
+            <button pButton pRipple type="button" label="Se connecter" class="politica-color p-button-raised p-button-text" (click)="showLoginDialog()"></button>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Inscription" [(visible)]="displayRegister" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
+    [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
+        <div class="register-form">
+            <span class="p-float-label">
+                <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="pseudo"> 
+                <label for="float-input">Pseudo</label>
+            </span>
+            <div class="input-group">
+                <span class="p-float-label">
+                    <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="firstname"> 
+                    <label for="float-input">Prénom</label>
+                </span>
+                <span class="p-float-label">
+                    <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="lastname"> 
+                    <label for="float-input">Nom</label>
+                </span>
+            </div>
+            <div class="input-group">
+                <span class="p-float-label">
+                    <p-dropdown [options]="genreOptions" [(ngModel)]="genre" [showClear]="true"></p-dropdown>
+                    <label for="float-input">genre</label>
+                </span>
+                <span class="p-float-label">
+                    <p-dropdown [options]="partiOptions" [(ngModel)]="politicalParti" [showClear]="true"></p-dropdown>
+                    <label for="float-input">Parti politique</label>
+                </span>
+            </div>
+            <span class="p-float-label">
+                <p-inputNumber inputId="integeronly" [(ngModel)]="age"></p-inputNumber>
+                <label for="float-input">Age</label>
+            </span>
+            <div class="input-group">
+                <span class="p-float-label">
+                    <input id="float-input" type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
+                    <label for="float-input">Email</label>
+                </span>
+                <span class="p-float-label">
+                    <p-password [(ngModel)]="password" pTooltip="Entrer votre mot de passe" [feedback]="false"></p-password>
+                    <label for="float-input">Mot de passe</label>
+                </span>
+            </div>
+            <div class="card">
+                <p-toast></p-toast>
+                <p-captcha siteKey="6Lf2XQkTAAAAANcvOwYqPxWL4iZDksFqHpS39GDA" (onResponse)="showResponse($event)"></p-captcha>
+            </div>
+            <span style="font-size: small;">
+                * Seul les champs marqués d'une * sont obligatoire.
+            </span>
+            <span style="font-size: small;">
+                ** Seul votre pseudo et votre parti politique sera rendu public,
+                tout informations pourra être utilisé lors de sondage sous réserve de votre accord.
+            </span>
+            <span style="font-size: small;">
+                *** La gestion de vos données vous appartient, vous pourrez la gérer dans la rubrique profil
+            </span>
+        </div>
+        <ng-template pTemplate="footer">
+        <p-button (click)="displayRegister=false" label="Annuler" styleClass="politica-color p-button-raised p-button-text"></p-button>
+        <p-button (click)="register()" label="S'incrire" styleClass="politica-color p-button-raised p-button-text"></p-button>
+        </ng-template>
+</p-dialog>
+
+<p-dialog header="Se connecter" [(visible)]="displayLogin" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
+    [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
+        <div class="register-form">
+            <div class="input-connect-group">
+                <span class="p-float-label">
+                    <input id="float-input" type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
+                    <label for="float-input">Email</label>
+                </span>
+                <span class="p-float-label">
+                    <p-password [(ngModel)]="password" pTooltip="Entrer votre mot de passe" [feedback]="false"></p-password>
+                    <label for="float-input">Mot de passe</label>
+                </span>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+        <p-button (click)="displayLogin=false" label="Annuler" styleClass="politica-color p-button-raised p-button-text"></p-button>
+        <p-button (click)="login()" label="S'incrire" styleClass="politica-color p-button-raised p-button-text"></p-button>
+        </ng-template>
+</p-dialog>
