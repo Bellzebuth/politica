@@ -32,6 +32,8 @@ import { CaptchaModule } from 'primeng/captcha';
 import { ToastModule } from 'primeng/toast';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { TagModule } from 'primeng/tag';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import { MessageModule } from 'primeng/message';
     ToastModule,
     MessageModule,
     MessagesModule,
+    TagModule,
+    SelectButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

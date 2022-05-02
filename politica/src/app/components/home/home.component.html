@@ -77,12 +77,16 @@
         <div class="register-form">
             <div class="input-connect-group">
                 <span class="p-float-label">
-                    <input id="float-input" type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
-                    <label for="float-input">Email</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="email" pTooltip="Entrer votre prénom"><i class="pi pi-user"></i></span>
+                        <input type="text" pInputText placeholder="Username">
+                    </div>
                 </span>
                 <span class="p-float-label">
-                    <p-password [(ngModel)]="password" pTooltip="Entrer votre mot de passe" [feedback]="false"></p-password>
-                    <label for="float-input">Mot de passe</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="password" pTooltip="Entrer votre mot de passe"><i class="pi pi-unlock"></i></span>
+                        <input type="password" pInputText placeholder="Mot de passe">
+                    </div>
                 </span>
             </div>
         </div>

@@ -18,6 +18,7 @@
   margin: 5%;
   padding: 2%;
   margin-top: 0%;
+  min-height: 100px;
 }
 
 .card-content {
@@ -93,4 +94,38 @@
 .news-footer {
   position: absolute;
   bottom: 0;
+}
+
+@media screen and (width < 950px) {
+  .profile {
+    display: none;
+  }
+
+  .news {
+    display: none;
+  }
+
+  .content {
+    justify-content: center;
+  }
+
+  .debate-feed {
+    width: 95%;
+  }
+}
+
+@media screen and (width < 350px) {
+  .font-footer {
+    font-size: 5vw;
+  }
+
+  .p-card-title {
+    font-size: 20px;
+  }
+}
+
+@media screen and (width < 430px) {
+  .input-width {
+    width: 60%;
+  }
 }

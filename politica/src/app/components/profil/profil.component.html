@@ -13,10 +13,7 @@
                 {{ profil.politicalParty }}
             </div>
             <div *ngIf="profil.journalist" class="p-card-footer">
-                <button pButton pRipple type="button" label="Journaliste" class="p-button-rounded p-button-success p-button-sm"></button>
-            </div>
-            <div *ngIf="!profil.journalist" class="p-card-footer">
-                <button pButton pRipple type="button" label="Utilisateur" class="p-button-rounded p-button-warning p-button-sm"></button>
+                <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
             </div>
         </div>
     </div>

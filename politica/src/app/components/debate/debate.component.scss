@@ -114,6 +114,18 @@
   width: 100%;
 }
 
+:host ::ng-deep .p-message {
+  background-color: white !important;
+}
+
+:host ::ng-deep .p-message-wrapper {
+  padding: 0;
+}
+
+:host ::ng-deep .p-selectbutton {
+  display: flex;
+}
+
 @media screen and (width < 950px) {
   .profile {
     display: none;
@@ -129,5 +141,11 @@
 
   .debate-feed {
     width: 95%;
+  }
+}
+
+@media screen and (width < 430px) {
+  .input-width {
+    width: 60%;
   }
 }

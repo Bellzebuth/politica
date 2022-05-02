@@ -3,12 +3,7 @@
 .colorbar {
   display: flex;
   justify-content: center;
-  background: linear-gradient(
-    0.15turn,
-    rgb(47, 47, 252),
-    $politica-violet-color,
-    rgb(255, 35, 35)
-  );
+  background-color: $politica-violet-color;
   height: 50px;
 }
 
@@ -51,9 +46,23 @@ img {
 }
 
 .span-width {
-  max-width: 80%;
+  max-width: 95%;
 }
 
 .input-width {
   max-width: 100%;
+}
+
+@media screen and (width < 430px) {
+  .empty-space {
+    display: none;
+  }
+
+  .menu {
+    width: 100%;
+  }
+
+  .research-space {
+    display: none;
+  }
 }

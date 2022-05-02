@@ -13,6 +13,9 @@ export class DebateComponent implements OnInit {
   debateList: Array<IDebate> = [];
   mainNews: Array<any> = [];
   profil: any;
+  newPost: String | undefined;
+  commentSide: Boolean = true;
+  sideOptions: Array<any> = [{icon: 'pi pi-thumbs-up', colorClass: "green", jusitfy: true}, {icon: 'pi pi-thumbs-down', colorClass: "red", justify: false}];
 
   constructor() { }
 
@@ -35,7 +38,7 @@ export class DebateComponent implements OnInit {
         debate: "2",
         comment: "2",
       }],
-      journalist: true,
+      journalist: false,
       image: "we don't care",
       indicator: 3
     };
@@ -47,7 +50,7 @@ export class DebateComponent implements OnInit {
       comment: [{
         id:"1",
         id_user:"2",
-        content:"Tu as tort parce que ...",
+        content:"Tu as tort parce que uehzfoheizjfezjdpjzodokzdhiehdie zohdhezoidheizhdiehzoidhezhdiehdoiezoidhiehzdiezoidheoizhdoizhdoz",
         side: false,
         score:7,
         liked: false,
@@ -194,6 +197,10 @@ export class DebateComponent implements OnInit {
         })
       }
     })
+  }
+
+  post() {
+    //TODO: Ajouter post debat
   }
 }
 

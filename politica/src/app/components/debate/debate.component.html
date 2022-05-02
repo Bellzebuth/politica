@@ -17,10 +17,7 @@
                     {{ profil.genre }}
                 </div>
                 <div *ngIf="profil.journalist" class="p-card-footer">
-                    <button pButton pRipple type="button" label="Journaliste" class="p-button-rounded p-button-success p-button-sm"></button>
-                </div>
-                <div *ngIf="!profil.journalist" class="p-card-footer">
-                    <button pButton pRipple type="button" label="Utilisateur" class="p-button-rounded p-button-warning p-button-sm"></button>
+                    <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
                 </div>
             </div>
         </div>
@@ -45,22 +42,22 @@
                 </div>
             </div>
             <div *ngFor="let comment of debate.comment">
-                <p-messages [severity]="comment.side ? 'success' : 'error'">
+                <p-messages styleClass="p-message" [severity]="comment.side ? 'success' : 'error'">
                     <ng-template pTemplate>
                         <div style="display: flex; justify-content: space-between; width: 100%;">
                             <div style="display: flex; flex-direction: row; width: 100%">
-                                <img src="../../../assets/PDP.png" width="55" height="55"/>
-                                <div class="ml-2" style="width: 100%">
-                                    <div style="margin-left: 5%; font-weight: 700;"> {{ comment.id_user }} </div>
+                                <img class="p-avatar p-avatar-lg" src="../../../assets/PDP.png" width="55" height="55"/>
+                                <div class="ml-2" style="width: 87%; word-wrap: break-word; max-width: 100%;">
+                                    <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ comment.id_user }} </div>
                                     <div style="margin-left: 5%;"> {{ comment.content }} </div>
+                                    <button pButton pRipple type="button" class="p-button-text p-button-sm" (click)="onLike(debate._id, comment.id)">
+                                        <span>
+                                            {{ comment.score }}
+                                            <i [ngClass]= "comment.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
-                            <button pButton pRipple type="button" class="p-button-text" (click)="onLike(debate._id, comment.id)">
-                                <span>
-                                    {{ comment.score }}
-                                    <i [ngClass]= "comment.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
-                                </span>
-                            </button>
                         </div>
                     </ng-template>
                 </p-messages>
@@ -68,12 +65,11 @@
             <a class="debate-comments" style="text-decoration: underline;" routerLink="/profil">Voir plus de commentaires ...</a>
             <div class="p-card" style="display: flex; margin-top: 1%;" >
                 <input type="text" pInputText class="p-inputtext-sm input-comments" placeholder="Exprimez-vous...">
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: rgb(11, 167, 11); margin: 2px;">
-                    <i class="pi pi-thumbs-up"></i>
-                </button>
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: red; margin: 2px;">
-                    <i class="pi pi-thumbs-down"></i>
-                </button>
+                <p-selectButton style="display: flex;" [options]="sideOptions" [(ngModel)]="commentSide" optionLabel="icon">
+                    <ng-template let-item>
+                        <i [class]="item.icon"></i>
+                    </ng-template>
+                </p-selectButton>
                 <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: #841586; margin: 2px;"><i class="pi pi-send"></i></button>
             </div>
         </div>

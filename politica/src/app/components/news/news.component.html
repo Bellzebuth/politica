@@ -1,7 +1,5 @@
 <app-menu></app-menu>
 <div class="debate-input">
-    <input type="text" pInputText class="p-inputtext-sm input-width" placeholder="Exprimez-vous...">  
-    <button pButton pRipple type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
 </div>
 <div class="content p-component">
     <div class="profile">
@@ -17,10 +15,7 @@
                     {{ profil.genre }}
                 </div>
                 <div *ngIf="profil.journalist" class="p-card-footer">
-                    <button pButton pRipple type="button" label="Journaliste" class="p-button-rounded p-button-success p-button-sm"></button>
-                </div>
-                <div *ngIf="!profil.journalist" class="p-card-footer">
-                    <button pButton pRipple type="button" label="Utilisateur" class="p-button-rounded p-button-warning p-button-sm"></button>
+                    <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
                 </div>
             </div>
         </div>
@@ -33,8 +28,7 @@
                 <div class="p-card-subtitle"></div>
                 <div class="p-card-content news-content-space"> {{ news.content }} </div>
                 <div class="p-card-footer news-footer">
-                    <i class="pi pi-upload"> {{ news.source }} </i>
-                    <i class="pi pi-pencil" style="margin-left: 15px;"> {{ news.id_journalist }} </i>
+                    <span class="font-footer"> {{ news.source }} - {{ news.id_journalist }} </span>
                 </div>
             </div>
         </div>

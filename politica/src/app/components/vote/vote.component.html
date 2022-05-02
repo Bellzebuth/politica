@@ -14,10 +14,7 @@
                     {{ profil.genre }}
                 </div>
                 <div *ngIf="profil.journalist" class="p-card-footer">
-                    <button pButton pRipple type="button" label="Journaliste" class="p-button-rounded p-button-success p-button-sm"></button>
-                </div>
-                <div *ngIf="!profil.journalist" class="p-card-footer">
-                    <button pButton pRipple type="button" label="Utilisateur" class="p-button-rounded p-button-warning p-button-sm"></button>
+                    <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
                 </div>
             </div>
         </div>
@@ -27,12 +24,8 @@
             <div class="card-content">
                 <div class="p-card-title title-vote"> {{ vote.subject }} </div>
                 <div class="p-card-content vote-content-space">
-                    <button pButton pRipple type="button" class="p-button-primary vote-button">
-                        <i class="pi pi-book"> les débats </i>
-                    </button>
-                    <button pButton pRipple type="button" class="p-button-primary vote-button">
-                        <i class="pi pi-info-circle"> les informations essentielles </i>
-                    </button>
+                    <p-button label="débats" icon="pi pi-book" styleClass="p-button-sm" class="vote-button" ></p-button>
+                    <p-button label="infos" icon="pi pi-info-circle" styleClass="p-button-sm" class="vote-button" ></p-button>
                 </div>
                 <div class="p-card-footer vote-footer">
                     <button pButton pRipple type="button" class="p-button-success">

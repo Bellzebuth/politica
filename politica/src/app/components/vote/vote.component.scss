@@ -88,7 +88,6 @@
 .title-vote {
   display: flex;
   justify-content: center;
-  text-transform: uppercase;
 }
 
 .vote-footer {
@@ -103,6 +102,36 @@
 }
 
 .vote-button {
+  display: flex;
+  justify-content: center;
   width: 50%;
   margin: 1%;
+}
+
+@media screen and (width < 1300px) {
+  .login {
+    width: 35%;
+  }
+}
+
+@media screen and (width < 950px) {
+  .profile {
+    display: none;
+  }
+
+  .news {
+    display: none;
+  }
+
+  .content {
+    justify-content: center;
+  }
+
+  .debate-feed {
+    width: 95%;
+  }
+
+  .title-vote {
+    font-size: 20px;
+  }
 }
