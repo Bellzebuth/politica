@@ -10,6 +10,7 @@ import { ProfilComponent } from './components/profil/profil.component';
 import { RegisterComponent } from './components/register/register.component';
 import { VoteComponent } from './components/vote/vote.component';
 import { Error404Component } from './utils/error404/error404.component';
+import { DebateDetailsComponent } from './components/debate-details/debate-details.component';
 
 // Guard imports
 import { ProfilGuard } from "../app/security/profil.guard";
@@ -35,9 +36,9 @@ const routes: Routes = [
   },
   {path:'news', component: NewsComponent, canActivate:[NewsGuard]},
   {path:'vote', component: VoteComponent, canActivate:[VoteGuard]},
-  {path:'login',component:LoginComponent, canActivate:[LoginGuard],},
-  {path:'register', component: RegisterComponent, canActivate:[RegisterGuard],},
-  
+  {path:'login',component:LoginComponent, canActivate:[LoginGuard]},
+  {path:'register', component: RegisterComponent, canActivate:[RegisterGuard]},
+  {path:'debate-details', component: DebateDetailsComponent},
   {
     path: 'root',
     loadChildren: () => import('./admin/root.module').then(m => m.RootModule),

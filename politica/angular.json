@@ -110,9 +110,31 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "politica:build:production",
+            "firebaseProject": "politica-database",
+            "firebaseHostingSite": "politica-database"
+          }
         }
       }
     }
   },
-  "defaultProject": "politica"
+  "defaultProject": "politica",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

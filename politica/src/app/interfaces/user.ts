@@ -8,7 +8,9 @@ export interface IUser {
     politicalParty: String,
     age: Number,
     profilPicture: String,
-    voted: Array<String>,
+    debate_liked_id: Array<String>,
+    comment_liked: Array<any>,
+    votedList: Array<any>,
     journalist: Boolean,
     image: String,
     indicator: Number

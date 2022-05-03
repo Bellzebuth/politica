@@ -50,7 +50,7 @@ export class DebateComponent implements OnInit {
       comment: [{
         id:"1",
         id_user:"2",
-        content:"Tu as tort parce que uehzfoheizjfezjdpjzodokzdhiehdie zohdhezoidheizhdiehzoidhezhdiehdoiezoidhiehzdiezoidheoizhdoizhdoz",
+        content:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         side: false,
         score:7,
         liked: false,

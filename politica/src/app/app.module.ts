@@ -4,6 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+//import Firebase
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideDatabase,getDatabase } from '@angular/fire/database';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+
 //import Components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -15,6 +22,7 @@ import { VoteComponent } from './components/vote/vote.component';
 import { ProfilComponent } from './components/profil/profil.component';
 import { MenuComponent } from './utils/menu/menu.component';
 import { Error404Component } from './utils/error404/error404.component';
+import { DebateDetailsComponent } from './components/debate-details/debate-details.component';
 
 //import primeNG
 import { AvatarModule } from "primeng/avatar";
@@ -34,6 +42,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { TagModule } from 'primeng/tag';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
   declarations: [
@@ -46,7 +55,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     VoteComponent,
     ProfilComponent,
     MenuComponent,
-    Error404Component
+    Error404Component,
+    DebateDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -70,6 +80,11 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     MessagesModule,
     TagModule,
     SelectButtonModule,
+    ProgressBarModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [],
   bootstrap: [AppComponent]

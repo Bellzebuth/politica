@@ -1,0 +1,151 @@
+@import "../../../styles.scss";
+
+.content {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile {
+  width: 25%;
+}
+
+.debate-feed {
+  width: 50%;
+}
+
+.card-display {
+  display: flex;
+}
+
+.card-container {
+  margin: 5%;
+  margin-top: 0%;
+  padding: 0%;
+  background-color: rgb(226, 226, 226);
+}
+
+.card-content {
+  padding: 2%;
+}
+
+.footer-news-display {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.footer-debate-display {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.news-image {
+  width: 100%;
+}
+
+.debate-input {
+  display: flex;
+  justify-content: center;
+  margin: 1%;
+}
+
+.input-width {
+  width: 35%;
+}
+
+.p-button-politica {
+  background-color: $politica-violet-color;
+  border: $politica-violet-color;
+}
+
+.card-content {
+  padding: 0 0 0 2%;
+  width: 100%;
+}
+
+.p-card-title,
+.p-card-subtitle {
+  margin-bottom: 0;
+}
+
+.p-card-content {
+  padding: 0;
+}
+
+.p-card-footer {
+  padding: 0.5rem 0 0 0;
+  font-size: 16px;
+}
+
+.profil-information {
+  width: 40%;
+}
+
+.pdp {
+  width: 40%;
+  height: 100%;
+}
+
+.stick-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.debate-comments {
+  padding: 1%;
+  margin: 2%;
+}
+
+.comment-for {
+  background-color: white;
+  border: solid rgb(11, 167, 11);
+  border-radius: 6px;
+}
+
+.comment-against {
+  background-color: white;
+  border: solid red;
+  border-radius: 6px;
+}
+
+.input-comments {
+  width: 100%;
+}
+
+:host ::ng-deep .p-message {
+  background-color: white !important;
+}
+
+:host ::ng-deep .p-message-wrapper {
+  padding: 0;
+}
+
+:host ::ng-deep .p-selectbutton {
+  display: flex;
+}
+
+@media screen and (width < 950px) {
+  .profile {
+    display: none;
+  }
+
+  .news {
+    display: none;
+  }
+
+  .content {
+    justify-content: center;
+  }
+
+  .debate-feed {
+    width: 95%;
+  }
+}
+
+@media screen and (width < 430px) {
+  .input-width {
+    width: 60%;
+  }
+}

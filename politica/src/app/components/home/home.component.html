@@ -14,7 +14,7 @@
     [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
         <div class="register-form">
             <span class="p-float-label">
-                <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="pseudo"> 
+                <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="username"> 
                 <label for="float-input">Pseudo</label>
             </span>
             <div class="input-group">
@@ -42,11 +42,19 @@
                 <label for="float-input">Age</label>
             </span>
             <div class="input-group">
-                <span class="p-float-label">
+                <span class="p-float-label" *ngIf="emailValid">
                     <input id="float-input" type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
                     <label for="float-input">Email</label>
                 </span>
-                <span class="p-float-label">
+                <span class="p-float-label" *ngIf="!emailValid">
+                    <input id="float-input" type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
+                    <label for="float-input">Email</label>
+                </span>
+                <span class="p-float-label" *ngIf="passwordValid">
+                    <p-password [(ngModel)]="password" pTooltip="Entrer votre mot de passe" [feedback]="false"></p-password>
+                    <label for="float-input">Mot de passe</label>
+                </span>
+                <span class="p-float-label" *ngIf="!passwordValid">
                     <p-password [(ngModel)]="password" pTooltip="Entrer votre mot de passe" [feedback]="false"></p-password>
                     <label for="float-input">Mot de passe</label>
                 </span>
@@ -76,16 +84,30 @@
     [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
         <div class="register-form">
             <div class="input-connect-group">
-                <span class="p-float-label">
+                <span class="p-float-label" *ngIf="emailValid">
                     <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="email" pTooltip="Entrer votre prénom"><i class="pi pi-user"></i></span>
-                        <input type="text" pInputText placeholder="Username">
+                        <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="email"><i class="pi pi-user"></i></span>
+                        <input type="text" [(ngModel)]="email" pInputText placeholder="Email">
                     </div>
                 </span>
-                <span class="p-float-label">
+                <span class="p-float-label" *ngIf="!emailValid">
+                    <div class="field">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="email"><i class="pi pi-user"></i></span>
+                        <input type="text" pInputText pTooltip="Merci d'entrer un email valide" aria-describedby="email-help" class="ng-invalid ng-dirty" [(ngModel)]="email" pInputText placeholder="Email">
+                    </div>
+                    </div>
+                </span>
+                <span class="p-float-label" *ngIf="passwordValid">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="password" pTooltip="Entrer votre mot de passe"><i class="pi pi-unlock"></i></span>
-                        <input type="password" pInputText placeholder="Mot de passe">
+                        <input type="password" [(ngModel)]="password" pInputText placeholder="Mot de passe">
+                    </div>
+                </span>
+                <span class="p-float-label" *ngIf="!passwordValid">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="password" pTooltip="Entrer votre mot de passe"><i class="pi pi-unlock"></i></span>
+                        <input type="password" pInputText pTooltip="Mot de passe invalide" aria-describedby="email-help" class="ng-invalid ng-dirty" [(ngModel)]="password" pInputText placeholder="Mot de passe">
                     </div>
                 </span>
             </div>

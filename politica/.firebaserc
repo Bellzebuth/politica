@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "politica-database": {
+      "hosting": {
+        "politica": [
+          "politica-database"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "politica-database"
+  }
+}

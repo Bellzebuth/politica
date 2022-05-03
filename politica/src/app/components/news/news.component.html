@@ -21,14 +21,14 @@
         </div>
     </div>
     <div class="debate-feed">
-        <div class="p-card card-display" *ngFor="let news of newsList">
-            <img class="p-avatar p-avatar-lg news-image" _ngcontent-qqs-c76="" src="../../../assets/PDP.png" />
-            <div class="card-content">
-                <div class="p-card-title"> {{ news.title }} </div>
+        <div class="p-card card-display" *ngFor="let news of newsList" (click)="showDialog(news._id)">
+            <img class="p-avatar p-avatar-lg news-image" _ngcontent-qqs-c76="" [src]="news.image" />
+            <div class="card-content" style="--lh: 1.2rem; line-height: var(--lh);">
+                <div class="p-card-title" style="word-wrap: break-word; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> {{ news.title }} </div>
                 <div class="p-card-subtitle"></div>
-                <div class="p-card-content news-content-space"> {{ news.content }} </div>
+                <div class="p-card-content news-content-space truncate-overflow"> {{ news.content }} </div>
                 <div class="p-card-footer news-footer">
-                    <span class="font-footer"> {{ news.source }} - {{ news.id_journalist }} </span>
+                    <span class="font-footer"> {{ news.source }} - {{ news.id_journalist }} - {{ news.dateTime }} </span>
                 </div>
             </div>
         </div>
@@ -36,3 +36,12 @@
     <div class="news">
     </div>
 </div>
+
+<p-dialog [header]="showNews.title" [modal]="true" [(visible)]="display" [dismissableMask]="true">
+    <p>
+        {{ showNews.content }}
+    </p>
+    <ng-template pTemplate="footer">
+        {{ showNews.source }} - {{ showNews.id_journalist }} - {{ showNews.dateTime }}
+    </ng-template>
+</p-dialog>

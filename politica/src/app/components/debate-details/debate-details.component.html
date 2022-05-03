@@ -1,7 +1,5 @@
 <app-menu></app-menu>
 <div class="debate-input">
-    <input type="text" pInputText class="p-inputtext-sm input-width" maxlength="255" placeholder="Exprimez-vous...">  
-    <button pButton pRipple type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
 </div>
 <div class="content p-component">
     <div class="profile">
@@ -23,13 +21,14 @@
         </div>
     </div>
     <div class="debate-feed">
-        <div class="p-card card-container" *ngFor="let debate of debateList">
-            <div class="p-card card-display" routerLink="/debate-details">
-            <img class="p-avatar p-avatar-lg" _ngcontent-qqs-c76="" src="../../../assets/PDP.png" />
+        <div class="p-card card-container">
+            <div class="p-card">
+                <div class="card-display">
+                <img class="p-avatar p-avatar-lg" _ngcontent-qqs-c76="" src="../../../assets/PDP.png" />
                 <div class="card-content">
-                    <div class="p-card-title" style="color:black;"> {{ debate.id_user }} </div>
+                    <div class="p-card-title"> {{ debate.id_user }} </div>
                     <div class="p-card-subtitle"></div>
-                    <div class="p-card-content" style="color:black;"> {{ debate.message }} </div>
+                    <div class="p-card-content"> {{ debate.message }} </div>
                     <div class="p-card-footer footer-debate-display"> 
                         <button pButton pRipple type="button" class="p-button-text"><span>{{ debate.comment.length }} <i class="pi pi-comments"></i></span></button>
                         <button pButton pRipple type="button" class="p-button p-button-text" (click)="interest(debate._id)">
@@ -41,6 +40,17 @@
                     </div>
                 </div>
             </div>
+                <div class="p-card-footer footer-debate-display">
+                    <input type="text" pInputText class="p-inputtext-sm input-comments" placeholder="Exprimez-vous...">
+                    <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: rgb(11, 167, 11); margin: 2px;">
+                        <i class="pi pi-thumbs-up"></i>
+                    </button>
+                    <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: red; margin: 2px;">
+                        <i class="pi pi-thumbs-down"></i>
+                    </button>
+                    <button pButton pRipple type="button" class="p-button p-button-text" style="color: #841586; margin: 2px;"><i class="pi pi-send"></i></button>
+                </div>
+            </div>
             <div *ngFor="let comment of debate.comment">
                 <p-messages styleClass="p-message" [severity]="comment.side ? 'success' : 'error'">
                     <ng-template pTemplate>
@@ -49,7 +59,7 @@
                                 <img class="p-avatar p-avatar-lg" src="../../../assets/PDP.png" width="55" height="55"/>
                                 <div class="ml-2" style="width: 87%; word-wrap: break-word; max-width: 100%;">
                                     <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ comment.id_user }} </div>
-                                    <div style="margin-left: 5%; color: black;"> {{ comment.content }} </div>
+                                    <div style="margin-left: 5%;"> {{ comment.content }} </div>
                                     <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="onLike(debate._id, comment.id)">
                                         <span>
                                             {{ comment.score }}
@@ -61,17 +71,6 @@
                         </div>
                     </ng-template>
                 </p-messages>
-            </div>
-            <a class="debate-comments" style="text-decoration: underline;" routerLink="/debate-details">Voir plus de commentaires ...</a>
-            <div class="p-card" style="display: flex; margin-top: 1%;" >
-                <input type="text" pInputText class="p-inputtext-sm input-comments" maxlength="255" placeholder="Exprimez-vous...">
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: rgb(11, 167, 11); margin: 2px;">
-                    <i class="pi pi-thumbs-up"></i>
-                </button>
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: red; margin: 2px;">
-                    <i class="pi pi-thumbs-down"></i>
-                </button>
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: #841586; margin: 2px;"><i class="pi pi-send"></i></button>
             </div>
         </div>
     </div>
