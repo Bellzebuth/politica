@@ -1,75 +1,41 @@
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { DbUser } from './model/db-user';
-import {Observable} from "rxjs";
-import firebase from "firebase/compat";
-import { addDoc, collection, Firestore } from "@angular/fire/firestore";
-import { getDatabase, ref, set } from "firebase/database";
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { IUser } from '../interfaces/user';
+
+const baseUrl = 'http://localhost:8080/api/auth/';
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
-  private adminID = 'A4Rs2ksmNOUnTa61JH8uRDKlL5q2';
-  public user!: Observable<firebase.User>;
-  constructor(private auth: Auth, private firestore: Firestore) {
+  constructor(private http: HttpClient) {}
+
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(baseUrl + 'signin', {
+      email,
+      password
+    }, httpOptions);
   }
 
-  login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+  register(user: IUser): Observable<any> {
+    return this.http.post(baseUrl + 'signup', user, httpOptions);
   }
 
-  register(newUser: DbUser) {
-    return createUserWithEmailAndPassword(this.auth, newUser.email, newUser.password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        this.writeUserData(user.uid, newUser)
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+  delete(id: string): Observable<any> {
+    return this.http.delete(baseUrl + 'user/' + id, httpOptions);
   }
 
-  writeUserData(userId: string, user: DbUser) {
-    const db = getDatabase();
-    set(ref(db, 'users/' + userId), user);
+  getAll(): Observable<any> {
+    return this.http.get(baseUrl, httpOptions);
   }
 
-  logout() {
-    return signOut(this.auth);
-  }
-
-  isAdmin(): boolean {
-    if (this.auth.currentUser){
-      return (this.auth.currentUser.uid == this.adminID);
-    }else {
-      return false
-    }
-  }
-
-  isSignedIn(): boolean{
-    if (this.auth.currentUser){
-      return true;
-    }else {
-      return false;
-    }
-  }
-
-  getCurrentUser() {
-    if (this.auth.currentUser){
-      return this.auth.currentUser.uid;
-    }else {
-      return 'no current user';
-    }
+  getUser(id: any): Observable<any> {
+    return this.http.get(baseUrl+ id, httpOptions);
   }
 }

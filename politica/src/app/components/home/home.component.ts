@@ -3,7 +3,7 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
 import {Router} from "@angular/router";
 import { DbUser } from 'src/app/services/model/db-user';
-import { Auth } from '@angular/fire/auth';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-home',
@@ -31,15 +31,27 @@ export class HomeComponent implements OnInit {
   emailValid: boolean= true;
   passwordValid: boolean= true;
 
+  isLoggedIn = false;
+  isLoginFailed = false;
+  isSuccessful = false;
+  isSignUpFailed = false;
+  errorMessage = '';
+  roles: string[] = [];
+
   constructor(private messageService: MessageService,
     private authService: AuthService,
     private readonly router: Router,
-    private auth: Auth) { 
+    private tokenStorage: TokenStorageService
+    ) { 
     this.genreOptions = [ 'Homme', 'Femme', 'Je m\'abstiens'];
     this.partiOptions = [ 'Je m\'abstiens', 'Indécis', 'Reconquête', 'RN', 'LR', 'LREM', 'MoDem', 'PS', 'EELV', 'LFI', 'PCF'];
   }
 
   ngOnInit(): void {
+    if (this.tokenStorage.getToken()) {
+      this.isLoggedIn = true;
+      this.roles = this.tokenStorage.getUser().roles;
+    }
   }
 
   showRegisterDialog() {
@@ -55,63 +67,52 @@ export class HomeComponent implements OnInit {
   }
 
   login() {
-    if (this.checkEmail(this.email) && this.password.length > 6){
-      this.authService
-      .login(this.email, this.password)
-      .then(() => {
-        if (this.authService.isAdmin()) {
-          this.router.navigate(['/admin'])
-        } else {
-          if (this.auth.currentUser){
-            const id = this.auth.currentUser.uid;
-            this.router.navigate(['/debate']);
-            this.displayLogin = false;
-          }
-        }
+    this.authService.login(this.email, this.password).subscribe({
+      next: data => {
+        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveUser(data);
+
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.roles = this.tokenStorage.getUser().roles;
+        this.router.navigate(['/profil']);
+      },
+      error: err => {
+        this.errorMessage = err.error.message;
+        this.isLoginFailed = true;
       }
-      )
-      .catch((e) => console.log(e.message));
-    } else if (this.checkEmail(this.email)) {
-      this.passwordValid = false;
-      this.password = "";
-    } else {
-      this.emailValid = false;
-      this.password = "";
-    }
+    });
   }
 
   register() {
-    if (this.checkEmail(this.email) && this.password.length > 6){
-      this.authService
-      .register({
-        username: this.username,
-        lastName: this.lastname,
-        firstName: this.firstname,
-        genre: this.genre,
-        email: this.email,
-        password: this.password,
-        politicalParty: this.politicalParti,
-        age: this.age,
-        profilPicture: "",
-        debate_liked_id: [],
-        comment_liked: [],
-        votedList: [],
-        journalist: false,
-        image: "",
-        indicator: 5,
-      })
-      .then(() => {
-        this.displayRegister = false;
-        this.router.navigate(['/profil']);
-      })
-      .catch((e) => console.log(e.message));
-    } else if (this.checkEmail(this.email)) {
-      this.passwordValid = false;
-      this.password = "";
-    } else {
-      this.emailValid = false;
-      this.password = "";
+    const user = {
+      username: this.username,
+      lastName: this.lastname,
+      firstName: this.firstname,
+      genre: this.genre,
+      email: this.email,
+      password: this.password,
+      politicalParty: this.politicalParti,
+      age: this.age,
+      profilPicture: "",
+      debate_liked_id: [],
+      comment_liked: [],
+      votedList: [],
+      journalist: false,
+      image: "",
+      indicator: 5
     }
+    this.authService.register(user).subscribe({
+      next: data => {
+        this.isSuccessful = true;
+        this.isSignUpFailed = false;
+        this.router.navigate(['/profil']);
+      },
+      error: err => {
+        this.errorMessage = err.error.message;
+        this.isSignUpFailed = true;
+      }
+    });
   }
 
   checkEmail(email: string) {
