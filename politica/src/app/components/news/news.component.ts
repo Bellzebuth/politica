@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { INews } from 'src/app/interfaces/news';
 import { IUser } from 'src/app/interfaces/user';
+import { AuthService } from 'src/app/services/auth.service';
+import { NewsService } from 'src/app/services/news.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-news',
@@ -10,65 +13,75 @@ import { IUser } from 'src/app/interfaces/user';
 export class NewsComponent implements OnInit {
   
   newsList: Array<any> = [];
-  profil: any;
+  profil!: IUser;
   display: boolean = false;
-  showNews: any = {
+  showNews: INews = {
     _id: "",
     title: "",
     content: "",
     source: "",
     image: "",
-    id_journalist: "",
-    dateTime: "",
+    journalist: {
+      id: "",
+      username: ""
+    },
+    dateTime: new Date(),
+  };
+  isLoggedIn = false;
+  newPost = {
+    title: "",
+    content: "",
+    source: "",
   };
 
-  constructor() { }
+  constructor(private authService: AuthService, private tokenStorageService: TokenStorageService, private newsService: NewsService) { }
 
   ngOnInit(): void {
-    this.profil = {
-      username: "username",
-      lastName: "lastname",
-      firstName: "fisrtname",
-      genre: "male",
-      email: "email",
-      password: "pasword",
-      politicalParty: "party",
-      age: 25,
-      profilPicture: "../../../assets/PDP.png",
-      journalist: true,
-      image: "we don't care",
-      indicator: 3
-    };
-    this.newsList.push({
-      _id: "1",
-      title: "Titre de la news",
-      content: "Contenu de l'info",
-      source: "Le Monde",
-      image: "../../../assets/exempleNews.jpeg",
-      id_journalist: "1",
-      dateTime: this.formatDate(new Date()),
-    });
-    this.newsList.push({
-      _id: "2",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      source: "Le Monde",
-      image: "../../../assets/exempleNews.jpeg",
-      id_journalist: "1",
-      dateTime: this.formatDate(new Date()),
+    this.getUser(this.tokenStorageService.getUser().id);
+    this.getNews();
+  }
+
+  getUser(userId: string) {
+    this.authService.getUser(userId).subscribe((data) => {
+      this.profil = data.data;
+      this.isLoggedIn = !!this.tokenStorageService.getToken();
+    }, error => {
+      console.log(error);
     });
   }
 
-  formatDate(date: { getDate: () => any; getMonth: () => number; getFullYear: () => any; }) {
+  getNews() {
+    this.newsService.getAll().subscribe((data) => {
+      this.newsList = data.data;
+      this.sortByDate(this.newsList);
+      this.formatDate(data.data[0].dateTime);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  sortByDate(list: Array<any>) {
+    list.sort(function (a, b) {
+      var key1 = a.dateTime;
+      var key2 = b.dateTime;
+  
+      if (key1 > key2) {
+          return -1;
+      } else if (key1 == key2) {
+          return 0;
+      } else {
+          return 1;
+      }
+    });
+  }
+
+  formatDate(date: string) {
+    const frenchDate = date.split('T')[0].split('-');
     return [
-      this.padTo2Digits(date.getDate()),
-      this.padTo2Digits(date.getMonth() + 1),
-      date.getFullYear(),
+      frenchDate[2],
+      frenchDate[1],
+      frenchDate[0]
     ].join('/');
-  }
-
-  padTo2Digits(num: { toString: () => string; }) {
-    return num.toString().padStart(2, '0');
   }
 
   showDialog(id: any) {
@@ -79,5 +92,29 @@ export class NewsComponent implements OnInit {
         this.display = true;
       } 
     })
+  }
+
+  post(){
+    const service = {
+      title: this.newPost.title,
+      content: this.newPost.content,
+      source: this.newPost.source,
+      image: "",
+      journalist: {
+        id: this.tokenStorageService.getUser().id,
+        username: this.profil.username,
+      },
+      dateTime: new Date(),
+    }
+    this.newsService.create(service).subscribe((data) => {
+      this.newPost = {
+        title: "",
+        content: "",
+        source: "",
+      };
+      this.getNews();
+    }, error => {
+      console.log(error);
+    });
   }
 }

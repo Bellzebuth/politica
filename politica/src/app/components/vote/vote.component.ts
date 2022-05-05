@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { IUser } from 'src/app/interfaces/user';
 import { IVote } from 'src/app/interfaces/vote';
+import { AuthService } from 'src/app/services/auth.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-vote',
@@ -9,41 +12,18 @@ import { IVote } from 'src/app/interfaces/vote';
 export class VoteComponent implements OnInit {
 
   voteList: Array<IVote> = [];
-  profil: any;
+  profil!: IUser;
   horizontalOptions: any;
 
-  constructor() { }
+  isLoggedIn = false;
+
+  constructor(private authService: AuthService, private tokenStorageService: TokenStorageService) { }
 
   ngOnInit(): void {
-    this.profil = {
-      username: "username",
-      lastName: "lastname",
-      firstName: "fisrtname",
-      genre: "male",
-      email: "email",
-      password: "pasword",
-      politicalParty: "party",
-      age: 25,
-      profilPicture: "../../../assets/PDP.png",
-      debate_liked_id:["1", "7"],
-      comment_liked: [{
-        debate: "1",
-        comment: "1",
-      },{
-        debate: "2",
-        comment: "2",
-      }],
-      votedList: [{
-        vote: "1",
-        side: true,
-      }],
-      journalist: false,
-      image: "we don't care",
-      indicator: 3
-    };
+    this.getUser(this.tokenStorageService.getUser().id);
     this.voteList.push({
       _id: '1',
-      labels: 'Le vote à 16 ans',
+      label: 'Le vote à 16 ans',
       for_vote: 16,
       against_vote: 154,
       percentageFor: Math.round((16 / (16+154)) * 100),
@@ -55,7 +35,7 @@ export class VoteComponent implements OnInit {
     });
     this.voteList.push({
       _id: '2',
-      labels: 'la retraite a 65 ans',
+      label: 'la retraite a 65 ans',
       for_vote: 168,
       against_vote: 127,
       percentageFor: Math.round((168 / (168+127)) * 100),
@@ -65,6 +45,14 @@ export class VoteComponent implements OnInit {
       closeDate: new Date(),
       voted: false,
     });
-    
+  }
+
+  getUser(userId: string) {
+    this.authService.getUser(userId).subscribe((data) => {
+      this.profil = data.data;
+      this.isLoggedIn = !!this.tokenStorageService.getToken();
+    }, error => {
+      console.log(error);
+    });
   }
 }

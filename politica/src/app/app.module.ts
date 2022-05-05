@@ -8,8 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 //import Components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
 import { DebateComponent } from './components/debate/debate.component';
 import { NewsComponent } from './components/news/news.component';
 import { VoteComponent } from './components/vote/vote.component';
@@ -37,13 +35,12 @@ import { MessageModule } from 'primeng/message';
 import { TagModule } from 'primeng/tag';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    RegisterComponent,
-    LoginComponent,
     DebateComponent,
     NewsComponent,
     VoteComponent,
@@ -76,6 +73,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
     TagModule,
     SelectButtonModule,
     ProgressBarModule,
+    InputTextareaModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

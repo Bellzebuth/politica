@@ -1,8 +1,12 @@
 export interface IDebate {
-    _id: String,
-    id_user: String,
+    _id: string,
+    user: {
+        id: string,
+        username: string,
+        profilPicture: string,
+    },
     interest_score: number,
-    message: String,
+    message: string,
     comment: Array<any>,
     dateTime: Date,
     liked: Boolean,

@@ -13,5 +13,9 @@ export interface DbUser {
     votedList: Array<any>,
     journalist: boolean,
     image: string,
-    indicator: number
+    indicator: number,
+    shareOne: boolean,
+    shareAll: boolean,
+    shareApp: boolean,
+    darkMode: boolean
 }

@@ -19,7 +19,11 @@ export class DebateDetailsComponent implements OnInit {
   constructor() {
     this.debate = {
       _id: "1",
-      id_user: "1",
+      user: {
+        id: "1",
+        username: "username",
+        profilPicture: "../../../assets/PDP.png",
+      },
       message: "Je pense PATATA",
       interest_score: 548,
       comment: [{

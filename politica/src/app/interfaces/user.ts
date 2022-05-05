@@ -5,7 +5,7 @@ export interface IUser {
     genre: String,
     email: String,
     password: String,
-    politicalParty: String,
+    politicalParti: String,
     age: Number,
     profilPicture: String,
     debate_liked_id: Array<String>,
@@ -13,5 +13,9 @@ export interface IUser {
     votedList: Array<any>,
     journalist: Boolean,
     image: String,
-    indicator: Number
+    indicator: Number,
+    shareOne: boolean,
+    shareAll: boolean,
+    shareApp: boolean,
+    darkMode: boolean
 }

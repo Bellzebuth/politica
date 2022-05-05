@@ -1,9 +1,12 @@
 export interface INews {
-    _id: String,
-    title: String,
-    content: String,
-    source: String,
-    image: String,
-    id_journalist: String,
+    _id: string,
+    title: string,
+    content: string,
+    source: string,
+    image: string,
+    journalist: {
+        id: string,
+        username: string,
+    },
     dateTime: Date
 }

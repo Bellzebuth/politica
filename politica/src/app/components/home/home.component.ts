@@ -43,8 +43,8 @@ export class HomeComponent implements OnInit {
     private readonly router: Router,
     private tokenStorage: TokenStorageService
     ) { 
-    this.genreOptions = [ 'Homme', 'Femme', 'Je m\'abstiens'];
-    this.partiOptions = [ 'Je m\'abstiens', 'Indécis', 'Reconquête', 'RN', 'LR', 'LREM', 'MoDem', 'PS', 'EELV', 'LFI', 'PCF'];
+    this.genreOptions = [ 'Homme', 'Femme'];
+    this.partiOptions = [ 'Sans parti', 'Indécis', 'Reconquête', 'RN', 'LR', 'LREM', 'MoDem', 'PS', 'EELV', 'LFI', 'PCF'];
   }
 
   ngOnInit(): void {
@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
       genre: this.genre,
       email: this.email,
       password: this.password,
-      politicalParty: this.politicalParti,
+      politicalParti: this.politicalParti,
       age: this.age,
       profilPicture: "",
       debate_liked_id: [],
@@ -100,13 +100,17 @@ export class HomeComponent implements OnInit {
       votedList: [],
       journalist: false,
       image: "",
-      indicator: 5
+      indicator: 5,
+      shareOne: true,
+      shareAll: true,
+      shareApp: true,
+      darkMode: false,
     }
     this.authService.register(user).subscribe({
       next: data => {
         this.isSuccessful = true;
         this.isSignUpFailed = false;
-        this.router.navigate(['/profil']);
+        this.login();
       },
       error: err => {
         this.errorMessage = err.error.message;

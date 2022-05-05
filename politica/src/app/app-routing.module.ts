@@ -4,22 +4,18 @@ import { RouterModule, Routes } from '@angular/router';
 // Components import
 import { DebateComponent } from './components/debate/debate.component';
 import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
 import { NewsComponent } from './components/news/news.component';
 import { ProfilComponent } from './components/profil/profil.component';
-import { RegisterComponent } from './components/register/register.component';
 import { VoteComponent } from './components/vote/vote.component';
 import { Error404Component } from './utils/error404/error404.component';
 import { DebateDetailsComponent } from './components/debate-details/debate-details.component';
 
 // Guard imports
 import { ProfilGuard } from "../app/security/profil.guard";
-import { LoginGuard } from '../app/security/login.guard';
 import { DebateGuard } from '../app/security/debate.guard';
 import { RootGuard } from '../app/security/root.guard';
 import { NewsGuard } from '../app/security/news.guard';
 import { VoteGuard } from '../app/security/vote.guard';
-import { RegisterGuard } from '../app/security/register.guard';
 
 
 const routes: Routes = [
@@ -36,8 +32,6 @@ const routes: Routes = [
   },
   {path:'news', component: NewsComponent, canActivate:[NewsGuard]},
   {path:'vote', component: VoteComponent, canActivate:[VoteGuard]},
-  {path:'login',component:LoginComponent, canActivate:[LoginGuard]},
-  {path:'register', component: RegisterComponent, canActivate:[RegisterGuard]},
   {path:'debate-details', component: DebateDetailsComponent},
   {
     path: 'root',

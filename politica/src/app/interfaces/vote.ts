@@ -1,6 +1,6 @@
 export interface IVote {
     _id: String,
-    labels: String,
+    label: String,
     for_vote: number,
     against_vote: number,
     percentageFor: number,

@@ -1,8 +1,9 @@
 <app-menu></app-menu>
 <div class="content">
-    <div class="user-info">
+    <div class="user-info" *ngIf="isLoggedIn">
         <div class="p-card card-display">
-            <img class="p-avatar p-avatar-lg pdp" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
             <div class="card-content">
                 <div class="p-card-title"> {{ profil.username }} </div>
             <div class="p-card-subtitle">
@@ -10,30 +11,30 @@
                 {{ profil.lastName }}
             </div>
             <div class="p-card-content">
-                {{ profil.politicalParty }}
+                {{ profil.politicalParti }}
             </div>
             <div *ngIf="profil.journalist" class="p-card-footer">
                 <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
             </div>
         </div>
     </div>
-    <div class="p-card panel-control">
+    <div class="p-card panel-control" *ngIf="isLoggedIn">
         <h3 _ngcontent-tcu-c76="">Panneau de contrôle</h3>
         <div class="data-controller">
-            <span>Partager mes données avec <span style="font-weight: 700;" >{{ profil.politicalParty }}</span></span>
-            <p-inputSwitch [(ngModel)]="checked1"></p-inputSwitch>
+            <span>Partager mes données avec <span style="font-weight: 700;" >{{ profil.politicalParti }}</span></span>
+            <p-inputSwitch [(ngModel)]="profil.shareOne"></p-inputSwitch>
         </div>
         <div class="data-controller">
             <span>Partager mes données avec <span style="font-weight: 700;" > l'ensemble des partis politique</span></span>
-            <p-inputSwitch [(ngModel)]="checked2"></p-inputSwitch>
+            <p-inputSwitch [(ngModel)]="profil.shareAll"></p-inputSwitch>
         </div>
         <div class="data-controller">
             <span>Partager mes données avec <span style="font-weight: 700;" >Politica</span></span>
-            <p-inputSwitch [(ngModel)]="checked3"></p-inputSwitch>
+            <p-inputSwitch [(ngModel)]="profil.shareApp"></p-inputSwitch>
         </div>
-        <div class="data-controller">
+        <div class="data-controller" *ngIf="darkModeOK">
             <span>Mode Sombre</span>
-            <p-inputSwitch [(ngModel)]="checked4"></p-inputSwitch>
+            <p-inputSwitch [(ngModel)]="profil.darkMode"></p-inputSwitch>
         </div>
     </div>
 </div>

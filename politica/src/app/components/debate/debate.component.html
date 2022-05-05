@@ -1,17 +1,18 @@
 <app-menu></app-menu>
 <div class="debate-input">
-    <input type="text" pInputText class="p-inputtext-sm input-width" maxlength="255" placeholder="Exprimez-vous...">  
-    <button pButton pRipple type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
+    <input type="text" [(ngModel)]="newPost" pInputText class="p-inputtext-sm input-width" maxlength="255" placeholder="Exprimez-vous...">  
+    <button pButton pRipple (click)="post()" type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
 </div>
 <div class="content p-component">
-    <div class="profile">
+    <div class="profile"  *ngIf="isLoggedIn">
         <div class="stick-left">
-            <img class="p-avatar p-avatar-lg pdp" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
             <div class="profil-information">
                 <div class="p-card-title"> {{ profil.username }} </div>
                 <div class="p-card-subtitle"></div>
                 <div class="p-card-content">
-                    {{ profil.politicalParty }}
+                    {{ profil.politicalParti }}
                 </div>
                 <div class="p-card-content">
                     {{ profil.genre }}
@@ -25,9 +26,10 @@
     <div class="debate-feed">
         <div class="p-card card-container" *ngFor="let debate of debateList">
             <div class="p-card card-display" routerLink="/debate-details">
-            <img class="p-avatar p-avatar-lg" _ngcontent-qqs-c76="" src="../../../assets/PDP.png" />
+            <img class="p-avatar p-avatar-lg" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
                 <div class="card-content">
-                    <div class="p-card-title" style="color:black;"> {{ debate.id_user }} </div>
+                    <div class="p-card-title" style="color:black;"> {{ debate.user.username }} </div>
                     <div class="p-card-subtitle"></div>
                     <div class="p-card-content" style="color:black;"> {{ debate.message }} </div>
                     <div class="p-card-footer footer-debate-display"> 
@@ -62,7 +64,7 @@
                     </ng-template>
                 </p-messages>
             </div>
-            <a class="debate-comments" style="text-decoration: underline;" routerLink="/debate-details">Voir plus de commentaires ...</a>
+            <a class="debate-comments" *ngIf="debate.comment.length > 2" style="text-decoration: underline;" routerLink="/debate-details">Voir plus de commentaires ...</a>
             <div class="p-card" style="display: flex; margin-top: 1%;" >
                 <input type="text" pInputText class="p-inputtext-sm input-comments" maxlength="255" placeholder="Exprimez-vous...">
                 <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: rgb(11, 167, 11); margin: 2px;">

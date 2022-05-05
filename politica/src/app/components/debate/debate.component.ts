@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { IDebate } from 'src/app/interfaces/debate';
 import { INews } from 'src/app/interfaces/news';
 import { IUser } from 'src/app/interfaces/user';
+import { AuthService } from 'src/app/services/auth.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { DebateService } from 'src/app/services/debate.service';
 
 @Component({
   selector: 'app-debate',
@@ -12,82 +15,17 @@ export class DebateComponent implements OnInit {
 
   debateList: Array<IDebate> = [];
   mainNews: Array<any> = [];
-  profil: any;
+  profil!: IUser;
+
   newPost: String | undefined;
   commentSide: Boolean = true;
   sideOptions: Array<any> = [{icon: 'pi pi-thumbs-up', colorClass: "green", jusitfy: true}, {icon: 'pi pi-thumbs-down', colorClass: "red", justify: false}];
 
-  constructor() { }
+  isLoggedIn = false;
+
+  constructor(private authService: AuthService, private tokenStorageService: TokenStorageService, private debateServie: DebateService) { }
 
   ngOnInit(): void {
-    this.profil = {
-      username: "username",
-      lastName: "lastname",
-      firstName: "fisrtname",
-      genre: "male",
-      email: "email",
-      password: "pasword",
-      politicalParty: "party",
-      age: 25,
-      profilPicture: "../../../assets/PDP.png",
-      debate_liked_id:["1", "7"],
-      comment_liked: [{
-        debate: "1",
-        comment: "1",
-      },{
-        debate: "2",
-        comment: "2",
-      }],
-      journalist: false,
-      image: "we don't care",
-      indicator: 3
-    };
-    this.debateList.push({
-      _id: "1",
-      id_user: "1",
-      message: "Je pense PATATA",
-      interest_score: 548,
-      comment: [{
-        id:"1",
-        id_user:"2",
-        content:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        side: false,
-        score:7,
-        liked: false,
-      },{
-        id:"2",
-        id_user:"2",
-        content:"Tu as raison car ...",
-        side: true,
-        score:5,
-        liked: false,
-      }],
-      dateTime: new Date(),
-      liked: false,
-    });
-    this.debateList.push({
-      _id: "2",
-      id_user: "1",
-      interest_score: 196,
-      message: "Je pense PATATA",
-      comment: [{
-        id:"1",
-        id_user:"2",
-        content:"Tu as tort parce que ...",
-        side: false,
-        score:7,
-        liked: false,
-      },{
-        id:"2",
-        id_user:"2",
-        content:"Tu as raison car ...",
-        side: true,
-        score:5,
-        liked: false,
-      }],
-      dateTime: new Date(),
-      liked:false,
-    });
     this.mainNews.push({
       _id: "1",
       title: "Titre de la news",
@@ -97,7 +35,42 @@ export class DebateComponent implements OnInit {
       id_journalist: "1",
       dateTime: this.formatDate(new Date()),
     });
+    this.getAllDebate();
+    this.getUser(this.tokenStorageService.getUser().id);
     this.isLiked();
+  }
+
+  getUser(userId: string) {
+    this.authService.getUser(userId).subscribe((data) => {
+      this.profil = data.data;
+      this.isLoggedIn = !!this.tokenStorageService.getToken();
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  getAllDebate() {
+    this.debateServie.getAll().subscribe((data) => {
+      this.debateList = data.data;
+      this.sortByDate(this.debateList);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  sortByDate(list: Array<any>) {
+    list.sort(function (a, b) {
+      var key1 = a.dateTime;
+      var key2 = b.dateTime;
+  
+      if (key1 > key2) {
+          return -1;
+      } else if (key1 == key2) {
+          return 0;
+      } else {
+          return 1;
+      }
+    });
   }
 
   formatDate(date: { getDate: () => any; getMonth: () => number; getFullYear: () => any; }) {
@@ -200,7 +173,23 @@ export class DebateComponent implements OnInit {
   }
 
   post() {
-    //TODO: Ajouter post debat
+    const debate = {
+      user: {
+        id: this.tokenStorageService.getUser().id,
+        username: this.profil.username,
+        profilPicture: this.profil.profilPicture,
+      },
+      interest_score: 0,
+      message: this.newPost,
+      comment: [],
+      dateTime: new Date()
+    }
+    this.debateServie.create(debate).subscribe((data) => {
+      this.newPost = "";
+      this.getAllDebate();
+    }, error => {
+      console.log(error);
+    });
   }
 }
 

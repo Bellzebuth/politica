@@ -12,28 +12,11 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 })
 export class ProfilComponent implements OnInit {
 
-  profil: IUser = {
-    username: "",
-    lastName: "",
-    firstName: "",
-    genre: "",
-    email: "",
-    password: "",
-    politicalParty: "",
-    age: 0,
-    profilPicture: "",
-    debate_liked_id: [],
-    comment_liked: [],
-    votedList: [],
-    journalist: false,
-    image: "",
-    indicator: 0
-  };
+  profil!: IUser;
 
-  checked1: boolean = false;
-  checked2: boolean = false;
-  checked3: boolean = true;
-  checked4: boolean = false;
+  isLoggedIn = false;
+
+  darkModeOK = false;
 
   constructor(private authService: AuthService, private tokenStorageService: TokenStorageService) {
   }
@@ -45,11 +28,7 @@ export class ProfilComponent implements OnInit {
   getUser(userId: string) {
     this.authService.getUser(userId).subscribe((data) => {
       this.profil = data.data;
-      console.log(this.profil);
-      if (this.profil.profilPicture == "") {
-        console.log(this.profil);
-        this.profil.profilPicture =  '../../assets/PDP.png';
-      } 
+      this.isLoggedIn = !!this.tokenStorageService.getToken();
     }, error => {
       console.log(error);
     });
