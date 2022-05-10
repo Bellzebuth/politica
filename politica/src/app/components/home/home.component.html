@@ -59,12 +59,34 @@
                     <label for="float-input">Mot de passe</label>
                 </span>
             </div>
-            <!-- 
-                <div class="card">
-                    <p-toast></p-toast>
-                    <p-captcha siteKey="6Lf2XQkTAAAAANcvOwYqPxWL4iZDksFqHpS39GDA" (onResponse)="showResponse($event)"></p-captcha>
-                </div>
-             -->
+            <div class="form-group">
+                <label for="photo">Photo</label>
+                  <input
+                    type="file"
+                    name="file"
+                    id="input-files"
+                    class="form-control"
+                    [(ngModel)]="profilPicture"
+                    (change)="selectFile($event)"
+                  />
+                  <button class="btn btn-success btn-sm" [disabled]="!selectedFiles" (click)="upload()">
+                    Upload
+                  </button>
+                  <div *ngIf="currentFile" class="progress my-3">
+                    <div
+                      class="progress-bar progress-bar-info progress-bar-striped"
+                      role="progressbar"
+                      attr.aria-valuenow="{{ progress }}"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      [ngStyle]="{ width: progress + '%' }"
+                    >
+                      {{ progress }}%
+                    </div>
+                  </div>
+                  <div *ngIf="message" class="alert alert-danger" role="alert">{{ message }}</div>
+              </div>
+           
             <span style="font-size: small;">
                 * Seul les champs marqués d'une * sont obligatoire.
             </span>

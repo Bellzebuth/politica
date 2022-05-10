@@ -1,12 +1,9 @@
 export interface IVote {
-    _id: String,
-    label: String,
+    _id: string,
+    label: string,
     for_vote: number,
     against_vote: number,
-    percentageFor: number,
-    percentageAgainst: number,
-    author: String,
+    author: string,
     dateTime: Date,
     closeDate: Date,
-    voted: Boolean,
 }

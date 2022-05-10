@@ -39,12 +39,14 @@ exports.new = function (req, res) {
 
 exports.view = function (req, res) {
     Debate.findById(req.params.debate_id, function (err, debate) {
-        if (err)
+        if (err) {
             res.send(err);
-        res.json({
-            message: 'debate details loading..',
-            data: debate
-        });
+        } else {
+            res.json({
+                message: 'debate details loading..',
+                data: debate
+            });
+        }
     });
 };
 

@@ -15,6 +15,7 @@ exports.signup = (req, res) => {
     genre: req.body.genre,
     email: req.body.email,
     politicalParti: req.body.politicalParti,
+    profilPicture: req.body.profilPicture ? req.body.profilPicture : undefined,
     age: req.body.age,
     journalist: false,
     indicator: 5,
@@ -150,12 +151,15 @@ exports.delete = function (req, res) {
 
 exports.view = function (req, res) {
   User.findById(req.params.user_id, function (err, user) {
-      if (err)
-          res.send(err);
-      res.json({
+      if (err) {
+        res.send(err);
+      } else {
+
+        res.json({
           message: 'user details loading..',
           data: user
       });
+      }
   });
 };
 

@@ -4,6 +4,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import {Router} from "@angular/router";
 import { DbUser } from 'src/app/services/model/db-user';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { Observable } from 'rxjs';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'app-home',
@@ -24,12 +27,19 @@ export class HomeComponent implements OnInit {
   genre : string = '';
   age!: number;
   politicalParti : string = '';
+  profilPicture: string = '';
 
   genreOptions: Array<string>;
   partiOptions: Array<string>;
 
   emailValid: boolean= true;
   passwordValid: boolean= true;
+
+  selectedFiles?: FileList;
+  currentFile?: File;
+  progress = 0;
+  message = '';
+  fileInfos?: Observable<any>;
 
   isLoggedIn = false;
   isLoginFailed = false;
@@ -41,7 +51,8 @@ export class HomeComponent implements OnInit {
   constructor(private messageService: MessageService,
     private authService: AuthService,
     private readonly router: Router,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private imageService: ImageService,
     ) { 
     this.genreOptions = [ 'Homme', 'Femme'];
     this.partiOptions = [ 'Sans parti', 'Indécis', 'Reconquête', 'RN', 'LR', 'LREM', 'MoDem', 'PS', 'EELV', 'LFI', 'PCF'];
@@ -85,6 +96,7 @@ export class HomeComponent implements OnInit {
   }
 
   register() {
+    console.log(this.currentFile?.name);
     const user = {
       username: this.username,
       lastName: this.lastname,
@@ -94,7 +106,7 @@ export class HomeComponent implements OnInit {
       password: this.password,
       politicalParti: this.politicalParti,
       age: this.age,
-      profilPicture: "",
+      profilPicture: this.currentFile?.name ? this.currentFile?.name : "",
       debate_liked_id: [],
       comment_liked: [],
       votedList: [],
@@ -122,5 +134,40 @@ export class HomeComponent implements OnInit {
   checkEmail(email: string) {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
-}
+  }
+
+  selectFile(event: any): void {
+    this.selectedFiles = event.target.files;
+  }
+
+  upload(): void {
+    this.progress = 0;
+
+    if (this.selectedFiles) {
+      const file: File | null = this.selectedFiles.item(0);
+
+      if (file) {
+        this.currentFile = file;
+
+        this.imageService.upload(this.currentFile).subscribe(
+          (event: any) => {
+            if (event.type === HttpEventType.UploadProgress) {
+              this.progress = Math.round(100 * event.loaded / event.total);
+            } else if (event instanceof HttpResponse) {
+              this.fileInfos = this.imageService.getFiles();
+            }
+          },
+          (err: any) => {
+            console.log(err);
+            this.progress = 0;
+
+            if (err.error && err.error.message) {
+              this.message = err.error.message;
+            } else {
+              this.message = 'Could not upload the file!';
+            }
+          });
+      }
+    }
+  }
 }

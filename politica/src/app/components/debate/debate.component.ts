@@ -5,6 +5,9 @@ import { IUser } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { DebateService } from 'src/app/services/debate.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgForm } from '@angular/forms';
+import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'app-debate',
@@ -16,14 +19,19 @@ export class DebateComponent implements OnInit {
   debateList: Array<IDebate> = [];
   mainNews: Array<any> = [];
   profil!: IUser;
+  imageName: string = "";
 
   newPost: String | undefined;
-  commentSide: Boolean = true;
-  sideOptions: Array<any> = [{icon: 'pi pi-thumbs-up', colorClass: "green", jusitfy: true}, {icon: 'pi pi-thumbs-down', colorClass: "red", justify: false}];
+  commentSide: Boolean = false;
 
   isLoggedIn = false;
 
-  constructor(private authService: AuthService, private tokenStorageService: TokenStorageService, private debateServie: DebateService) { }
+  constructor(private authService: AuthService,
+    private tokenStorageService: TokenStorageService,
+    private debateService: DebateService,
+    private sanitizer: DomSanitizer,
+    private imageService: ImageService,
+    ) {}
 
   ngOnInit(): void {
     this.mainNews.push({
@@ -42,20 +50,44 @@ export class DebateComponent implements OnInit {
 
   getUser(userId: string) {
     this.authService.getUser(userId).subscribe((data) => {
-      this.profil = data.data;
-      this.isLoggedIn = !!this.tokenStorageService.getToken();
+      this.imageName = data.data.profilPicture;
+      this.imageService.get(data.data.profilPicture).subscribe( image => {
+        data.data.profilPicture = this.arrayBufferToBase64(image);
+        this.profil = data.data;
+        this.isLoggedIn = !!this.tokenStorageService.getToken();
+      }, error => {
+        console.log(error);
+      })
     }, error => {
       console.log(error);
     });
   }
 
   getAllDebate() {
-    this.debateServie.getAll().subscribe((data) => {
+    this.debateService.getAll().subscribe((data) => {
       this.debateList = data.data;
+      data.data.forEach((debate: IDebate, index: number) => {
+        this.imageService.get(debate.user.profilPicture).subscribe(image => {
+          this.debateList[index].user.profilPicture = this.arrayBufferToBase64(image);
+        });
+        debate.comment.forEach((comment, indexComment) => {
+          this.imageService.get(comment.user.profilPicture).subscribe(image => {
+            this.debateList[index].comment[indexComment].user.profilPicture = this.arrayBufferToBase64(image);
+          });
+        });
+      });
       this.sortByDate(this.debateList);
     }, error => {
       console.log(error);
     });
+  }
+
+  getTheTwoFirstElement(list: Array<any>) {
+    if (list.length >= 2){
+      return [list[0], list[1]];
+    } else {
+      return list;
+    }
   }
 
   sortByDate(list: Array<any>) {
@@ -86,45 +118,11 @@ export class DebateComponent implements OnInit {
   }
 
   isLiked() {
-    this.profil.debate_liked_id.forEach((debate_liked_id: String) => {
-      this.debateList.forEach(debate => {
-        if (debate_liked_id === debate._id) {
-          debate.liked = true;
-        }
-      })
-    });
-    this.profil.comment_liked.forEach((comment_liked: any) => {
-      this.debateList.forEach(debate => {
-        if (comment_liked.debate === debate._id){
-          debate.comment.forEach(element => {
-            if (comment_liked.comment === element.id){
-              element.liked = true;
-            }
-          });
-        }
-      })
-    });
+    
   }
 
   interest(debate_id: String){
     //TODO Modifier liste debat_liked de l'utilisateur
-    if (this.profil.debate_liked_id.includes(debate_id)){
-      this.profil.debate_liked_id.splice(this.profil.debate_liked_id.indexOf(debate_id), 1);
-      this.debateList.forEach( debate => {
-        if (debate._id === debate_id) {
-          debate.liked = false;
-          debate.interest_score -= 1;
-        }
-      })
-    } else {
-      this.profil.debate_liked_id.push(debate_id);
-      this.debateList.forEach( debate => {
-        if (debate._id === debate_id) {
-          debate.liked = true;
-          debate.interest_score += 1;
-        }
-      })
-    }
   }
 
   onLike(debate_id: String, comment_id: String){
@@ -177,19 +175,72 @@ export class DebateComponent implements OnInit {
       user: {
         id: this.tokenStorageService.getUser().id,
         username: this.profil.username,
-        profilPicture: this.profil.profilPicture,
+        profilPicture: this.imageName,
       },
       interest_score: 0,
       message: this.newPost,
       comment: [],
       dateTime: new Date()
     }
-    this.debateServie.create(debate).subscribe((data) => {
+    this.debateService.create(debate).subscribe((data) => {
       this.newPost = "";
       this.getAllDebate();
     }, error => {
       console.log(error);
     });
+  }
+
+  submit(form: NgForm, debate_id: String) {
+    if (form.value.comment.length != 0){
+      this.debateService.get(debate_id).subscribe((data) => {
+        data.data.comment.push({
+          user: {
+            id: this.tokenStorageService.getUser().id,
+            username: this.profil.username,
+            profilPicture: this.imageName,
+          },
+          comment: form.value.comment,
+          side: this.commentSide,
+          score: 0,
+          dateTime: new Date(),
+        });
+        this.sortByScore(data.data.comment);
+        this.debateService.update(data.data._id, data.data).subscribe((data: any) => {
+          this.getAllDebate();
+        })
+      }, (error: any) => {
+        console.log(error);
+      });
+    }
+  }
+
+  sortByScore(list: Array<any>) {
+    list.sort(function (a, b) {
+      var key1 = a.score;
+      var key2 = b.score;
+  
+      if (key1 > key2) {
+          return -1;
+      } else if (key1 == key2) {
+          return 0;
+      } else {
+          return 1;
+      }
+    });
+  }
+
+  sanitize( url:string ) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }  
+
+  arrayBufferToBase64( buffer: Iterable<number> ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+       binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
   }
 }
 

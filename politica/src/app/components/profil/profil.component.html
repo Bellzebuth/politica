@@ -2,7 +2,7 @@
 <div class="content">
     <div class="user-info" *ngIf="isLoggedIn">
         <div class="p-card card-display">
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
             <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
             <div class="card-content">
                 <div class="p-card-title"> {{ profil.username }} </div>

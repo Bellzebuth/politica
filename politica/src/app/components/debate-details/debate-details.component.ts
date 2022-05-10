@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { IDebate } from 'src/app/interfaces/debate';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { AuthService } from 'src/app/services/auth.service';
+import { DebateService } from 'src/app/services/debate.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgForm } from '@angular/forms';
+import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'app-debate-details',
@@ -10,88 +16,62 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 })
 export class DebateDetailsComponent implements OnInit {
 
-  debate: IDebate;
+  debate!: IDebate;
   profil: any;
   mainNews: Array<any> = [];
-  commentSide: Boolean = true;
-  sideOptions: Array<any> = [{icon: 'pi pi-thumbs-up', colorClass: "green", jusitfy: true}, {icon: 'pi pi-thumbs-down', colorClass: "red", justify: false}];
+  commentSide: Boolean = false;
+  isLoggedIn = false;
+  debateList: any;
 
-  constructor() {
-    this.debate = {
-      _id: "1",
-      user: {
-        id: "1",
-        username: "username",
-        profilPicture: "../../../assets/PDP.png",
-      },
-      message: "Je pense PATATA",
-      interest_score: 548,
-      comment: [{
-        id:"1",
-        id_user:"2",
-        content:"Tu as tort parce que uehzfoheizjfezjdpjzodokzdhiehdie zohdhezoidheizhdiehzoidhezhdiehdoiezoidhiehzdiezoidheoizhdoizhdoz",
-        side: false,
-        score:7,
-        liked: false,
-      },{
-        id:"2",
-        id_user:"2",
-        content:"Tu as raison car ...",
-        side: true,
-        score:5,
-        liked: false,
-      }],
-      dateTime: new Date(),
-      liked: false,
-    };
+  constructor(private authService: AuthService,
+    private tokenStorageService: TokenStorageService,
+    private debateService: DebateService,
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
+    private imageService: ImageService,
+  ) {
+    
    }
 
   ngOnInit(): void {
-    this.profil = {
-      username: "username",
-      lastName: "lastname",
-      firstName: "fisrtname",
-      genre: "male",
-      email: "email",
-      password: "pasword",
-      politicalParty: "party",
-      age: 25,
-      profilPicture: "../../../assets/PDP.png",
-      debate_liked_id:["1", "7"],
-      comment_liked: [{
-        debate: "1",
-        comment: "1",
-      },{
-        debate: "2",
-        comment: "2",
-      }],
-      journalist: false,
-      image: "we don't care",
-      indicator: 3
-    };
-    this.mainNews.push({
-      _id: "1",
-      title: "Titre de la news",
-      content: "Contenu de l'info",
-      source: "Le Monde",
-      image: "../../../assets/exempleNews.jpeg",
-      id_journalist: "1",
-      dateTime: this.formatDate(new Date()),
+    this.getUser(this.tokenStorageService.getUser().id);
+    this.getDebate();
+    this.isLiked();
+  }
+
+  getUser(userId: string) {
+    this.authService.getUser(userId).subscribe((data) => {
+      this.imageService.get(data.data.profilPicture).subscribe( image => {
+        data.data.profilPicture = this.arrayBufferToBase64(image);
+        this.profil = data.data;
+        this.isLoggedIn = !!this.tokenStorageService.getToken();
+      }, error => {
+        console.log(error);
+      })
+    }, error => {
+      console.log(error);
     });
-    /**
-     * this.route.params.subscribe((params: Params) => {
+  }
+
+  getDebate() {
+    this.route.params.subscribe((params: Params) => {
       this.route.data.subscribe(async () => {
-        await this.cookieServ.get(params['_id']).subscribe(
-          data => {
-            this.cookie = data.data;
+        this.debateService.get(params['_id']).subscribe(data => {
+          this.debate = data.data;
+          this.imageService.get(this.debate.user.profilPicture).subscribe((image: Iterable<number>) => {
+            this.debate.user.profilPicture = this.arrayBufferToBase64(image);
+          });
+          this.debate.comment.forEach((comment, indexComment) => {
+            this.imageService.get(comment.user.profilPicture).subscribe((image: Iterable<number>) => {
+              this.debate.comment[indexComment].user.profilPicture = this.arrayBufferToBase64(image);
+            });
+          });
           },
           error => {
             console.log(error);
           });
       })
     })
-     */
-    this.isLiked();
   }
 
   formatDate(date: { getDate: () => any; getMonth: () => number; getFullYear: () => any; }) {
@@ -125,5 +105,58 @@ export class DebateDetailsComponent implements OnInit {
 
   dislike(debate_id: String, comment_id: String){
     //TODO disliker le commentaire
+  }
+
+  submit(form: NgForm, debate_id: String) {
+    if (form.value.comment.length != 0){
+      this.debateService.get(debate_id).subscribe((data) => {
+        data.data.comment.push({
+          user: {
+            id: this.tokenStorageService.getUser().id,
+            username: this.profil.username,
+            profilPicture: this.profil.profilPicture,
+          },
+          comment: form.value.comment,
+          side: this.commentSide,
+          score: 0,
+          dateTime: new Date(),
+        });
+        this.sortByScore(data.data.comment);
+        this.debateService.update(data.data._id, data.data).subscribe((data: any) => {
+          this.getDebate();
+        })
+      }, (error: any) => {
+        console.log(error);
+      });
+    }
+  }
+
+  sortByScore(list: Array<any>) {
+    list.sort(function (a, b) {
+      var key1 = a.score;
+      var key2 = b.score;
+  
+      if (key1 > key2) {
+          return -1;
+      } else if (key1 == key2) {
+          return 0;
+      } else {
+          return 1;
+      }
+    });
+  }
+
+  sanitize( url:string ) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }  
+
+  arrayBufferToBase64( buffer: Iterable<number> ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+       binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
   }
 }

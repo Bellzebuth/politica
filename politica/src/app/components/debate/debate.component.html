@@ -4,9 +4,9 @@
     <button pButton pRipple (click)="post()" type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
 </div>
 <div class="content p-component">
-    <div class="profile"  *ngIf="isLoggedIn">
-        <div class="stick-left">
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+    <div class="profile">
+        <div class="stick-left" *ngIf="isLoggedIn">
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
             <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
             <div class="profil-information">
                 <div class="p-card-title"> {{ profil.username }} </div>
@@ -25,9 +25,9 @@
     </div>
     <div class="debate-feed">
         <div class="p-card card-container" *ngFor="let debate of debateList">
-            <div class="p-card card-display" routerLink="/debate-details">
-            <img class="p-avatar p-avatar-lg" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
-            <img class="p-avatar p-avatar-lg" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
+            <div class="p-card card-display" [routerLink]="['/debate-details', debate._id]">
+            <img class="p-avatar p-avatar-lg" *ngIf="!(debate.user.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + debate.user.profilPicture)"/>
+            <img class="p-avatar p-avatar-lg" *ngIf="debate.user.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
                 <div class="card-content">
                     <div class="p-card-title" style="color:black;"> {{ debate.user.username }} </div>
                     <div class="p-card-subtitle"></div>
@@ -37,25 +37,32 @@
                         <button pButton pRipple type="button" class="p-button p-button-text" (click)="interest(debate._id)">
                             <span>
                                 {{ debate.interest_score }}
+                                <i ngClass= "pi pi-star-fill"></i>
+                                <!--
                                 <i [ngClass]= "debate.liked ? 'pi pi-star-fill' : 'pi pi-star'"></i>
+                                -->
                             </span>
                         </button>
                     </div>
                 </div>
             </div>
-            <div *ngFor="let comment of debate.comment">
+            <div *ngFor="let comment of getTheTwoFirstElement(debate.comment);">
                 <p-messages styleClass="p-message" [severity]="comment.side ? 'success' : 'error'">
                     <ng-template pTemplate>
                         <div style="display: flex; justify-content: space-between; width: 100%;">
                             <div style="display: flex; flex-direction: row; width: 100%">
-                                <img class="p-avatar p-avatar-lg" src="../../../assets/PDP.png" width="55" height="55"/>
+                                <img class="p-avatar p-avatar-lg" *ngIf="!(comment.user.profilPicture === undefined)" width="55" height="55" [src]="sanitize('data:image/jpg;base64, ' + comment.user.profilPicture)"/>
+                                <img class="p-avatar p-avatar-lg" *ngIf="comment.user.profilPicture === undefined" width="55" height="55" src="../../../assets/PDP.webp"/>
                                 <div class="ml-2" style="width: 87%; word-wrap: break-word; max-width: 100%;">
-                                    <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ comment.id_user }} </div>
-                                    <div style="margin-left: 5%; color: black;"> {{ comment.content }} </div>
+                                    <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ comment.user.username }} </div>
+                                    <div style="margin-left: 5%; color: black;"> {{ comment.comment }} </div>
                                     <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="onLike(debate._id, comment.id)">
                                         <span>
                                             {{ comment.score }}
+                                            <i ngClass= "pi pi-heart-fill"></i>
+                                            <!--
                                             <i [ngClass]= "comment.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                                            -->
                                         </span>
                                     </button>
                                 </div>
@@ -66,14 +73,38 @@
             </div>
             <a class="debate-comments" *ngIf="debate.comment.length > 2" style="text-decoration: underline;" routerLink="/debate-details">Voir plus de commentaires ...</a>
             <div class="p-card" style="display: flex; margin-top: 1%;" >
-                <input type="text" pInputText class="p-inputtext-sm input-comments" maxlength="255" placeholder="Exprimez-vous...">
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: rgb(11, 167, 11); margin: 2px;">
-                    <i class="pi pi-thumbs-up"></i>
-                </button>
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: red; margin: 2px;">
-                    <i class="pi pi-thumbs-down"></i>
-                </button>
-                <button pButton pRipple type="button" class="p-button p-button p-button-text" style="color: #841586; margin: 2px;"><i class="pi pi-send"></i></button>
+                <form #form="ngForm" (submit)="submit(form, debate._id)" style="width: 100%; display: flex; justify-content: space-between;">
+                    <label for="comment" style="flex: 4;">
+                        <input
+                        type="text"
+                        style="height: 100%; border-color: transparent;"
+                        ngModel
+                        name="comment"
+                        id="comment"
+                        pInputText
+                        class="p-inputtext-sm input-comments"
+                        maxlength="255"
+                        placeholder="Argumentez...">
+                    </label>
+                        <p-toggleButton
+                            pRipple
+                            [(ngModel)]="commentSide"
+                            [ngModelOptions]="{standalone: true}"
+                            onLabel="Pour"
+                            onIcon="pi pi-thumbs-up"
+                            offLabel="Contre"
+                            offIcon="pi pi-thumbs-down"
+                            [style]="{'width': '7em', 'height': '100%', 'color': 'red', 'border-color': 'transparent', 'margin-left': '5px'}">
+                        </p-toggleButton>
+                    <button 
+                        pButton
+                        pRipple
+                        type="submit"
+                        class="p-button p-button p-button-text"
+                        style="color: #841586; margin: 2px;">
+                            <i class="pi pi-send"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

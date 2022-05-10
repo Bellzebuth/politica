@@ -114,6 +114,11 @@
   width: 100%;
 }
 
+.green {
+  color: green;
+  background-color: green;
+}
+
 :host ::ng-deep .p-message {
   background-color: white !important;
 }
@@ -124,6 +129,19 @@
 
 :host ::ng-deep .p-selectbutton {
   display: flex;
+}
+
+:host ::ng-deep .p-highlight {
+  color: green !important;
+  background-color: white !important;
+}
+
+:host ::ng-deep .pi-thumbs-up {
+  color: green !important;
+}
+
+:host ::ng-deep .pi-thumbs-down {
+  color: red !important;
 }
 
 @media screen and (width < 950px) {

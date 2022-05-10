@@ -3,7 +3,7 @@
 <div class="content p-component">
     <div class="profile">
         <div class="stick-left" *ngIf="isLoggedIn">
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
             <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
             <div class="profil-information">
                 <div class="p-card-title"> {{ profil.username }} </div>
@@ -28,14 +28,15 @@
                     <p-button label="débats" icon="pi pi-book" styleClass="p-button-sm" class="vote-button"></p-button>
                     <p-button label="infos" icon="pi pi-info-circle" styleClass="p-button-sm" class="vote-button" ></p-button>
                 </div>
-                <div class="p-card-footer vote-footer" *ngIf="!vote.voted">
-                    <button pButton pRipple type="button" class="p-button-success p-button-text">
+                <div class="p-card-footer vote-footer">
+                    <button pButton pRipple type="button" (click)="updateVote(true, vote._id)" class="p-button-success p-button-text">
                         <i class="pi pi-check"> {{ vote.for_vote }} </i>
                     </button>
-                    <button pButton pRipple type="button" class="p-button-danger p-button-text">
+                    <button pButton pRipple type="button" (click)="updateVote(false, vote._id)" class="p-button-danger p-button-text">
                     <i class="pi pi-times" style="margin-left: 15px;"> {{ vote.against_vote }} </i>
                     </button>
                 </div>
+                <!-- 
                 <div class="p-card-footer" *ngIf="vote.voted">
                     <span style="margin: 1%;">
                         <p-progressBar [value]="vote.percentageFor"></p-progressBar>
@@ -46,6 +47,7 @@
                         Contre
                     </span>
                 </div>
+                -->
             </div>
         </div>
     </div>

@@ -36,6 +36,8 @@ import { TagModule } from 'primeng/tag';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   declarations: [
@@ -74,6 +76,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     SelectButtonModule,
     ProgressBarModule,
     InputTextareaModule,
+    ToggleButtonModule,
+    ImageModule
   ],
   providers: [],
   bootstrap: [AppComponent]

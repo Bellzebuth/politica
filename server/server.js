@@ -21,7 +21,7 @@ const db = require("./models");
 const Role = db.role;
 
 db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/?readPreference=primary&appname=MongoDB%20Compass&ssl=false`, {
+  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/politica-database?readPreference=primary&appname=MongoDB%20Compass&ssl=false`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })

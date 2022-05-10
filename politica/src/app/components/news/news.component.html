@@ -4,7 +4,7 @@
 <div class="content p-component">
     <div class="profile">
         <div class="stick-left" *ngIf="isLoggedIn">
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="profil.profilPicture"/>
+            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
             <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
             <div class="profil-information">
                 <div class="p-card-title"> {{ profil.username }} </div>
@@ -21,26 +21,51 @@
             </div>
         </div>
     </div>
-    <div class="debate-feed">
-        <div class="p-card news-post" *ngIf="profil.journalist">
-            <span class="p-float-label">
-                <input id="float-input" type="text" pInputText [(ngModel)]="newPost.title" maxlength="255"> 
-                <label for="float-input">Titre</label>
-            </span>
-            <span class="p-float-label">
-                <textarea id="float-input" rows="5" cols="30" [(ngModel)]="newPost.content" maxlength="255" pInputTextarea></textarea>
-                <label for="float-input">Contenu</label>
-            </span>
-            <span class="p-float-label">
-                <input id="float-input" type="text" pInputText [(ngModel)]="newPost.source" maxlength="255"> 
-                <label for="float-input">Source</label>
-            </span>
-            <button pButton pRipple (click)="post()" type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
+    <div class="debate-feed" *ngIf="isLoggedIn">
+        <div class="p-card card-container card-display" *ngIf="!profil.journalist">
+            <div class="modify-width" style="width: 30%;">
+                <p-image [src]="sanitize('data:image/jpg;base64, ' + imagePreview)" *ngIf="!(currentFile === undefined)" alt="Image" width="100%" [preview]="true"></p-image>
+                <p-image src="../../../assets/imageVide.png" *ngIf="currentFile === undefined" alt="Image" width="100%" [preview]="true"></p-image>
+            </div>
+            <div class="card-content modify-width">
+                <span class="p-float-label modify-width">
+                    <input id="float-input" class="modify-width" type="text" pInputText [(ngModel)]="newPost.title" maxlength="255"> 
+                    <label for="float-input">Titre</label>
+                </span>
+                <span class="p-float-label modify-width">
+                    <textarea id="float-input" rows="5" style="width: 100%;" [(ngModel)]="newPost.content" maxlength="255" pInputTextarea></textarea>
+                    <label for="float-input">Contenu</label>
+                </span>
+                <span class="p-float-label modify-width">
+                    <input id="float-input" class="modify-width" type="text" pInputText [(ngModel)]="newPost.source" maxlength="255"> 
+                    <label for="float-input">Source</label>
+                </span>
+                <div class="form-group">
+                    <input
+                        type="file"
+                        name="file"
+                        id="input-files"
+                        class=""
+                        style="margin-top: 4%;"
+                        [(ngModel)]="newPost.image"
+                        (change)="selectFile($event)"
+                    />
+                    <button pButton pRipple class="p-button p-button-sm" [disabled]="!selectedFiles" (click)="upload()">
+                        Upload
+                    </button>
+                    <div *ngIf="currentFile" class="progress my-3" style="margin-top: 1%;">
+                        <p-progressBar [value]="progress"></p-progressBar>
+                    </div>
+                    <div *ngIf="message" class="alert alert-danger" role="alert">{{ message }}</div>
+                </div>
+
+                <button pButton pRipple (click)="post()" style="margin-top: 4%;" type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
+            </div>
         </div>
         <div class="p-card card-display" *ngFor="let news of newsList" (click)="showDialog(news._id)">
-            <img class="p-avatar p-avatar-lg news-image" _ngcontent-qqs-c76="" [src]="news.image" />
+            <img class="p-avatar p-avatar-lg news-image" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + news.image)" />
             <div class="card-content" style="--lh: 1.2rem; line-height: var(--lh);">
-                <div class="p-card-title" style="word-wrap: break-word; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> {{ news.title }} </div>
+                <div class="p-card-title" style="word-wrap: break-word; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; min-height: 30px;"> {{ news.title }} </div>
                 <div class="p-card-subtitle"></div>
                 <div class="p-card-content news-content-space truncate-overflow"> {{ news.content }} </div>
                 <div class="p-card-footer news-footer">
@@ -58,6 +83,6 @@
         {{ showNews.content }}
     </p>
     <ng-template pTemplate="footer">
-        {{ showNews.source }} - {{ showNews.journalist.username }} - {{ showNews.dateTime }}
+        {{ showNews.source }} - {{ showNews.journalist.username }} - {{ formatDate(showNews.dateTime) }}
     </ng-template>
 </p-dialog>

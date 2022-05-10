@@ -32,7 +32,7 @@ const routes: Routes = [
   },
   {path:'news', component: NewsComponent, canActivate:[NewsGuard]},
   {path:'vote', component: VoteComponent, canActivate:[VoteGuard]},
-  {path:'debate-details', component: DebateDetailsComponent},
+  {path:'debate-details/:_id', component: DebateDetailsComponent},
   {
     path: 'root',
     loadChildren: () => import('./admin/root.module').then(m => m.RootModule),
