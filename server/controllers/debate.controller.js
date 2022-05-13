@@ -18,12 +18,13 @@ exports.index = function (req, res) {
 
 exports.new = function (req, res) {
     const debate = new Debate();
+    debate.user_id = req.body.user_id ? req.body.user_id : debate.user_id;
     debate.user = req.body.user ? req.body.user : debate.user;
     debate.interest_score = req.body.interest_score;
+    debate.politicalParti = req.body.politicalParti;
     debate.message = req.body.message;
     debate.comment = req.body.comment;
     debate.dateTime = new Date();
-    debate.liked = req.body.liked;
     
     debate.save(function (err) {
         if (err){
@@ -54,22 +55,26 @@ exports.view = function (req, res) {
 exports.update = function (req, res) {Debate.findById(req.params.debate_id, function (err, debate) {
         if (err) {
             res.send(err);
-        }
-        debate.user = req.body.user ? req.body.user : debate.user;
-        debate.interest_score = req.body.interest_score;
-        debate.message = req.body.message;
-        debate.comment = req.body.comment;
-        debate.dateTime = req.body.dateTime;
-        debate.liked = req.body.liked;
+        } else {
+            debate.user_id = req.body.user_id ? req.body.user_id : debate.user_id;
+            debate.user = req.body.user ? req.body.user : debate.user;
+            debate.interest_score = req.body.interest_score;
+            debate.politicalParti = req.body.politicalParti;
+            debate.message = req.body.message;
+            debate.comment = req.body.comment;
+            debate.dateTime = req.body.dateTime;
         
-        debate.save(function (err) {
-            if (err)
-                res.json(err);
-            res.json({
-                message: 'debate Info updated',
-                data: debate
+            debate.save(function (err) {
+                if (err) {
+                    res.json(err);
+                } else {
+                    res.json({
+                        message: 'debate Info updated',
+                        data: debate
+                    });
+                }
             });
-        });
+        }
     });
 };
 
@@ -84,3 +89,18 @@ exports.delete = function (req, res) {
         });
     });
 };
+
+exports.getUserDebate = function(req, res) {
+    Debate.find({
+        user_id : req.params.user_id
+    }, function (err, debate) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json({
+                status: "success",
+                data: debate
+            });
+        }
+    });
+}

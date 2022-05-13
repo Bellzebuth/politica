@@ -39,12 +39,14 @@ exports.new = function (req, res) {
 
 exports.view = function (req, res) {
     Vote.findById(req.params.vote_id, function (err, vote) {
-        if (err)
+        if (err) {
             res.send(err);
-        res.json({
-            message: 'vote details loading..',
-            data: vote
-        });
+        } else {
+            res.json({
+                message: 'vote details loading..',
+                data: vote
+            });
+        }
     });
 };
 
@@ -52,20 +54,23 @@ exports.view = function (req, res) {
 exports.update = function (req, res) {Vote.findById(req.params.vote_id, function (err, vote) {
         if (err) {
             res.send(err);
-        }
-        vote.for_vote = req.body.for_vote ? req.body.for_vote : vote.for_vote;
-        vote.against_vote = req.body.against_vote ? req.body.against_vote : vote.against_vote;
-        vote.author = req.body.author ? req.body.author : vote.author;
-        vote.closeDate = req.body.closeDate ? req.body.closeDate : vote.closeDate;
+        } else {
+            vote.for_vote = req.body.for_vote ? req.body.for_vote : vote.for_vote;
+            vote.against_vote = req.body.against_vote ? req.body.against_vote : vote.against_vote;
+            vote.author = req.body.author ? req.body.author : vote.author;
+            vote.closeDate = req.body.closeDate ? req.body.closeDate : vote.closeDate;
         
-        vote.save(function (err) {
-            if (err)
-                res.json(err);
-            res.json({
-                message: 'vote Info updated',
-                data: vote
-            });
+            vote.save(function (err) {
+                if (err) {
+                    res.json(err);
+                } else {
+                    res.json({
+                        message: 'vote Info updated',
+                        data: vote
+                    });
+                }
         });
+        }
     });
 };
 
@@ -73,11 +78,28 @@ exports.delete = function (req, res) {
     Vote.remove({
         _id: req.params.vote_id
     }, function (err, vote) {
-        if (err)
-            res.send(err);res.json({
-            status: "success",
-            message: 'vote deleted'
-        });
+        if (err) {
+            res.send(err);
+        } else {
+            res.json({
+                status: "success",
+                message: 'vote deleted'
+            });
+        }
     });
 };
 
+exports.getFinishedVote = function (req, res) {
+    Vote.find({
+        closeDate : { $lte: new Date()}
+    }, function (err, vote) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json({
+                message: 'vote finished loading...',
+                data: vote
+            });
+        }
+    });
+};

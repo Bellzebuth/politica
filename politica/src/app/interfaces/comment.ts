@@ -1,5 +1,6 @@
-export interface IDebate {
+export interface IComment {
     _id: string,
+    debate_id: string,
     user_id: string,
     user: {
         username: string,
@@ -7,7 +8,7 @@ export interface IDebate {
     },
     politicalParti: string,
     interest_score: number,
-    message: string,
-    comment: Array<any>,
+    comment: string,
+    side: boolean,
     dateTime: Date,
 }

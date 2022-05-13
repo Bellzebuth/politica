@@ -1,0 +1,18 @@
+<section (scroll)="onWindowScroll($event);">
+    <div class="colorbar">
+      <div class="empty-space">
+      </div>
+      <div class="menu">
+        <nav class="animated fadeInDown displaying">
+          <div class="navbar" id="navbar">
+            <a class="navLink" routerLink="/admin"><img src="../../../assets/icons/icons8-accueil(1).svg"/></a>
+          </div>   
+        </nav>
+      </div>
+      <div class="research-space">
+        <div>
+          <button pButton pRipple type="button" (click)="logout()" label="" class="p-button-danger p-button-sm logout"><i class="pi pi-sign-out"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>

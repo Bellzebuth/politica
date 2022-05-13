@@ -34,8 +34,8 @@ const routes: Routes = [
   {path:'vote', component: VoteComponent, canActivate:[VoteGuard]},
   {path:'debate-details/:_id', component: DebateDetailsComponent},
   {
-    path: 'root',
-    loadChildren: () => import('./admin/root.module').then(m => m.RootModule),
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.RootModule),
     canActivate:[RootGuard],
     canLoad:[RootGuard]
   },

@@ -8,11 +8,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ImageService } from 'src/app/services/image.service';
 import { Observable } from 'rxjs';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.scss']
+  styleUrls: ['./news.component.scss'],
+  providers: [MessageService]
 })
 export class NewsComponent implements OnInit {
   
@@ -51,6 +53,7 @@ export class NewsComponent implements OnInit {
     private newsService: NewsService,
     private sanitizer: DomSanitizer,
     private imageService: ImageService,
+    private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
@@ -60,14 +63,9 @@ export class NewsComponent implements OnInit {
 
   getUser(userId: string) {
     this.authService.getUser(userId).subscribe((data) => {
-      this.imageService.get(data.data.profilPicture).subscribe( image => {
-        data.data.profilPicture = this.arrayBufferToBase64(image);
         this.profil = data.data;
         this.isLoggedIn = !!this.tokenStorageService.getToken();
       }, error => {
-        console.log(error);
-      })
-    }, error => {
       console.log(error);
     });
   }
@@ -75,11 +73,6 @@ export class NewsComponent implements OnInit {
   getNews() {
     this.newsService.getAll().subscribe((data) => {
       this.newsList = data.data;
-      data.data.forEach((news: INews, index: number) => {
-        this.imageService.get(news.image).subscribe(image => {
-          this.newsList[index].image = this.arrayBufferToBase64(image);
-        })
-      });
       this.formatDate(data.data[0].dateTime);
     }, error => {
       console.log(error);
@@ -121,28 +114,49 @@ export class NewsComponent implements OnInit {
   }
 
   post(){
-    const service = {
-      title: this.newPost.title,
-      content: this.newPost.content,
-      source: this.newPost.source,
-      image: this.currentFile?.name,
-      journalist: {
-        id: this.tokenStorageService.getUser().id,
-        username: this.profil.username,
-      },
-      dateTime: new Date(),
-    }
-    this.newsService.create(service).subscribe((data) => {
-      this.newPost = {
-        title: "",
-        content: "",
-        source: "",
+    if ( this.newPost.title !== "" && this.newPost.content !== "" && this.newPost.source !== "" && this.currentFile?.name !== undefined) {
+      const service = {
+        title: this.newPost.title,
+        content: this.newPost.content,
+        source: this.newPost.source,
         image: "",
-      };
-      this.getNews();
-    }, error => {
-      console.log(error);
-    });
+        journalist: {
+          id: this.tokenStorageService.getUser().id,
+          username: this.profil.username,
+        },
+        dateTime: new Date(),
+      }
+      this.imageService.get(this.currentFile?.name).subscribe(image => {
+        service.image = this.arrayBufferToBase64(image);
+        this.newsService.create(service).subscribe(() => {
+          this.newPost = {
+            title: "",
+            content: "",
+            source: "",
+            image: "",
+          };
+          this.currentFile = undefined;
+          this.getNews();
+          this.addSingle(true, "");
+        }, error => {
+          this.addSingle(false, "Une erreur s'est produite, veuillez réessayer plus tard");
+          console.log(error);
+        });
+      })
+    } else {
+      if (this.newPost.title === "") {
+        this.addSingle(false, "Merci d'ajouter un titre");
+      }
+      if (this.newPost.content === "") {
+        this.addSingle(false, "Merci d'ajouter un contenu");
+      }
+      if (this.newPost.source === "") {
+        this.addSingle(false, "Merci d'ajouter une source");
+      }
+      if (this.currentFile?.name === undefined) {
+        this.addSingle(false, "Merci d'ajouter une image");
+      }
+    }
   }
 
   sanitize( url:string ) {
@@ -161,13 +175,10 @@ export class NewsComponent implements OnInit {
 
   upload(): void {
     this.progress = 0;
-
     if (this.selectedFiles) {
       const file: File | null = this.selectedFiles.item(0);
-
       if (file) {
         this.currentFile = file;
-        console.log(this.currentFile);
         this.imageService.upload(this.currentFile).subscribe(
           (event: any) => {
             if (event.type === HttpEventType.UploadProgress) {
@@ -184,7 +195,6 @@ export class NewsComponent implements OnInit {
           (err: any) => {
             console.log(err);
             this.progress = 0;
-
             if (err.error && err.error.message) {
               this.message = err.error.message;
             } else {
@@ -196,5 +206,17 @@ export class NewsComponent implements OnInit {
   }
   selectFile(event: any): void {
     this.selectedFiles = event.target.files;
+  }
+
+  addSingle(bool: Boolean, message: string) {
+    if (bool) {
+      this.messageService.add({severity:'success', summary:'Success Message', detail:'Infos ajoutée avec succès'});
+    } else {
+      this.messageService.add({severity:'error', summary:'Error Message', detail: message});
+    }
+  }
+
+  clear() {
+    this.messageService.clear();
   }
 }

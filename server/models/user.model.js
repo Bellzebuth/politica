@@ -37,16 +37,13 @@ const User = mongoose.model(
       type: String
     },
     debate_liked_id: {
-      type: Array,
-      required: true
+      type: Array
     },
     comment_liked: {
-      type: Array,
-      required: true
+      type: Array
     },
     votedList: {
-      type: Array,
-      required: true
+      type: Array
     },
     journalist: {
       type: Boolean,

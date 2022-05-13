@@ -16,4 +16,5 @@ module.exports = function(app) {
     app.patch("/api/vote", voteController.update);
     app.put("/api/vote/:vote_id", voteController.update);
     app.delete("/api/vote/:vote_id", voteController.delete);
+    app.get("/api/voted", voteController.getFinishedVote);
   };

@@ -1,7 +1,8 @@
 <app-menu></app-menu>
+<p-toast></p-toast>
 <div class="content">
     <div class="user-info" *ngIf="isLoggedIn">
-        <div class="p-card card-display">
+        <div class="p-card card-display" style="position: relative;">
             <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
             <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
             <div class="card-content">
@@ -16,25 +17,67 @@
             <div *ngIf="profil.journalist" class="p-card-footer">
                 <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
             </div>
+            <div>
+                <button pButton pRipple type="button" (click)="logout()" label="" class="p-button-danger p-button-sm logout"><i class="pi pi-sign-out"></i></button>
+            </div>
         </div>
     </div>
     <div class="p-card panel-control" *ngIf="isLoggedIn">
         <h3 _ngcontent-tcu-c76="">Panneau de contrôle</h3>
         <div class="data-controller">
             <span>Partager mes données avec <span style="font-weight: 700;" >{{ profil.politicalParti }}</span></span>
-            <p-inputSwitch [(ngModel)]="profil.shareOne"></p-inputSwitch>
+            <p-inputSwitch (click)="updateUser()" [(ngModel)]="profil.shareOne"></p-inputSwitch>
         </div>
         <div class="data-controller">
             <span>Partager mes données avec <span style="font-weight: 700;" > l'ensemble des partis politique</span></span>
-            <p-inputSwitch [(ngModel)]="profil.shareAll"></p-inputSwitch>
+            <p-inputSwitch (click)="updateUser()" [(ngModel)]="profil.shareAll"></p-inputSwitch>
         </div>
         <div class="data-controller">
             <span>Partager mes données avec <span style="font-weight: 700;" >Politica</span></span>
-            <p-inputSwitch [(ngModel)]="profil.shareApp"></p-inputSwitch>
+            <p-inputSwitch (click)="updateUser()" [(ngModel)]="profil.shareApp"></p-inputSwitch>
         </div>
         <div class="data-controller" *ngIf="darkModeOK">
             <span>Mode Sombre</span>
-            <p-inputSwitch [(ngModel)]="profil.darkMode"></p-inputSwitch>
+            <p-inputSwitch (click)="updateUser()" [(ngModel)]="profil.darkMode"></p-inputSwitch>
+        </div>
+    </div>
+    <div class="p-card panel-control" style="display: flex; flex-direction: column; align-items: center;" *ngIf="!profil.journalist">
+        <div> Devenez journaliste en téléchargeant votre carte de presse</div>
+        <div>
+            <div class="form-group" style="display: flex; align-items: center;">
+                <input
+                    type="file"
+                    name="file"
+                    id="input-files"
+                    class=""
+                    style="margin-top: 4%;"
+                    [(ngModel)]="journalistImage"
+                    (change)="selectFile($event)"
+                />
+                <div style="margin-top: 4%;">
+                    <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+                    <p-button (click)="confirm()" [disabled]="!selectedFiles" icon="pi pi-check" label="Devenir journaliste" styleClass="mr-2"></p-button>
+                </div>
+                <div *ngIf="message" class="alert alert-danger" role="alert">{{ message }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="p-card card-container card-display" *ngFor="let debate of debateList">
+        <img class="p-avatar p-avatar-lg" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
+            <img class="p-avatar p-avatar-lg" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
+        <div class="card-content">
+            <div class="p-card-title" style="color:black;"  [routerLink]="['/debate-details', debate._id]"> {{ debate.user.username }} </div>
+            <div class="p-card-subtitle"  [routerLink]="['/debate-details', debate._id]"></div>
+            <div class="p-card-content" style="color:black;"  [routerLink]="['/debate-details', debate._id]"> {{ debate.message }} </div>
+            <div class="p-card-footer footer-debate-display"> 
+                <button pButton pRipple type="button" class="p-button-text"><span>{{ debate.comment.length }} <i class="pi pi-comments"></i></span></button>
+                <button pButton pRipple type="button" class="p-button p-button-text" (click)="likeDebate(debate._id)">
+                    <span>
+                        {{ debate.interest_score }}
+                        <i [ngClass]= "isDebateLiked(debate._id) ? 'pi pi-star-fill' : 'pi pi-star'"></i>
+                    </span>
+                </button>
+            </div>
         </div>
     </div>
 </div>

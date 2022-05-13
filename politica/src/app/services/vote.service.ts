@@ -31,4 +31,7 @@ export class VoteService {
     return this.http.delete(`${baseUrl}/${id}`);
   }
 
+  getFinishedVote(): Observable<any> {
+    return this.http.get(`${baseUrl}d`);
+  }
 }

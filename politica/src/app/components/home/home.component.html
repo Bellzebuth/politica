@@ -59,8 +59,7 @@
                     <label for="float-input">Mot de passe</label>
                 </span>
             </div>
-            <div class="form-group">
-                <label for="photo">Photo</label>
+            <div class="form-group" style="margin: 2%;">
                   <input
                     type="file"
                     name="file"
@@ -69,7 +68,7 @@
                     [(ngModel)]="profilPicture"
                     (change)="selectFile($event)"
                   />
-                  <button class="btn btn-success btn-sm" [disabled]="!selectedFiles" (click)="upload()">
+                  <button pButton pRipple class="p-button p-button-sm" [disabled]="!selectedFiles" (click)="upload()">
                     Upload
                   </button>
                   <div *ngIf="currentFile" class="progress my-3">
@@ -87,7 +86,7 @@
                   <div *ngIf="message" class="alert alert-danger" role="alert">{{ message }}</div>
               </div>
            
-            <span style="font-size: small;">
+            <span style="font-size: small; margin-top: 5%;">
                 * Seul les champs marqués d'une * sont obligatoire.
             </span>
             <span style="font-size: small;">

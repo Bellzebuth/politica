@@ -7,7 +7,10 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { DebateService } from 'src/app/services/debate.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgForm } from '@angular/forms';
-import { ImageService } from 'src/app/services/image.service';
+import { CommentService } from 'src/app/services/comment.service';
+import { IComment } from 'src/app/interfaces/comment';
+import { VoteService } from 'src/app/services/vote.service';
+import { IVote } from 'src/app/interfaces/vote';
 
 @Component({
   selector: 'app-debate',
@@ -17,48 +20,47 @@ import { ImageService } from 'src/app/services/image.service';
 export class DebateComponent implements OnInit {
 
   debateList: Array<IDebate> = [];
-  mainNews: Array<any> = [];
+  
   profil!: IUser;
-  imageName: string = "";
 
   newPost: String | undefined;
   commentSide: Boolean = false;
 
+  voteEnded: Array<any> = [];
+
   isLoggedIn = false;
 
-  constructor(private authService: AuthService,
+  widthBar = [{
+    for: "0%",
+    against: "0%"
+  },{
+    for: "0%",
+    against: "0%"
+  },{
+    for: "0%",
+    against: "0%"
+  }]; 
+
+  constructor(
+    private authService: AuthService,
     private tokenStorageService: TokenStorageService,
     private debateService: DebateService,
     private sanitizer: DomSanitizer,
-    private imageService: ImageService,
+    private commentService: CommentService,
+    private voteService: VoteService,
     ) {}
 
   ngOnInit(): void {
-    this.mainNews.push({
-      _id: "1",
-      title: "Titre de la news",
-      content: "Contenu de l'info",
-      source: "Le Monde",
-      image: "../../../assets/exempleNews.jpeg",
-      id_journalist: "1",
-      dateTime: this.formatDate(new Date()),
-    });
+    this.getVoteResult();
     this.getAllDebate();
     this.getUser(this.tokenStorageService.getUser().id);
-    this.isLiked();
   }
 
   getUser(userId: string) {
     this.authService.getUser(userId).subscribe((data) => {
-      this.imageName = data.data.profilPicture;
-      this.imageService.get(data.data.profilPicture).subscribe( image => {
-        data.data.profilPicture = this.arrayBufferToBase64(image);
         this.profil = data.data;
         this.isLoggedIn = !!this.tokenStorageService.getToken();
       }, error => {
-        console.log(error);
-      })
-    }, error => {
       console.log(error);
     });
   }
@@ -66,17 +68,13 @@ export class DebateComponent implements OnInit {
   getAllDebate() {
     this.debateService.getAll().subscribe((data) => {
       this.debateList = data.data;
-      data.data.forEach((debate: IDebate, index: number) => {
-        this.imageService.get(debate.user.profilPicture).subscribe(image => {
-          this.debateList[index].user.profilPicture = this.arrayBufferToBase64(image);
-        });
-        debate.comment.forEach((comment, indexComment) => {
-          this.imageService.get(comment.user.profilPicture).subscribe(image => {
-            this.debateList[index].comment[indexComment].user.profilPicture = this.arrayBufferToBase64(image);
-          });
-        });
-      });
       this.sortByDate(this.debateList);
+      this.debateList.forEach(debate => {
+        this.commentService.getCommentDebate(debate._id).subscribe(data => {
+          debate.comment = data.data;
+          this.sortByScore(debate.comment);
+        })
+      });
     }, error => {
       console.log(error);
     });
@@ -105,78 +103,77 @@ export class DebateComponent implements OnInit {
     });
   }
 
-  formatDate(date: { getDate: () => any; getMonth: () => number; getFullYear: () => any; }) {
+  formatDate(date: any) {
+    const frenchDate = date.toString().split('T')[0].split('-');
     return [
-      this.padTo2Digits(date.getDate()),
-      this.padTo2Digits(date.getMonth() + 1),
-      date.getFullYear(),
+      frenchDate[2],
+      frenchDate[1],
+      frenchDate[0]
     ].join('/');
   }
 
-  padTo2Digits(num: { toString: () => string; }) {
-    return num.toString().padStart(2, '0');
-  }
-
-  isLiked() {
-    
-  }
-
-  interest(debate_id: String){
-    //TODO Modifier liste debat_liked de l'utilisateur
-  }
-
-  onLike(debate_id: String, comment_id: String){
-    if (this.profil.comment_liked.filter((e: { debate: String; comment: String; }) => e.debate === debate_id && e.comment === comment_id).length > 0) {
-      this.dislike(debate_id, comment_id);
+  isDebateLiked(debate_id: string) {
+    if (this.profil.debate_liked_id.includes(debate_id)){
+      return true;
     } else {
-      this.like(debate_id, comment_id);
+      return false;
     }
   }
 
-  like(debate_id: String, comment_id: String){
-    this.profil.comment_liked.push(
-      {
-        debate: debate_id,
-        comment: comment_id,
-      }
-    )
-    this.debateList.forEach((debate, debate_index) => {
-      if (debate._id === debate_id) {
-        debate.comment.forEach((debate_comment, comment_index) => {
-          if (debate_comment.id === comment_id){
-            this.debateList[debate_index].comment[comment_index].score += 1;
-            this.debateList[debate_index].comment[comment_index].liked = true;
-          }
-        })
-      }
-    })
+  likeDebate(debate_id: string, debate: IDebate){
+    if (this.isDebateLiked(debate_id)) {
+      this.profil.debate_liked_id.splice(this.profil.debate_liked_id.indexOf(debate_id), 1);
+      debate.interest_score -= 1;
+      debate.comment = [];
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.debateService.update(debate_id, debate).subscribe( data => {
+        this.getAllDebate();
+      });
+    } else {
+      this.profil.debate_liked_id.push(debate_id);
+      debate.interest_score += 1;
+      debate.comment = [];
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.debateService.update(debate_id, debate).subscribe( data => {
+        this.getAllDebate();
+      });
+    }
   }
 
-  dislike(debate_id: String, comment_id: String){
-    this.profil.comment_liked.forEach((comment_liked: { debate: String; comment: String; }, index: number) => {
-      if (comment_liked.debate === debate_id && comment_liked.comment === comment_id) {
-        this.profil.comment_liked.splice( this.profil.comment_liked.indexOf(comment_liked, 1));
-        this.debateList.forEach((debate, debate_index) => {
-          if (debate._id === debate_id) {
-            debate.comment.forEach((debate_comment, comment_index) => {
-              if (debate_comment.id === comment_id){
-                this.debateList[debate_index].comment[comment_index].score -= 1;
-                this.debateList[debate_index].comment[comment_index].liked = false;
-              }
-            })
-          }
-        })
-      }
-    })
+  isCommentLiked(comment_id: string){
+    if (this.profil.comment_liked.includes(comment_id)){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  like(comment_id: string, comment: IComment){
+    if (this.profil.comment_liked.includes(comment_id)) {
+      this.profil.comment_liked.splice(this.profil.comment_liked.indexOf(comment_id), 1);
+      comment.interest_score -= 1;
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.commentService.update(comment_id, comment).subscribe(() => {
+        this.getAllDebate();
+      });
+    } else {
+      this.profil.comment_liked.push(comment_id);
+      comment.interest_score += 1;
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.commentService.update(comment_id, comment).subscribe(() => {
+        this.getAllDebate();
+      });
+    }
   }
 
   post() {
     const debate = {
+      user_id: this.tokenStorageService.getUser().id,
       user: {
-        id: this.tokenStorageService.getUser().id,
         username: this.profil.username,
-        profilPicture: this.imageName,
+        profilPicture: this.profil.profilPicture,
       },
+      politicalParti: this.profil.politicalParti,
       interest_score: 0,
       message: this.newPost,
       comment: [],
@@ -192,32 +189,29 @@ export class DebateComponent implements OnInit {
 
   submit(form: NgForm, debate_id: String) {
     if (form.value.comment.length != 0){
-      this.debateService.get(debate_id).subscribe((data) => {
-        data.data.comment.push({
-          user: {
-            id: this.tokenStorageService.getUser().id,
-            username: this.profil.username,
-            profilPicture: this.imageName,
-          },
-          comment: form.value.comment,
-          side: this.commentSide,
-          score: 0,
-          dateTime: new Date(),
-        });
-        this.sortByScore(data.data.comment);
-        this.debateService.update(data.data._id, data.data).subscribe((data: any) => {
-          this.getAllDebate();
-        })
-      }, (error: any) => {
-        console.log(error);
+      const comment = {
+        debate_id: debate_id,
+        user_id: this.tokenStorageService.getUser().id,
+        user: {
+          username: this.profil.username,
+          profilPicture: this.profil.profilPicture,
+        },
+        politicalParti: this.profil.politicalParti,
+        interest_score: 1,
+        comment: form.value.comment,
+        side: this.commentSide,
+        dateTime: new Date(),
+      }
+      this.commentService.create(comment).subscribe(() => {
+        this.getAllDebate();
       });
     }
   }
 
   sortByScore(list: Array<any>) {
     list.sort(function (a, b) {
-      var key1 = a.score;
-      var key2 = b.score;
+      var key1 = a.interest_score;
+      var key2 = b.interest_score;
   
       if (key1 > key2) {
           return -1;
@@ -241,6 +235,24 @@ export class DebateComponent implements OnInit {
        binary += String.fromCharCode( bytes[ i ] );
     }
     return window.btoa( binary );
+  }
+
+  getVoteResult() {
+    this.voteService.getFinishedVote().subscribe(data => {
+      if (data.data.length < 3) {
+        this.voteEnded = data.data;
+      } else {
+        this.voteEnded = [ data.data[0], data.data[1], data.data[2]];
+      }
+      this.voteEnded.forEach((vote, index) => {
+        this.widthBar[index].for = this.percentage(vote.for_vote, vote.against_vote).toString() + '%';
+        this.widthBar[index].against = this.percentage(vote.for_vote, vote.against_vote).toString() + '%';
+      });
+    })
+  }
+
+  percentage(num: number, den: number) {
+    return ((num / (den + num) * 100).toFixed(2));
   }
 }
 

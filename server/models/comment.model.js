@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 
-var debateSchema = mongoose.Schema({
+var commentSchema = mongoose.Schema({
+    debate_id: {
+        type: String,
+        required: true
+    },
     user_id: {
         type: String,
         required: true
@@ -22,13 +26,13 @@ var debateSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    message: {
+    comment: {
         type: String,
         required: true
     },
-    comment: {
-        type: Array,
-        required: true,
+    side: {
+        type: Boolean,
+        required: true
     },
     dateTime: {
         type: Date,
@@ -36,8 +40,8 @@ var debateSchema = mongoose.Schema({
     }
 });
 
-var Debate = module.exports = mongoose.model('debate', debateSchema);
+var Comment = module.exports = mongoose.model('comment', commentSchema);
 
 module.exports.get = function (callback, limit) {
-    Debate.find(callback).limit(limit);
+    Comment.find(callback).limit(limit);
 }

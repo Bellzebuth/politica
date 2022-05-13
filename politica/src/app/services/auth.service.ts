@@ -38,4 +38,8 @@ export class AuthService {
   getUser(id: any): Observable<any> {
     return this.http.get(baseUrl+ id, httpOptions);
   }
+
+  update(id: any, data: IUser): Observable<any> {
+    return this.http.put(`${baseUrl}${id}`, data);
+  }
 }

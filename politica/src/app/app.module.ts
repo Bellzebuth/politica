@@ -38,6 +38,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ImageModule } from 'primeng/image';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 
 @NgModule({
   declarations: [
@@ -77,7 +79,8 @@ import { ImageModule } from 'primeng/image';
     ProgressBarModule,
     InputTextareaModule,
     ToggleButtonModule,
-    ImageModule
+    ImageModule,
+    ConfirmDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

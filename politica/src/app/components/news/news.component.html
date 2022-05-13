@@ -1,4 +1,5 @@
 <app-menu></app-menu>
+<p-toast></p-toast>
 <div class="debate-input">
 </div>
 <div class="content p-component">
@@ -22,7 +23,7 @@
         </div>
     </div>
     <div class="debate-feed" *ngIf="isLoggedIn">
-        <div class="p-card card-container card-display" *ngIf="!profil.journalist">
+        <div class="p-card card-container card-display-add" *ngIf="profil.journalist">
             <div class="modify-width" style="width: 30%;">
                 <p-image [src]="sanitize('data:image/jpg;base64, ' + imagePreview)" *ngIf="!(currentFile === undefined)" alt="Image" width="100%" [preview]="true"></p-image>
                 <p-image src="../../../assets/imageVide.png" *ngIf="currentFile === undefined" alt="Image" width="100%" [preview]="true"></p-image>
@@ -63,7 +64,9 @@
             </div>
         </div>
         <div class="p-card card-display" *ngFor="let news of newsList" (click)="showDialog(news._id)">
-            <img class="p-avatar p-avatar-lg news-image" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + news.image)" />
+            <div class="news-image">
+                <img class="p-avatar p-avatar-lg" style="width: 100%; height: 100%;" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + news.image)" />
+            </div>
             <div class="card-content" style="--lh: 1.2rem; line-height: var(--lh);">
                 <div class="p-card-title" style="word-wrap: break-word; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; min-height: 30px;"> {{ news.title }} </div>
                 <div class="p-card-subtitle"></div>

@@ -23,24 +23,21 @@
             </div>
         </div>
     </div>
-    <div class="debate-feed">
+    <div class="debate-feed" *ngIf="isLoggedIn">
         <div class="p-card card-container" *ngFor="let debate of debateList">
-            <div class="p-card card-display" [routerLink]="['/debate-details', debate._id]">
+            <div class="p-card card-display">
             <img class="p-avatar p-avatar-lg" *ngIf="!(debate.user.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + debate.user.profilPicture)"/>
             <img class="p-avatar p-avatar-lg" *ngIf="debate.user.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
                 <div class="card-content">
-                    <div class="p-card-title" style="color:black;"> {{ debate.user.username }} </div>
-                    <div class="p-card-subtitle"></div>
-                    <div class="p-card-content" style="color:black;"> {{ debate.message }} </div>
+                    <div class="p-card-title" style="color:black;"  [routerLink]="['/debate-details', debate._id]"> {{ debate.user.username }} </div>
+                    <div class="p-card-subtitle"  [routerLink]="['/debate-details', debate._id]"></div>
+                    <div class="p-card-content" style="color:black;"  [routerLink]="['/debate-details', debate._id]"> {{ debate.message }} </div>
                     <div class="p-card-footer footer-debate-display"> 
-                        <button pButton pRipple type="button" class="p-button-text"><span>{{ debate.comment.length }} <i class="pi pi-comments"></i></span></button>
-                        <button pButton pRipple type="button" class="p-button p-button-text" (click)="interest(debate._id)">
+                        <button pButton pRipple type="button" class="p-button-text" [routerLink]="['/debate-details', debate._id]"><span>{{ debate.comment.length }} <i class="pi pi-comments"></i></span></button>
+                        <button pButton pRipple type="button" class="p-button p-button-text" (click)="likeDebate(debate._id, debate)">
                             <span>
                                 {{ debate.interest_score }}
-                                <i ngClass= "pi pi-star-fill"></i>
-                                <!--
-                                <i [ngClass]= "debate.liked ? 'pi pi-star-fill' : 'pi pi-star'"></i>
-                                -->
+                                <i [ngClass]= "isDebateLiked(debate._id) ? 'pi pi-star-fill' : 'pi pi-star'"></i>
                             </span>
                         </button>
                     </div>
@@ -56,13 +53,10 @@
                                 <div class="ml-2" style="width: 87%; word-wrap: break-word; max-width: 100%;">
                                     <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ comment.user.username }} </div>
                                     <div style="margin-left: 5%; color: black;"> {{ comment.comment }} </div>
-                                    <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="onLike(debate._id, comment.id)">
+                                    <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="like(comment._id, comment)">
                                         <span>
-                                            {{ comment.score }}
-                                            <i ngClass= "pi pi-heart-fill"></i>
-                                            <!--
-                                            <i [ngClass]= "comment.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
-                                            -->
+                                            {{ comment.interest_score }}
+                                            <i [ngClass]= "isCommentLiked(comment._id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
                                         </span>
                                     </button>
                                 </div>
@@ -71,7 +65,7 @@
                     </ng-template>
                 </p-messages>
             </div>
-            <a class="debate-comments" *ngIf="debate.comment.length > 2" style="text-decoration: underline;" routerLink="/debate-details">Voir plus de commentaires ...</a>
+            <a class="debate-comments" *ngIf="debate.comment.length > 2" style="text-decoration: underline;" [routerLink]="['/debate-details', debate._id]">Voir plus de commentaires ...</a>
             <div class="p-card" style="display: flex; margin-top: 1%;" >
                 <form #form="ngForm" (submit)="submit(form, debate._id)" style="width: 100%; display: flex; justify-content: space-between;">
                     <label for="comment" style="flex: 4;">
@@ -108,14 +102,19 @@
             </div>
         </div>
     </div>
-    <div class="news">
-        <div class="p-card" *ngFor="let news of mainNews">
-            <img class="p-avatar news-image" _ngcontent-qqs-c76="" [src]="news.image" />
-            <div class="card-content">
-                <div class="p-card-header"> {{ news.title }} </div>
-                <div class="p-card-subheader"> {{ news.content }} </div>
-                <div class="p-card-footer"> {{ news.source }} </div>
-                <div class="p-card-footer"> {{ news.dateTime }} </div>
+    <div class="news" style="width: 20%;" *ngIf="isLoggedIn">
+        <div class="p-card" *ngFor="let vote of voteEnded; let index = index;" style="width: 100%;">
+            <div style="margin:2%">
+                <div class="p-card-header" style="font-size: x-large; font-weight: 700;"> {{ vote.label }} </div>
+                <div class="p-card-subheader" [id]="vote._id" style="display: flex; flex-direction: row; padding: 1%;">
+                    <div [style.width]="widthBar[index].for" class="green">
+                        <span style="margin-left: 5%;">{{ percentage(vote.for_vote, vote.against_vote) }} %</span>
+                    </div>
+                    <div [style.width]="widthBar[index].against" class="red">
+                        <span style="margin-right: 5%;">{{ percentage(vote.against_vote, vote.for_vote) }} %</span>
+                    </div>
+                </div>
+                <div class="p-card-footer" style="display: flex; justify-content: flex-end;"> {{ formatDate(vote.closeDate) }} </div>
             </div>
         </div>
     </div>

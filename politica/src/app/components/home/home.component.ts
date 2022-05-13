@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
 import {Router} from "@angular/router";
-import { DbUser } from 'src/app/services/model/db-user';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { Observable } from 'rxjs';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { ImageService } from 'src/app/services/image.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -53,6 +53,7 @@ export class HomeComponent implements OnInit {
     private readonly router: Router,
     private tokenStorage: TokenStorageService,
     private imageService: ImageService,
+    private sanitizer: DomSanitizer,
     ) { 
     this.genreOptions = [ 'Homme', 'Femme'];
     this.partiOptions = [ 'Sans parti', 'Indécis', 'Reconquête', 'RN', 'LR', 'LREM', 'MoDem', 'PS', 'EELV', 'LFI', 'PCF'];
@@ -82,11 +83,14 @@ export class HomeComponent implements OnInit {
       next: data => {
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data);
-
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-        this.router.navigate(['/profil']);
+        if (this.tokenStorage.getUser().roles == 'ROLE_ADMIN'){
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/debate']);
+        }
       },
       error: err => {
         this.errorMessage = err.error.message;
@@ -96,7 +100,6 @@ export class HomeComponent implements OnInit {
   }
 
   register() {
-    console.log(this.currentFile?.name);
     const user = {
       username: this.username,
       lastName: this.lastname,
@@ -106,7 +109,7 @@ export class HomeComponent implements OnInit {
       password: this.password,
       politicalParti: this.politicalParti,
       age: this.age,
-      profilPicture: this.currentFile?.name ? this.currentFile?.name : "",
+      profilPicture: "",
       debate_liked_id: [],
       comment_liked: [],
       votedList: [],
@@ -118,17 +121,34 @@ export class HomeComponent implements OnInit {
       shareApp: true,
       darkMode: false,
     }
-    this.authService.register(user).subscribe({
-      next: data => {
-        this.isSuccessful = true;
-        this.isSignUpFailed = false;
-        this.login();
-      },
-      error: err => {
-        this.errorMessage = err.error.message;
-        this.isSignUpFailed = true;
-      }
-    });
+    this.imageService.get(this.currentFile?.name).subscribe(image => {
+      user.profilPicture = this.arrayBufferToBase64(image);
+      this.authService.register(user).subscribe({
+        next: data => {
+          this.isSuccessful = true;
+          this.isSignUpFailed = false;
+          this.login();
+        },
+        error: err => {
+          this.errorMessage = err.error.message;
+          this.isSignUpFailed = true;
+        }
+      });
+    })
+  }
+
+  sanitize( url:string ) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }  
+
+  arrayBufferToBase64( buffer: Iterable<number> ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+       binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
   }
 
   checkEmail(email: string) {

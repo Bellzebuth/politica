@@ -1,0 +1,56 @@
+<app-menu-admin></app-menu-admin>
+<p-toast></p-toast>
+<div class="content p-component">
+    <div class="profile">
+        <div class="addVote">
+            <span class="add-vote-title"> Ajouter un vote </span>
+            <form #form="ngForm" (submit)="submit(form)" style="width: 100">
+                <div style="display: flex; flex-direction: column;">
+                    <label for="vote" style="margin: 2%;">
+                        <input
+                        type="text"
+                        ngModel
+                        name="vote"
+                        id="vote"
+                        class="p-inputtext-sm input-comments"
+                        pInputText
+                        maxlength="255"
+                        placeholder="Ajouter un vote ...">
+                    </label>
+                    <label for="closeDate" style="margin: 2%;">
+                        <p-calendar name="closeDate" [(ngModel)]="closeDate" placeholder="Date de clotûre des votes"></p-calendar>
+                    </label>
+                    <div style="width: 100%; display: flex; justify-content: center;">
+                    <button 
+                        pButton
+                        pRipple
+                        type="submit"
+                        label="Publier"
+                        class="p-button p-button-politica p-button-sm"
+                        style="width: 10%; min-width: 75px;"
+                        >
+                    </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="debate-feed">
+        <div class="p-card card-container" *ngFor="let user of userList">
+            <div class="p-card card-display">
+                <div class="card-content">
+                    <div class="p-card-title" style="color:black;"> {{ user.username }} </div>
+                    <div class="p-card-subtitle"></div>
+                    <div class="p-card-content" style="color:black;"> {{ user.firstName }} - {{ user.lastName }} </div>
+                    <div class="p-card-footer footer-user-display"> 
+                            <span>
+                                {{ user.politicalParti }}
+                            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="news">
+    </div>
+</div>

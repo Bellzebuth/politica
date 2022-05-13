@@ -16,4 +16,5 @@ module.exports = function(app) {
     app.patch("/api/debate", debateController.update);
     app.put("/api/debate/:debate_id", debateController.update);
     app.delete("/api/debate/:debate_id", debateController.delete);
+    app.get("/api/debate/user/:user_id", debateController.getUserDebate);
   };

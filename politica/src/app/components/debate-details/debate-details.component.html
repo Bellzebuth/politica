@@ -21,8 +21,8 @@
             </div>
         </div>
     </div>
-    <div class="debate-feed">
-        <div class="p-card card-container">
+    <div class="debate-feed" *ngIf="isLoggedIn">
+        <div class="p-card card-container" *ngIf="debate !== undefined">
             <div class="p-card">
                 <div class="card-display">
                     <img class="p-avatar p-avatar-lg" *ngIf="!(debate.user.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + debate.user.profilPicture)"/>
@@ -33,13 +33,10 @@
                     <div class="p-card-content"> {{ debate.message }} </div>
                     <div class="p-card-footer footer-debate-display"> 
                         <button pButton pRipple type="button" class="p-button-text"><span>{{ debate.comment.length }} <i class="pi pi-comments"></i></span></button>
-                        <button pButton pRipple type="button" class="p-button p-button-text" (click)="interest(debate._id)">
+                        <button pButton pRipple type="button" class="p-button p-button-text" (click)="likeDebate(debate._id, debate)">
                             <span>
                                 {{ debate.interest_score }}
-                                <i ngClass= "pi pi-star-fill"></i>
-                                <!--
-                                <i [ngClass]= "debate.liked ? 'pi pi-star-fill' : 'pi pi-star'"></i>
-                                -->
+                                <i [ngClass]= "isDebateLiked(debate._id) ? 'pi pi-star-fill' : 'pi pi-star'"></i>
                             </span>
                         </button>
                     </div>
@@ -90,13 +87,10 @@
                                 <div class="ml-2" style="width: 87%; word-wrap: break-word; max-width: 100%;">
                                     <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ comment.user.username }} </div>
                                     <div style="margin-left: 5%; color: black;"> {{ comment.comment }} </div>
-                                    <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="onLike(debate._id, comment.id)">
+                                    <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="like(comment._id, comment)">
                                         <span>
-                                            {{ comment.score }}
-                                            <i ngClass= "pi pi-heart-fill"></i>
-                                            <!--
-                                            <i [ngClass]= "comment.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
-                                            -->
+                                            {{ comment.interest_score }}
+                                            <i [ngClass]= "isCommentLiked(comment._id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
                                         </span>
                                     </button>
                                 </div>

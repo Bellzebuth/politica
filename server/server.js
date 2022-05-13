@@ -12,11 +12,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.urlencoded({ extended: true }, {limit: '50mb'}));
 const db = require("./models");
 const Role = db.role;
 
@@ -45,6 +44,7 @@ require("./routes/debate.routes")(app);
 require("./routes/images.routes")(app);
 require("./routes/news.routes")(app);
 require("./routes/vote.routes")(app);
+require("./routes/comment.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

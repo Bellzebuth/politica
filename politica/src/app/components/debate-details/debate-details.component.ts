@@ -8,6 +8,8 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgForm } from '@angular/forms';
 import { ImageService } from 'src/app/services/image.service';
+import { CommentService } from 'src/app/services/comment.service';
+import { IComment } from 'src/app/interfaces/comment';
 
 @Component({
   selector: 'app-debate-details',
@@ -17,18 +19,21 @@ import { ImageService } from 'src/app/services/image.service';
 export class DebateDetailsComponent implements OnInit {
 
   debate!: IDebate;
+
   profil: any;
-  mainNews: Array<any> = [];
+
   commentSide: Boolean = false;
+
+  mainNews: Array<any> = [];
+  
   isLoggedIn = false;
-  debateList: any;
 
   constructor(private authService: AuthService,
     private tokenStorageService: TokenStorageService,
     private debateService: DebateService,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private imageService: ImageService,
+    private commentService: CommentService,
   ) {
     
    }
@@ -36,18 +41,12 @@ export class DebateDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.getUser(this.tokenStorageService.getUser().id);
     this.getDebate();
-    this.isLiked();
   }
 
   getUser(userId: string) {
     this.authService.getUser(userId).subscribe((data) => {
-      this.imageService.get(data.data.profilPicture).subscribe( image => {
-        data.data.profilPicture = this.arrayBufferToBase64(image);
-        this.profil = data.data;
-        this.isLoggedIn = !!this.tokenStorageService.getToken();
-      }, error => {
-        console.log(error);
-      })
+      this.profil = data.data;
+      this.isLoggedIn = !!this.tokenStorageService.getToken();
     }, error => {
       console.log(error);
     });
@@ -58,14 +57,10 @@ export class DebateDetailsComponent implements OnInit {
       this.route.data.subscribe(async () => {
         this.debateService.get(params['_id']).subscribe(data => {
           this.debate = data.data;
-          this.imageService.get(this.debate.user.profilPicture).subscribe((image: Iterable<number>) => {
-            this.debate.user.profilPicture = this.arrayBufferToBase64(image);
-          });
-          this.debate.comment.forEach((comment, indexComment) => {
-            this.imageService.get(comment.user.profilPicture).subscribe((image: Iterable<number>) => {
-              this.debate.comment[indexComment].user.profilPicture = this.arrayBufferToBase64(image);
-            });
-          });
+          this.commentService.getCommentDebate(this.debate._id).subscribe(data => {
+            this.debate.comment = data.data;
+            this.sortByScore(this.debate.comment);
+          })
           },
           error => {
             console.log(error);
@@ -86,55 +81,100 @@ export class DebateDetailsComponent implements OnInit {
     return num.toString().padStart(2, '0');
   }
 
-  isLiked() {
-    //TODO verifier quels commentaires ont été likés
+  sortByDate(list: Array<any>) {
+    list.sort(function (a, b) {
+      var key1 = a.dateTime;
+      var key2 = b.dateTime;
+  
+      if (key1 > key2) {
+          return -1;
+      } else if (key1 == key2) {
+          return 0;
+      } else {
+          return 1;
+      }
+    });
   }
 
-  interest(debate_id: String){
-    //TODO Modifier liste debat_liked de l'utilisateur et ajouter un au score du débat
-    
+  isDebateLiked(debate_id: string) {
+    if (this.profil.debate_liked_id.includes(debate_id)){
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  onLike(debate_id: String, comment_id: String){
-    //TODO Vérifier si c'est un like ou un dislike
+  likeDebate(debate_id: string, debate: IDebate){
+    if (this.isDebateLiked(debate_id)) {
+      this.profil.debate_liked_id.splice(this.profil.debate_liked_id.indexOf(debate_id), 1);
+      debate.interest_score -= 1;
+      debate.comment = [];
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.debateService.update(debate_id, debate).subscribe(data => {
+        this.getDebate();
+      });
+    } else {
+      this.profil.debate_liked_id.push(debate_id);
+      debate.interest_score += 1;
+      debate.comment = [];
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.debateService.update(debate_id, debate).subscribe(data => {
+        this.getDebate();
+      });
+    }
   }
 
-  like(debate_id: String, comment_id: String){
-    //TODO liker le commentaire
+  isCommentLiked(comment_id: string){
+    if (this.profil.comment_liked.includes(comment_id)){
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  dislike(debate_id: String, comment_id: String){
-    //TODO disliker le commentaire
+  like(comment_id: string, comment: IComment){
+    if (this.profil.comment_liked.includes(comment_id)) {
+      this.profil.comment_liked.splice(this.profil.comment_liked.indexOf(comment_id), 1);
+      comment.interest_score -= 1;
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.commentService.update(comment_id, comment).subscribe(() => {
+        this.getDebate();
+      });
+    } else {
+      this.profil.comment_liked.push(comment_id);
+      comment.interest_score += 1;
+      this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
+      this.commentService.update(comment_id, comment).subscribe(() => {
+        this.getDebate();
+      });
+    }
   }
 
   submit(form: NgForm, debate_id: String) {
     if (form.value.comment.length != 0){
-      this.debateService.get(debate_id).subscribe((data) => {
-        data.data.comment.push({
-          user: {
-            id: this.tokenStorageService.getUser().id,
-            username: this.profil.username,
-            profilPicture: this.profil.profilPicture,
-          },
-          comment: form.value.comment,
-          side: this.commentSide,
-          score: 0,
-          dateTime: new Date(),
-        });
-        this.sortByScore(data.data.comment);
-        this.debateService.update(data.data._id, data.data).subscribe((data: any) => {
-          this.getDebate();
-        })
-      }, (error: any) => {
-        console.log(error);
+      const comment = {
+        debate_id: debate_id,
+        user_id: this.tokenStorageService.getUser().id,
+        user: {
+          username: this.profil.username,
+          profilPicture: this.profil.profilPicture,
+        },
+        politicalParti: this.profil.politicalParti,
+        interest_score: 1,
+        comment: form.value.comment,
+        side: this.commentSide,
+        dateTime: new Date(),
+      }
+      this.commentService.create(comment).subscribe(() => {
+        this.getDebate();
       });
     }
   }
 
   sortByScore(list: Array<any>) {
     list.sort(function (a, b) {
-      var key1 = a.score;
-      var key2 = b.score;
+      var key1 = a.interest_score;
+      var key2 = b.interest_score;
   
       if (key1 > key2) {
           return -1;

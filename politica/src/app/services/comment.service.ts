@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IDebate } from '../interfaces/debate';
+import { IComment } from '../interfaces/comment';
 
-const baseUrl = 'http://localhost:8080/api/debate';
+const baseUrl = 'http://localhost:8080/api/comment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DebateService {
+export class CommentService {
 
   constructor(private http: HttpClient) { }
 
@@ -24,7 +24,7 @@ export class DebateService {
     return this.http.post(baseUrl, data);
   }
 
-  update(id: any, data: IDebate): Observable<any> {
+  update(id: any, data: IComment): Observable<any> {
     return this.http.put(`${baseUrl}/${id}`, data);
   }
 
@@ -32,7 +32,7 @@ export class DebateService {
     return this.http.delete(`${baseUrl}/${id}`);
   }
 
-  getUserDebate(user_id: any): Observable<any> {
-    return this.http.get(`${baseUrl}/user/${user_id}`);
+  getCommentDebate(debate_id: any): Observable<any> {
+    return this.http.get(`${baseUrl}/debate/${debate_id}`);
   }
 }

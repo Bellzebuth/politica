@@ -79,12 +79,12 @@
 }
 
 .profil-information {
-  width: 40%;
+  width: 150px;
 }
 
 .pdp {
-  width: 30%;
-  height: 100%;
+  width: 150px;
+  height: 150px;
 }
 
 .stick-left {
@@ -97,4 +97,40 @@
 .data-controller {
   display: flex;
   justify-content: space-between;
+}
+
+.footer-debate-display {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.logout {
+  position: absolute;
+  bottom: 2%;
+  right: 1%;
+}
+
+@media screen and (width < 950px) {
+  .user-info {
+    width: 90%;
+  }
+}
+
+@media screen and (width < 450px) {
+  .pdp {
+    width: 100px;
+    height: 100px;
+  }
+
+  .data-controller {
+    font-size: smaller;
+    margin-top: 5%;
+  }
+}
+
+@media screen and (width < 350px) {
+  .pdp {
+    width: 50px;
+    height: 50px;
+  }
 }
