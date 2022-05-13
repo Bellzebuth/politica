@@ -108,13 +108,11 @@ export class DebateDetailsComponent implements OnInit {
     if (this.isDebateLiked(debate_id)) {
       this.profil.debate_liked_id.splice(this.profil.debate_liked_id.indexOf(debate_id), 1);
       debate.interest_score -= 1;
-      debate.comment = [];
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
       this.debateService.update(debate_id, debate).subscribe();
     } else {
       this.profil.debate_liked_id.push(debate_id);
       debate.interest_score += 1;
-      debate.comment = [];
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
       this.debateService.update(debate_id, debate).subscribe();
     }
