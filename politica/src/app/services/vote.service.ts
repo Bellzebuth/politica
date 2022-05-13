@@ -34,4 +34,8 @@ export class VoteService {
   getFinishedVote(): Observable<any> {
     return this.http.get(`${baseUrl}d`);
   }
+
+  getActiveVote(): Observable<any> {
+    return this.http.get(baseUrl + 'active');
+  }
 }

@@ -45,7 +45,7 @@ export class VoteComponent implements OnInit {
 
   getVote() {
     this.voteList = [];
-    this.voteService.getAll().subscribe((data) => {
+    this.voteService.getActiveVote().subscribe((data) => {
       data.data.forEach((vote: IVote) => {
         if (!this.profil.votedList.includes(vote._id)){
           this.voteList.push(vote);
@@ -79,16 +79,6 @@ export class VoteComponent implements OnInit {
 
   sanitize( url:string ) {
     return this.sanitizer.bypassSecurityTrustUrl(url);
-  }  
-
-  arrayBufferToBase64( buffer: Iterable<number> ) {
-    var binary = '';
-    var bytes = new Uint8Array( buffer );
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-       binary += String.fromCharCode( bytes[ i ] );
-    }
-    return window.btoa( binary );
   }
 
   addSingle(bool: Boolean, message: string) {

@@ -110,17 +110,13 @@ export class DebateDetailsComponent implements OnInit {
       debate.interest_score -= 1;
       debate.comment = [];
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.debateService.update(debate_id, debate).subscribe(data => {
-        this.getDebate();
-      });
+      this.debateService.update(debate_id, debate).subscribe();
     } else {
       this.profil.debate_liked_id.push(debate_id);
       debate.interest_score += 1;
       debate.comment = [];
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.debateService.update(debate_id, debate).subscribe(data => {
-        this.getDebate();
-      });
+      this.debateService.update(debate_id, debate).subscribe();
     }
   }
 
@@ -137,16 +133,12 @@ export class DebateDetailsComponent implements OnInit {
       this.profil.comment_liked.splice(this.profil.comment_liked.indexOf(comment_id), 1);
       comment.interest_score -= 1;
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.commentService.update(comment_id, comment).subscribe(() => {
-        this.getDebate();
-      });
+      this.commentService.update(comment_id, comment).subscribe();
     } else {
       this.profil.comment_liked.push(comment_id);
       comment.interest_score += 1;
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.commentService.update(comment_id, comment).subscribe(() => {
-        this.getDebate();
-      });
+      this.commentService.update(comment_id, comment).subscribe();
     }
   }
 

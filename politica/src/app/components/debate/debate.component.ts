@@ -26,7 +26,7 @@ export class DebateComponent implements OnInit {
   newPost: String | undefined;
   commentSide: Boolean = false;
 
-  voteEnded: Array<any> = [];
+  voteEnded: Array<IVote> = [];
 
   isLoggedIn = false;
 
@@ -124,19 +124,13 @@ export class DebateComponent implements OnInit {
     if (this.isDebateLiked(debate_id)) {
       this.profil.debate_liked_id.splice(this.profil.debate_liked_id.indexOf(debate_id), 1);
       debate.interest_score -= 1;
-      debate.comment = [];
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.debateService.update(debate_id, debate).subscribe( data => {
-        this.getAllDebate();
-      });
+      this.debateService.update(debate_id, debate).subscribe();
     } else {
       this.profil.debate_liked_id.push(debate_id);
       debate.interest_score += 1;
-      debate.comment = [];
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.debateService.update(debate_id, debate).subscribe( data => {
-        this.getAllDebate();
-      });
+      this.debateService.update(debate_id, debate).subscribe();
     }
   }
 
@@ -149,19 +143,18 @@ export class DebateComponent implements OnInit {
   }
 
   like(comment_id: string, comment: IComment){
+    console.log(comment);
     if (this.profil.comment_liked.includes(comment_id)) {
       this.profil.comment_liked.splice(this.profil.comment_liked.indexOf(comment_id), 1);
       comment.interest_score -= 1;
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
       this.commentService.update(comment_id, comment).subscribe(() => {
-        this.getAllDebate();
       });
     } else {
       this.profil.comment_liked.push(comment_id);
       comment.interest_score += 1;
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
       this.commentService.update(comment_id, comment).subscribe(() => {
-        this.getAllDebate();
       });
     }
   }
@@ -197,7 +190,7 @@ export class DebateComponent implements OnInit {
           profilPicture: this.profil.profilPicture,
         },
         politicalParti: this.profil.politicalParti,
-        interest_score: 1,
+        interest_score: 0,
         comment: form.value.comment,
         side: this.commentSide,
         dateTime: new Date(),

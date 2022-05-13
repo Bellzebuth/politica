@@ -61,7 +61,7 @@ exports.update = function (req, res) {Debate.findById(req.params.debate_id, func
             debate.interest_score = req.body.interest_score;
             debate.politicalParti = req.body.politicalParti;
             debate.message = req.body.message;
-            debate.comment = req.body.comment;
+            debate.comment = [];
             debate.dateTime = req.body.dateTime;
         
             debate.save(function (err) {

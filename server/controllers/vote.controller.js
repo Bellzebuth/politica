@@ -103,3 +103,18 @@ exports.getFinishedVote = function (req, res) {
         }
     });
 };
+
+exports.getActiveVote = function (req, res) {
+    Vote.find({
+        closeDate : { $gte: new Date()}
+    }, function (err, vote) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json({
+                message: 'vote active loading...',
+                data: vote
+            });
+        }
+    });
+};
