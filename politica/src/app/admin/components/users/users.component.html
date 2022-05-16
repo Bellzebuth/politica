@@ -36,21 +36,33 @@
         </div>
     </div>
     <div class="debate-feed">
-        <div class="p-card card-container" *ngFor="let user of userList">
-            <div class="p-card card-display">
-                <div class="card-content">
-                    <div class="p-card-title" style="color:black;"> {{ user.username }} </div>
+        
+    </div>
+    <div class="profile">
+        <div class="addVote">
+            <div class="p-card card-display" *ngFor="let news of newsList" (click)="showDialog(news._id)">
+                <div class="news-image">
+                    <img class="p-avatar p-avatar-lg" style="width: 100%; height: 100%;" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + news.image)" />
+                </div>
+                <div class="card-content" style="--lh: 1.2rem; line-height: var(--lh);">
+                    <div class="p-card-title" style="word-wrap: break-word; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; min-height: 30px;"> {{ news.title }} </div>
                     <div class="p-card-subtitle"></div>
-                    <div class="p-card-content" style="color:black;"> {{ user.firstName }} - {{ user.lastName }} </div>
-                    <div class="p-card-footer footer-user-display"> 
-                            <span>
-                                {{ user.politicalParti }}
-                            </span>
+                    <div class="p-card-content news-content-space truncate-overflow"> {{ news.content }} </div>
+                    <div class="p-card-footer news-footer">
+                        <span class="font-footer" style="font-size: smaller;"> {{ news.source }} - {{ news.journalist.username }} - {{ formatDate(news.dateTime) }} </span>
                     </div>
+                    <button pButton pRipple (click)="deleteNews(news)" label="Delete" icon="pi pi-trash"></button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="news">
-    </div>
 </div>
+
+<p-dialog [header]="showNews.title" [modal]="true" [(visible)]="display" [dismissableMask]="true">
+    <p>
+        {{ showNews.content }}
+    </p>
+    <ng-template pTemplate="footer">
+        {{ showNews.source }} - {{ showNews.journalist.username }} - {{ formatDate(showNews.dateTime) }}
+    </ng-template>
+</p-dialog>

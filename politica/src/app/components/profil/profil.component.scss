@@ -110,6 +110,20 @@
   right: 1%;
 }
 
+.p-float-label {
+  margin: 2%;
+  margin-top: 30px;
+  max-width: 100%;
+}
+
+.p-inputtext {
+  max-width: 100%;
+}
+
+.p-dialog {
+  width: 100vw !important;
+}
+
 @media screen and (width < 950px) {
   .user-info {
     width: 90%;

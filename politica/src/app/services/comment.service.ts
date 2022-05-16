@@ -35,4 +35,8 @@ export class CommentService {
   getCommentDebate(debate_id: any): Observable<any> {
     return this.http.get(`${baseUrl}/debate/${debate_id}`);
   }
+
+  updateMany(user_id: any, data: any): Observable<any> {
+    return this.http.put(`${baseUrl}update/${user_id}`, data);
+  }
 }

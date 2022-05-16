@@ -5,7 +5,7 @@ const User = mongoose.model(
   new mongoose.Schema({
     username: {
         type: String,
-        required: true
+        required: true,
     },
     password: {
         type: String,
@@ -24,7 +24,7 @@ const User = mongoose.model(
     },
     email: {
       type: String,
-      required: true
+      required: true,
     },
     politicalParti: {
       type: String
@@ -67,6 +67,12 @@ const User = mongoose.model(
     shareApp: {
       type: Boolean,
       required: true
+    },
+    newsPosted: {
+      type: Number,
+    },
+    fakeNewsPosted: {
+      type: Number
     },
     darkMode: {
       type: Boolean,

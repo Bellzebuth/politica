@@ -18,6 +18,15 @@
   display: flex;
 }
 
+.news {
+  display: flex;
+  justify-content: center;
+}
+
+.last-news {
+  width: 80%;
+}
+
 .card-container {
   margin: 5%;
   margin-top: 0%;
@@ -42,7 +51,8 @@
 }
 
 .news-image {
-  width: 100%;
+  width: 250px;
+  height: 150px;
 }
 
 .debate-input {
@@ -61,8 +71,7 @@
 }
 
 .card-content {
-  padding: 0 0 0 2%;
-  width: 100%;
+  padding: 2%;
 }
 
 .p-card-title,
@@ -140,8 +149,59 @@
   justify-content: center;
 }
 
+:host ::ng-deep .p-dialog-resizable {
+  width: 90% !important;
+  max-width: 800px;
+}
+
+:host ::ng-deep .p-float-label {
+  margin-top: 4%;
+}
+
+@media screen and (width < 350px) {
+  .font-footer {
+    font-size: 5vw;
+  }
+
+  .p-card-title {
+    font-size: 20px;
+  }
+
+  .news-image {
+    width: 120px !important;
+    height: 75px !important;
+  }
+}
+
 @media screen and (width < 430px) {
   .input-width {
     width: 60%;
+  }
+
+  .news-content-space {
+    height: 25px;
+    font-size: 10px;
+  }
+}
+
+@media screen and (width < 560px) and (width > 430px) {
+  .news-content-space {
+    height: 40px;
+    font-size: 10px;
+  }
+}
+
+@media screen and (width < 650px) {
+  .card-display-add {
+    flex-direction: column;
+  }
+
+  .modify-width {
+    width: 100% !important;
+  }
+
+  .news-image {
+    width: 150px;
+    height: 115px;
   }
 }

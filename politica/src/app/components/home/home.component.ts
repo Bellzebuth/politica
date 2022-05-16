@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
 
   emailValid: boolean= true;
   passwordValid: boolean= true;
+  usernameValid: boolean = true;
 
   selectedFiles?: FileList;
   currentFile?: File;
@@ -85,6 +86,7 @@ export class HomeComponent implements OnInit {
         this.tokenStorage.saveUser(data);
         this.isLoginFailed = false;
         this.isLoggedIn = true;
+        this.addSingle(true, "Connexion réussi");
         this.roles = this.tokenStorage.getUser().roles;
         if (this.tokenStorage.getUser().roles == 'ROLE_ADMIN'){
           this.router.navigate(['/admin']);
@@ -95,8 +97,34 @@ export class HomeComponent implements OnInit {
       error: err => {
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
+        this.addSingle(false, "Identifiant ou mot de passe incorrect");
       }
     });
+  }
+
+  checkRegistration() {
+    this.authService.checkUsername(this.username).subscribe(email => {
+      if (email.message === 'user found') {
+        this.addSingle(false, "Le pseudo est déjà utilisé !");
+        this.usernameValid = false;
+      } else {
+        this.authService.checkEmail(this.email).subscribe(data => {
+          if (data.message === 'user found') {
+            console.log(data);
+            this.addSingle(false, "L'adresse mail est déjà utilisée !");
+            this.emailValid = false;
+          } else {
+            if (this.checkEmail(this.email)) {
+              this.register();
+            } else {
+              this.addSingle(false, "L'email n'est pas conforme !");
+              this.emailValid = false;
+            }
+          }
+        })
+      }
+    })
+    
   }
 
   register() {
@@ -116,12 +144,15 @@ export class HomeComponent implements OnInit {
       journalist: false,
       image: "",
       indicator: 5,
+      newsPosted: 0,
+      fakeNewsPosted: 0,
       shareOne: true,
       shareAll: true,
       shareApp: true,
       darkMode: false,
     }
-    this.imageService.get(this.currentFile?.name).subscribe(image => {
+    if (this.currentFile){
+      this.imageService.get(this.currentFile.name).subscribe(image => {
       user.profilPicture = this.arrayBufferToBase64(image);
       this.authService.register(user).subscribe({
         next: data => {
@@ -132,9 +163,24 @@ export class HomeComponent implements OnInit {
         error: err => {
           this.errorMessage = err.error.message;
           this.isSignUpFailed = true;
+          this.addSingle(false, "Inscription raté, veuillez réessayer plus tard");
         }
       });
     })
+    } else {
+      this.authService.register(user).subscribe({
+        next: data => {
+          this.isSuccessful = true;
+          this.isSignUpFailed = false;
+          this.login();
+        },
+        error: err => {
+          this.errorMessage = err.error.message;
+          this.isSignUpFailed = true;
+          this.addSingle(false, "Inscription raté, veuillez réessayer plus tard");
+        }
+      });
+    }
   }
 
   sanitize( url:string ) {
@@ -189,5 +235,17 @@ export class HomeComponent implements OnInit {
           });
       }
     }
+  }
+
+  addSingle(bool: Boolean, message: string) {
+    if (bool) {
+      this.messageService.add({severity:'success', summary:'Succès', detail:'Infos ajoutée avec succès'});
+    } else {
+      this.messageService.add({severity:'error', summary:'Message d\'erreur', detail: message});
+    }
+  }
+
+  clear() {
+    this.messageService.clear();
   }
 }

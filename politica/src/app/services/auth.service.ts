@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IUser } from '../interfaces/user';
 
 const baseUrl = 'http://localhost:8080/api/auth/';
+const baseUrlForgetters = 'http://localhost:8080/api/';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -41,5 +42,13 @@ export class AuthService {
 
   update(id: any, data: IUser): Observable<any> {
     return this.http.put(`${baseUrl}${id}`, data);
+  }
+
+  checkEmail(email: any): Observable<any> {
+    return this.http.get(`${baseUrlForgetters}email/${email}`, httpOptions);
+  }
+
+  checkUsername(username: any): Observable<any> {
+    return this.http.get(`${baseUrlForgetters}username/${username}`, httpOptions);
   }
 }

@@ -39,6 +39,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { BadgeModule } from 'primeng/badge';
 
 
 @NgModule({
@@ -81,6 +83,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ToggleButtonModule,
     ImageModule,
     ConfirmDialogModule,
+    DynamicDialogModule,
+    BadgeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

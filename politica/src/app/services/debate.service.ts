@@ -35,4 +35,8 @@ export class DebateService {
   getUserDebate(user_id: any): Observable<any> {
     return this.http.get(`${baseUrl}/user/${user_id}`);
   }
+
+  updateMany(user_id: any, data: any): Observable<any> {
+    return this.http.put(`${baseUrl}update/${user_id}`, data);
+  }
 }

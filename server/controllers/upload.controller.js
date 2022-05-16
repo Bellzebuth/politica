@@ -13,7 +13,6 @@ const mongoClient = new MongoClient(`mongodb://${db.HOST}:${db.PORT}`);
 const uploadFiles = async (req, res) => {
   try {
     await upload(req, res);
-    console.log(req.file);
 
     if (req.file == undefined) {
       return res.send({

@@ -16,10 +16,12 @@ import { DebateGuard } from '../app/security/debate.guard';
 import { RootGuard } from '../app/security/root.guard';
 import { NewsGuard } from '../app/security/news.guard';
 import { VoteGuard } from '../app/security/vote.guard';
+import { HomeGuard } from './security/home.guard';
+import { Error404Guard } from './security/error404.guard';
 
 
 const routes: Routes = [
-  {path:'', component: HomeComponent},
+  {path:'', component: HomeComponent, canActivate:[HomeGuard]},
   {
     path:'profil',
     component:ProfilComponent,
@@ -39,7 +41,7 @@ const routes: Routes = [
     canActivate:[RootGuard],
     canLoad:[RootGuard]
   },
-  {path:"**", component: Error404Component}
+  {path:"**", component: Error404Component, canActivate:[Error404Guard]}
 ];;
 
 @NgModule({

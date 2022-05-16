@@ -7,6 +7,8 @@ import { NgForm } from '@angular/forms';
 import { VoteService } from 'src/app/services/vote.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { MessageService } from 'primeng/api';
+import { NewsService } from 'src/app/services/news.service';
+import { INews } from 'src/app/interfaces/news';
 
 @Component({
   selector: 'app-users',
@@ -20,16 +22,33 @@ export class UsersComponent implements OnInit {
   closeDate!: Date;
   msgs: Array<any> = [];
   voteLabel: string = "";
+  newsList: Array<any> = [];
+  display: boolean = false;
+  showNews: INews = {
+    _id: "",
+    title: "",
+    content: "",
+    source: "",
+    image: "",
+    journalist: {
+      id: "",
+      username: ""
+    },
+    dateTime: new Date(),
+  };
 
   constructor(
     private authService: AuthService,
     private voteService: VoteService,
     private tokenStorage: TokenStorageService,
     private messageService: MessageService,
+    private newsService: NewsService,
+    private sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit(): void {
     this.getAllUsers();
+    this.getNews();
   }
 
   getAllUsers() {
@@ -71,5 +90,62 @@ export class UsersComponent implements OnInit {
 
   clear() {
     this.messageService.clear();
+  }
+
+  getNews() {
+    this.newsService.getAll().subscribe((data) => {
+      this.newsList = data.data;
+      this.formatDate(data.data[0].dateTime);
+      this.sortByDate(this.newsList);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  showDialog(id: any) {
+    this.newsService.get(id).subscribe((data) => {
+      this.showNews = data.data;
+      this.display = true;
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  sortByDate(list: Array<any>) {
+    list.sort(function (a, b) {
+      var key1 = a.dateTime;
+      var key2 = b.dateTime;
+  
+      if (key1 > key2) {
+          return -1;
+      } else if (key1 == key2) {
+          return 0;
+      } else {
+          return 1;
+      }
+    });
+  }
+
+  formatDate(date: any) {
+    const frenchDate = date.toString().split('T')[0].split('-');
+    return [
+      frenchDate[2],
+      frenchDate[1],
+      frenchDate[0]
+    ].join('/');
+  }
+
+  sanitize( url:string ) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
+  deleteNews(news: INews) {
+    this.newsList.splice(this.newsList.indexOf(news), 1);
+    this.authService.getUser(news.journalist.id).subscribe(data => {
+      data.data.fakeNewsPosted += 1;
+      data.data.indicator = 5 - Math.round((data.data.fakeNewsPosted / data.data.newsPosted) * 5);
+      this.authService.update(data.data._id, data.data).subscribe();
+      this.newsService.delete(news._id).subscribe();
+    })
   }
 }

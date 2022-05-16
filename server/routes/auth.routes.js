@@ -23,5 +23,7 @@ module.exports = function(app) {
   app.get("/api/auth/:user_id", controller.view);
   app.put("/api/auth/:user_id", controller.update);
   app.get("/api/auth/", controller.index);
-  app.delete("/api/auth/user/:user_id", controller.delete);
+  app.delete("/api/auth/:user_id", controller.delete);
+  app.get("/api/username/:username", controller.findByUsername);
+  app.get("/api/email/:email", controller.findByEmail);
 };

@@ -106,3 +106,22 @@ exports.getDebateComment = function(req, res) {
         }
     });
 }
+
+exports.updateMany = function (req, res) {
+    Comment.updateMany({
+        user_id: req.params.user_id
+    },{
+        $set: {
+            user: req.body.user
+        }
+    }, function (err, comment) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json({
+                status: "success",
+                data: comment
+            });
+        }
+    })
+};

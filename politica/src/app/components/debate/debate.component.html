@@ -6,19 +6,19 @@
 <div class="content p-component">
     <div class="profile">
         <div class="stick-left" *ngIf="isLoggedIn">
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
-            <div class="profil-information">
-                <div class="p-card-title"> {{ profil.username }} </div>
-                <div class="p-card-subtitle"></div>
-                <div class="p-card-content">
-                    {{ profil.politicalParti }}
-                </div>
-                <div class="p-card-content">
-                    {{ profil.genre }}
-                </div>
-                <div *ngIf="profil.journalist" class="p-card-footer">
-                    <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
+            <div class="p-card" [routerLink]="['/profil']">
+                <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
+                <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
+                <div class="profil-information">
+                    <div class="p-card-title"> {{ profil.username }} </div>
+                    <div class="p-card-subtitle"></div>
+                    <div class="p-card-content">
+                        {{ profil.politicalParti }}
+                    </div>
+                    <div *ngIf="profil.journalist" class="p-card-footer">
+                        <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
+                        <p-badge [value]="profil.indicator.toString()" severity="info" styleClass="mr-2"></p-badge>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,21 +43,59 @@
                     </div>
                 </div>
             </div>
-            <div *ngFor="let comment of getTheTwoFirstElement(debate.comment);">
-                <p-messages styleClass="p-message" [severity]="comment.side ? 'success' : 'error'">
+            <div>
+                <p-messages styleClass="p-message" [severity]="debate.comment[0].side ? 'success' : 'error'" *ngIf="debate.comment.length >= 1">
                     <ng-template pTemplate>
                         <div style="display: flex; justify-content: space-between; width: 100%;">
                             <div style="display: flex; flex-direction: row; width: 100%">
-                                <img class="p-avatar p-avatar-lg" *ngIf="!(comment.user.profilPicture === undefined)" width="55" height="55" [src]="sanitize('data:image/jpg;base64, ' + comment.user.profilPicture)"/>
-                                <img class="p-avatar p-avatar-lg" *ngIf="comment.user.profilPicture === undefined" width="55" height="55" src="../../../assets/PDP.webp"/>
+                                <img class="p-avatar p-avatar-lg" *ngIf="!(debate.comment[0].user.profilPicture === undefined)" width="55" height="55" [src]="sanitize('data:image/jpg;base64, ' + debate.comment[0].user.profilPicture)"/>
+                                <img class="p-avatar p-avatar-lg" *ngIf="debate.comment[0].user.profilPicture === undefined" width="55" height="55" src="../../../assets/PDP.webp"/>
                                 <div class="ml-2" style="width: 87%; word-wrap: break-word; max-width: 100%;">
-                                    <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ comment.user.username }} </div>
-                                    <div style="margin-left: 5%; color: black;"> {{ comment.comment }} </div>
-                                    <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="like(comment._id, comment)">
+                                    <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ debate.comment[0].user.username }} </div>
+                                    <div style="margin-left: 5%; color: black;"> {{ debate.comment[0].comment }} </div>
+                                    <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="like(debate.comment[0])">
                                         <span>
-                                            {{ comment.interest_score }}
-                                            <i [ngClass]= "isCommentLiked(comment._id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                                            {{ debate.comment[0].interest_score }}
+                                            <i [ngClass]= "isCommentLiked(debate.comment[0]._id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
                                         </span>
+                                    </button>
+                                    <button
+                                        pButton
+                                        pRipple
+                                        type="button"
+                                        icon="pi pi-times"
+                                        *ngIf="isMyComment(debate.comment[0])"
+                                        (click)="deleteComment(debate, debate.comment[0])"
+                                        class="p-button-rounded p-button-danger p-button-text">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-messages>
+                <p-messages styleClass="p-message" [severity]="debate.comment[1].side ? 'success' : 'error'" *ngIf="debate.comment.length >= 2">
+                    <ng-template pTemplate>
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                            <div style="display: flex; flex-direction: row; width: 100%">
+                                <img class="p-avatar p-avatar-lg" *ngIf="!(debate.comment[1].user.profilPicture === undefined)" width="55" height="55" [src]="sanitize('data:image/jpg;base64, ' + debate.comment[1].user.profilPicture)"/>
+                                <img class="p-avatar p-avatar-lg" *ngIf="debate.comment[1].user.profilPicture === undefined" width="55" height="55" src="../../../assets/PDP.webp"/>
+                                <div class="ml-2" style="width: 87%; word-wrap: break-word; max-width: 100%;">
+                                    <div style="margin-left: 5%; font-weight: 700; color:black;"> {{ debate.comment[1].user.username }} </div>
+                                    <div style="margin-left: 5%; color: black;"> {{ debate.comment[1].comment }} </div>
+                                    <button pButton pRipple type="button" class="p-button-rounded p-button-help p-button-text" (click)="like(debate.comment[1])">
+                                        <span>
+                                            {{ debate.comment[1].interest_score }}
+                                            <i [ngClass]= "isCommentLiked(debate.comment[1]._id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                                        </span>
+                                    </button>
+                                    <button
+                                        pButton
+                                        pRipple
+                                        type="button"
+                                        icon="pi pi-times"
+                                        *ngIf="isMyComment(debate.comment[1])"
+                                        (click)="deleteComment(debate, debate.comment[1])"
+                                        class="p-button-rounded p-button-danger p-button-text">
                                     </button>
                                 </div>
                             </div>

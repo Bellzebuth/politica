@@ -16,4 +16,5 @@ module.exports = function(app) {
     app.put("/api/comment/:comment_id", commentController.update);
     app.delete("/api/comment/:comment_id", commentController.delete);
     app.get("/api/comment/debate/:debate_id", commentController.getDebateComment);
+    app.put("/api/commentupdate/:user_id", commentController.updateMany);
   };

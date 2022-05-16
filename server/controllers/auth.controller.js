@@ -22,6 +22,8 @@ exports.signup = (req, res) => {
     shareOne: req.body.shareOne,
     shareAll: req.body.shareAll,
     shareApp: req.body.shareApp,
+    newsPosted: req.body.newsPosted,
+    fakeNewsPosted: req.body.fakeNewsPosted,
     darkMode: req.body.darkMode,
   });
 
@@ -30,7 +32,6 @@ exports.signup = (req, res) => {
       res.status(500).send({ message: err });
       return;
     }
-
     if (req.body.roles) {
       Role.find(
         {
@@ -59,14 +60,12 @@ exports.signup = (req, res) => {
           res.status(500).send({ message: err });
           return;
         }
-
         user.roles = [role._id];
         user.save(err => {
           if (err) {
             res.status(500).send({ message: err });
             return;
           }
-
           res.send({ message: "User was registered successfully!" });
         });
       });
@@ -102,11 +101,9 @@ exports.signin = (req, res) => {
       }
 
       var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
+        expiresIn: 86400
       });
-
       var authorities = [];
-
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
@@ -181,10 +178,12 @@ exports.update = function (req, res) {User.findById(req.params.user_id, function
     user.debate_liked_id = req.body.debate_liked_id ? req.body.debate_liked_id : user.debate_liked_id;
     user.comment_liked = req.body.comment_liked ? req.body.comment_liked : user.comment_liked; 
     user.votedList = req.body.votedList ? req.body.votedList : user.votedList;
-    user.shareOne=req.body.shareOne;
-    user.shareAll=req.body.shareAll;
-    user.shareApp=req.body.shareApp;
-    user.darkMode=req.body.darkMode;
+    user.shareOne = req.body.shareOne;
+    user.shareAll = req.body.shareAll;
+    user.shareApp = req.body.shareApp;
+    user.newsPosted = req.body.newsPosted;
+    user.fakeNewsPosted = req.body.fakeNewsPosted;
+    user.darkMode = req.body.darkMode;
 
     user.save(function (err) {
       if (err) {
@@ -198,4 +197,46 @@ exports.update = function (req, res) {User.findById(req.params.user_id, function
     });
   }
 });
+};
+
+exports.findByUsername = function (req, res) {
+  User.find({
+    username: req.params.username
+  }, function (err, user) {
+    if (err) {
+      res.send(err);
+    } else {
+      if (user.length === 0) {
+        res.json({
+          message: 'user not found',
+        })
+      } else {
+        res.json({
+          message: 'user found',
+          data: user
+        });
+      }
+    }
+  });
+};
+
+exports.findByEmail = function (req, res) {
+  User.find({
+    email: req.params.email
+  }, function (err, user) {
+    if (err) {
+      res.send(err);
+    } else {
+      if (user.length === 0) {
+        res.json({
+          message: 'user not found',
+        })
+      } else {
+        res.json({
+          message: 'user found',
+          data: user
+        });
+      }
+    }
+  });
 };

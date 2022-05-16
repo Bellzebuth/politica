@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { IDebate } from 'src/app/interfaces/debate';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { AuthService } from 'src/app/services/auth.service';
 import { DebateService } from 'src/app/services/debate.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgForm } from '@angular/forms';
-import { ImageService } from 'src/app/services/image.service';
 import { CommentService } from 'src/app/services/comment.service';
 import { IComment } from 'src/app/interfaces/comment';
 
@@ -25,7 +23,7 @@ export class DebateDetailsComponent implements OnInit {
   commentSide: Boolean = false;
 
   mainNews: Array<any> = [];
-  
+
   isLoggedIn = false;
 
   constructor(private authService: AuthService,
@@ -188,5 +186,19 @@ export class DebateDetailsComponent implements OnInit {
        binary += String.fromCharCode( bytes[ i ] );
     }
     return window.btoa( binary );
+  }
+
+  isMyComment(comment: IComment) {
+    if (comment.user_id === this.tokenStorageService.getUser().id){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  deleteComment(comment: IComment) {
+    this.commentService.delete(comment._id).subscribe();
+    this.debate.comment.splice(this.debate.comment.indexOf(comment), 1);
+    console.log(this.debate.comment);
   }
 }

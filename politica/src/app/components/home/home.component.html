@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="politica">
     <span class="title">Politica</span>
     <span class="subtitle">Débattons du futur</span>
@@ -13,9 +14,20 @@
 <p-dialog header="Inscription" [(visible)]="displayRegister" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
     [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
         <div class="register-form">
-            <span class="p-float-label">
+            <span class="p-float-label" *ngIf="usernameValid">
                 <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="username"> 
                 <label for="float-input">Pseudo</label>
+            </span>
+            <span class="p-float-label" *ngIf="!usernameValid">
+                    <input
+                    id="float-input-invalid"
+                    type="text"
+                    pInputText
+                    pTooltip="Essayer un autre pseudo"
+                    [(ngModel)]="username"
+                    class="ng-invalid ng-dirty"
+                    > 
+                    <label for="float-input-invalid">Pseudo</label>
             </span>
             <div class="input-group">
                 <span class="p-float-label">
@@ -47,8 +59,15 @@
                     <label for="float-input">Email</label>
                 </span>
                 <span class="p-float-label" *ngIf="!emailValid">
-                    <input id="float-input" type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
-                    <label for="float-input">Email</label>
+                    <input
+                    id="float-input-invalid"
+                    type="text"
+                    pInputText
+                    pTooltip="Essayer un autre email"
+                    [(ngModel)]="email"
+                    class="ng-invalid ng-dirty"
+                    > 
+                    <label for="float-input-invalid">Email</label>
                 </span>
                 <span class="p-float-label" *ngIf="passwordValid">
                     <p-password [(ngModel)]="password" pTooltip="Entrer votre mot de passe" [feedback]="false"></p-password>
@@ -60,46 +79,34 @@
                 </span>
             </div>
             <div class="form-group" style="margin: 2%;">
-                  <input
+                <input
                     type="file"
                     name="file"
                     id="input-files"
-                    class="form-control"
+                    class=""
+                    style="margin-top: 4%;"
                     [(ngModel)]="profilPicture"
                     (change)="selectFile($event)"
-                  />
-                  <button pButton pRipple class="p-button p-button-sm" [disabled]="!selectedFiles" (click)="upload()">
+                />
+                <button pButton pRipple class="p-button p-button-sm" [disabled]="!selectedFiles" (click)="upload()">
                     Upload
-                  </button>
-                  <div *ngIf="currentFile" class="progress my-3">
-                    <div
-                      class="progress-bar progress-bar-info progress-bar-striped"
-                      role="progressbar"
-                      attr.aria-valuenow="{{ progress }}"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                      [ngStyle]="{ width: progress + '%' }"
-                    >
-                      {{ progress }}%
-                    </div>
-                  </div>
-                  <div *ngIf="message" class="alert alert-danger" role="alert">{{ message }}</div>
-              </div>
-           
+                </button>
+                <div *ngIf="currentFile" class="progress my-3" style="margin-top: 1%;">
+                    <p-progressBar [value]="progress"></p-progressBar>
+                </div>
+                <div *ngIf="message" class="alert alert-danger" role="alert">{{ message }}</div>
+            </div>
             <span style="font-size: small; margin-top: 5%;">
-                * Seul les champs marqués d'une * sont obligatoire.
-            </span>
-            <span style="font-size: small;">
-                ** Seul votre pseudo et votre parti politique sera rendu public,
+                * Seul votre pseudo et votre parti politique sera rendu public,
                 tout informations pourra être utilisé lors de sondage sous réserve de votre accord.
             </span>
             <span style="font-size: small;">
-                *** La gestion de vos données vous appartient, vous pourrez la gérer dans la rubrique profil
+                ** La gestion de vos données vous appartient, vous pourrez la gérer dans la rubrique profil
             </span>
         </div>
         <ng-template pTemplate="footer">
         <p-button (click)="displayRegister=false" label="Annuler" styleClass="politica-color p-button-raised p-button-text"></p-button>
-        <p-button (click)="register()" label="S'incrire" styleClass="politica-color p-button-raised p-button-text"></p-button>
+        <p-button (click)="checkRegistration()" label="S'incrire" styleClass="politica-color p-button-raised p-button-text"></p-button>
         </ng-template>
 </p-dialog>
 
@@ -107,13 +114,13 @@
     [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
         <div class="register-form">
             <div class="input-connect-group">
-                <span class="p-float-label" *ngIf="emailValid">
+                <span class="p-float-label" *ngIf="!isLoginFailed">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="email"><i class="pi pi-user"></i></span>
                         <input type="text" [(ngModel)]="email" pInputText placeholder="Email">
                     </div>
                 </span>
-                <span class="p-float-label" *ngIf="!emailValid">
+                <span class="p-float-label" *ngIf="isLoginFailed">
                     <div class="field">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="email"><i class="pi pi-user"></i></span>
@@ -121,13 +128,13 @@
                     </div>
                     </div>
                 </span>
-                <span class="p-float-label" *ngIf="passwordValid">
+                <span class="p-float-label" *ngIf="!isLoginFailed">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="password" pTooltip="Entrer votre mot de passe"><i class="pi pi-unlock"></i></span>
                         <input type="password" [(ngModel)]="password" pInputText placeholder="Mot de passe">
                     </div>
                 </span>
-                <span class="p-float-label" *ngIf="!passwordValid">
+                <span class="p-float-label" *ngIf="isLoginFailed">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon" ngDefaultControl [(ngModel)]="password" pTooltip="Entrer votre mot de passe"><i class="pi pi-unlock"></i></span>
                         <input type="password" pInputText pTooltip="Mot de passe invalide" aria-describedby="email-help" class="ng-invalid ng-dirty" [(ngModel)]="password" pInputText placeholder="Mot de passe">

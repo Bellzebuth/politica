@@ -17,4 +17,5 @@ module.exports = function(app) {
     app.put("/api/debate/:debate_id", debateController.update);
     app.delete("/api/debate/:debate_id", debateController.delete);
     app.get("/api/debate/user/:user_id", debateController.getUserDebate);
+    app.put("/api/debateupdate/:user_id", debateController.updateMany);
   };

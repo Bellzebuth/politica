@@ -12,6 +12,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { InputTextModule } from 'primeng/inputtext';
     MessageModule,
     ToastModule,
     InputTextModule,
+    DialogModule
   ]
 })
 export class RootModule { }

@@ -142,19 +142,18 @@ export class DebateComponent implements OnInit {
     }
   }
 
-  like(comment_id: string, comment: IComment){
-    console.log(comment);
-    if (this.profil.comment_liked.includes(comment_id)) {
-      this.profil.comment_liked.splice(this.profil.comment_liked.indexOf(comment_id), 1);
+  like(comment: IComment){
+    if (this.profil.comment_liked.includes(comment._id)) {
+      this.profil.comment_liked.splice(this.profil.comment_liked.indexOf(comment._id), 1);
       comment.interest_score -= 1;
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.commentService.update(comment_id, comment).subscribe(() => {
+      this.commentService.update(comment._id, comment).subscribe(() => {
       });
     } else {
-      this.profil.comment_liked.push(comment_id);
+      this.profil.comment_liked.push(comment._id);
       comment.interest_score += 1;
       this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
-      this.commentService.update(comment_id, comment).subscribe(() => {
+      this.commentService.update(comment._id, comment).subscribe(() => {
       });
     }
   }
@@ -246,6 +245,19 @@ export class DebateComponent implements OnInit {
 
   percentage(num: number, den: number) {
     return ((num / (den + num) * 100).toFixed(2));
+  }
+
+  isMyComment(comment: IComment) {
+    if (comment.user_id === this.tokenStorageService.getUser().id){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  deleteComment(debate: IDebate, comment: IComment) {
+    this.commentService.delete(comment._id).subscribe();
+    debate.comment.splice(debate.comment.indexOf(comment), 1);
   }
 }
 

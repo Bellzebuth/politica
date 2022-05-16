@@ -74,6 +74,7 @@ export class NewsComponent implements OnInit {
     this.newsService.getAll().subscribe((data) => {
       this.newsList = data.data;
       this.formatDate(data.data[0].dateTime);
+      this.sortByDate(this.newsList);
     }, error => {
       console.log(error);
     });
@@ -138,6 +139,9 @@ export class NewsComponent implements OnInit {
           this.currentFile = undefined;
           this.getNews();
           this.addSingle(true, "");
+          this.profil.newsPosted += 1;
+          this.profil.indicator = 5 - Math.round((this.profil.fakeNewsPosted / this.profil.newsPosted) * 5);
+          this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
         }, error => {
           this.addSingle(false, "Une erreur s'est produite, veuillez réessayer plus tard");
           console.log(error);
@@ -204,6 +208,7 @@ export class NewsComponent implements OnInit {
       }
     }
   }
+  
   selectFile(event: any): void {
     this.selectedFiles = event.target.files;
   }

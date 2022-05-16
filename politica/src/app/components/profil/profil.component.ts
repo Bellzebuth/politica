@@ -10,6 +10,7 @@ import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/a
 import { Observable } from 'rxjs';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { CommentService } from 'src/app/services/comment.service';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-profil',
@@ -30,6 +31,13 @@ export class ProfilComponent implements OnInit {
   fileInfos?: Observable<any>;
   
   isLoggedIn = false;
+
+  genreOptions: Array<string> = [ 'Homme', 'Femme'];
+  partiOptions: Array<string> = [ 'Sans parti', 'Indécis', 'Reconquête', 'RN', 'LR', 'LREM', 'MoDem', 'PS', 'EELV', 'LFI', 'PCF'];
+
+  displayEdit = false;
+  usernameValid: boolean = true;
+  changeProfil!: IUser;
 
   darkModeOK = false;
 
@@ -53,6 +61,7 @@ export class ProfilComponent implements OnInit {
   getUser(userId: string) {
     this.authService.getUser(userId).subscribe((data) => {
         this.profil = data.data;
+        this.changeProfil = Object.assign({}, data.data);
         this.isLoggedIn = !!this.tokenStorageService.getToken();
       }, error => {
       console.log(error);
@@ -114,6 +123,51 @@ export class ProfilComponent implements OnInit {
     this.authService.update(this.tokenStorageService.getUser().id, this.profil).subscribe();
   }
 
+  updateNewUser() {
+    if (this.currentFile) {
+      this.imageService.get(this.currentFile?.name).subscribe(image => {
+        this.changeProfil.profilPicture = this.arrayBufferToBase64(image);
+        this.authService.update(this.tokenStorageService.getUser().id, this.changeProfil).subscribe(() => {
+          this.getUser(this.tokenStorageService.getUser().id);
+          this.displayEdit = false;
+          this.commentService.updateMany(this.tokenStorageService.getUser().id, {
+            user: {
+              username: this.changeProfil.username,
+              profilPicture: this.changeProfil.profilPicture,
+            }
+          }).subscribe();
+          this.debateService.updateMany(this.tokenStorageService.getUser().id, {
+            user: {
+              username: this.changeProfil.username,
+              profilPicture: this.changeProfil.profilPicture,
+            }
+          }).subscribe(() => {
+            this.getAllUserDebate();
+          });
+        });
+      })  
+    } else {
+      this.authService.update(this.tokenStorageService.getUser().id, this.changeProfil).subscribe(() => {
+        this.getUser(this.tokenStorageService.getUser().id);
+        this.displayEdit = false;
+        this.commentService.updateMany(this.tokenStorageService.getUser().id, {
+          user: {
+            username: this.changeProfil.username,
+            profilPicture: this.changeProfil.profilPicture,
+          }
+        }).subscribe();
+        this.debateService.updateMany(this.tokenStorageService.getUser().id, {
+          user: {
+            username: this.changeProfil.username,
+            profilPicture: this.changeProfil.profilPicture,
+          }
+        }).subscribe(() => {
+          this.getAllUserDebate();
+        });
+      });
+    }
+  }
+
   confirm() {
     this.confirmationService.confirm({
         message: 'Êtes-vous sûr de vouloir devenir journaliste ?',
@@ -129,6 +183,10 @@ export class ProfilComponent implements OnInit {
     });
   }
 
+  showEditDialog() {
+    this.displayEdit = true;
+  }
+
   upload(): void {
     this.progress = 0;
     if (this.selectedFiles) {
@@ -142,6 +200,7 @@ export class ProfilComponent implements OnInit {
             } else if (event instanceof HttpResponse) {
               this.fileInfos = this.imageService.getFiles();
               this.profil.journalist = true;
+              
               this.updateUser();
             }
           },
@@ -158,9 +217,21 @@ export class ProfilComponent implements OnInit {
       }
     }
   }
+
   selectFile(event: any): void {
     this.selectedFiles = event.target.files;
   }
+
+  arrayBufferToBase64( buffer: Iterable<number> ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+       binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+  }
+
 
   logout(): void {
     this.tokenStorageService.signOut();

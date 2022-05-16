@@ -6,28 +6,19 @@ import { TokenStorageService } from '../services/token-storage.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RootGuard implements CanActivate, CanLoad {
-  private roles: string[] = [];
-
+export class HomeGuard implements CanActivate, CanLoad {
   constructor(
     private tokenStorageService: TokenStorageService
   ) {}
-  
+
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       if (!this.tokenStorageService.getToken()) {
-        window.location.replace('/');
-        return false;
+        return true;
       } else {
-        const user = this.tokenStorageService.getUser();
-        this.roles = user.roles;
-        if (this.roles.includes('ROLE_ADMIN')) {
-          return true;
-        } else {
-          window.location.replace('/');
-          return false;
-        }
+        this.tokenStorageService.signOut();
+        return true;
       }
   }
   canLoad(

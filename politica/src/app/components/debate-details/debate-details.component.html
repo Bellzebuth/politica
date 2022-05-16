@@ -4,19 +4,19 @@
 <div class="content p-component">
     <div class="profile">
         <div class="stick-left" *ngIf="isLoggedIn">
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
-            <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
-            <div class="profil-information">
-                <div class="p-card-title"> {{ profil.username }} </div>
-                <div class="p-card-subtitle"></div>
-                <div class="p-card-content">
-                    {{ profil.politicalParti }}
-                </div>
-                <div class="p-card-content">
-                    {{ profil.genre }}
-                </div>
-                <div *ngIf="profil.journalist" class="p-card-footer">
-                    <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
+            <div class="p-card" [routerLink]="['/profil']">
+                <img class="p-avatar p-avatar-lg pdp" *ngIf="!(profil.profilPicture === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + profil.profilPicture)"/>
+                <img class="p-avatar p-avatar-lg pdp" *ngIf="profil.profilPicture === undefined" _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
+                <div class="profil-information">
+                    <div class="p-card-title"> {{ profil.username }} </div>
+                    <div class="p-card-subtitle"></div>
+                    <div class="p-card-content">
+                        {{ profil.politicalParti }}
+                    </div>
+                    <div *ngIf="profil.journalist" class="p-card-footer">
+                        <p-tag styleClass="mr-2" severity="success" value="Journaliste" [rounded]="true"></p-tag>
+                        <p-badge [value]="profil.indicator.toString()" severity="info" styleClass="mr-2"></p-badge>
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,6 +92,15 @@
                                             {{ comment.interest_score }}
                                             <i [ngClass]= "isCommentLiked(comment._id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
                                         </span>
+                                    </button>
+                                    <button
+                                        pButton
+                                        pRipple
+                                        type="button"
+                                        icon="pi pi-times"
+                                        *ngIf="isMyComment(comment)"
+                                        (click)="deleteComment(comment)"
+                                        class="p-button-rounded p-button-danger p-button-text">
                                     </button>
                                 </div>
                             </div>
