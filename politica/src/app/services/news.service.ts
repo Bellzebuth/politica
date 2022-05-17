@@ -31,5 +31,4 @@ export class NewsService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${baseUrl}/${id}`);
   }
-
 }

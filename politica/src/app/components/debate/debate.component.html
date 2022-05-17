@@ -1,7 +1,68 @@
 <app-menu></app-menu>
 <div class="debate-input">
-    <input type="text" [(ngModel)]="newPost" pInputText class="p-inputtext-sm input-width" maxlength="255" placeholder="Exprimez-vous...">  
-    <button pButton pRipple (click)="post()" type="button" label="Publier" class="p-button p-button-politica p-button-sm"></button>
+    <input type="text" [(ngModel)]="newPost" pInputText class="p-inputtext-sm input-width" maxlength="255" placeholder="Exprimez-vous...">
+    <button
+        pButton
+        pRipple
+        (click)="showSourceDialog()"
+        type="button"
+        label="Publier"
+        class="p-button p-button-politica p-button-sm">
+    </button>
+
+    <p-dialog header="Sourcez vos propos" [(visible)]="displaySource" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
+    [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
+        <div class="register-form">
+                <input
+                type="text"
+                style="height: 100%; margin-top: 2%;"
+                [(ngModel)]="source.s1"
+                name="source"
+                id="source"
+                pInputText
+                class="p-inputtext-sm input-comments"
+                maxlength="255"
+                placeholder="Argumentez...">
+        </div>
+        <div class="register-form" *ngIf="countSource >= 1">
+            <input
+            type="text"
+            style="height: 100%; margin-top: 2%;"
+            [(ngModel)]="source.s2"
+            name="source"
+            id="source"
+            pInputText
+            class="p-inputtext-sm input-comments"
+            maxlength="255"
+            placeholder="Argumentez...">
+    </div>
+    <div class="register-form" *ngIf="countSource >= 2">
+        <input
+        type="text"
+        style="height: 100%; margin-top: 2%;"
+        [(ngModel)]="source.s3"
+        name="source"
+        id="source"
+        pInputText
+        class="p-inputtext-sm input-comments"
+        maxlength="255"
+        placeholder="Argumentez...">
+</div>
+        <div *ngIf="countSource !== 2" style="width: 100%; display: flex; justify-content: center;">
+            <button 
+                pButton
+                pRipple
+                type="button"
+                icon="pi pi-plus"
+                (click)="addInput()"
+                class="p-button-rounded p-button-help p-button-text"
+                style="margin-top: 2%;">
+            </button>
+        </div>
+        <ng-template pTemplate="footer">
+            <p-button (click)="post()" label="OK" styleClass="politica-color p-button-raised p-button-text"></p-button>
+        </ng-template>
+    </p-dialog>
 </div>
 <div class="content p-component">
     <div class="profile">
@@ -40,6 +101,10 @@
                                 <i [ngClass]= "isDebateLiked(debate._id) ? 'pi pi-star-fill' : 'pi pi-star'"></i>
                             </span>
                         </button>
+                        <button pButton pRipple type="button" class="p-button-text" (click)="showDebateSource(debate)">
+                            <i class="pi pi-info-circle"></i>
+                        </button>
+                        <app-source [visible]="displayDebateSource" *ngIf="debateSelected" [debate]="debateSelected" (close)="debateSelected = undefined"></app-source>
                     </div>
                 </div>
             </div>
@@ -118,16 +183,16 @@
                         maxlength="255"
                         placeholder="Argumentez...">
                     </label>
-                        <p-toggleButton
-                            pRipple
-                            [(ngModel)]="commentSide"
-                            [ngModelOptions]="{standalone: true}"
-                            onLabel="Pour"
-                            onIcon="pi pi-thumbs-up"
-                            offLabel="Contre"
-                            offIcon="pi pi-thumbs-down"
-                            [style]="{'width': '7em', 'height': '100%', 'color': 'red', 'border-color': 'transparent', 'margin-left': '5px'}">
-                        </p-toggleButton>
+                    <p-toggleButton
+                        pRipple
+                        [(ngModel)]="commentSide"
+                        [ngModelOptions]="{standalone: true}"
+                        onLabel="Pour"
+                        onIcon="pi pi-thumbs-up"
+                        offLabel="Contre"
+                        offIcon="pi pi-thumbs-down"
+                        [style]="{'width': '7em', 'height': '100%', 'color': 'red', 'border-color': 'transparent', 'margin-left': '5px'}">
+                    </p-toggleButton>
                     <button 
                         pButton
                         pRipple

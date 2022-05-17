@@ -30,6 +30,17 @@ var debateSchema = mongoose.Schema({
         type: Array,
         required: true,
     },
+    source: {
+        s1: {
+            type: String,
+        },
+        s2: {
+            type: String,
+        },
+        s3: {
+            type: String,
+        },
+    },
     dateTime: {
         type: Date,
         required: true,

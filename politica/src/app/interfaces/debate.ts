@@ -9,5 +9,6 @@ export interface IDebate {
     interest_score: number,
     message: string,
     comment: Array<any>,
+    source: any,
     dateTime: Date,
 }

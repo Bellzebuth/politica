@@ -22,11 +22,21 @@ export class DebateComponent implements OnInit {
   debateList: Array<IDebate> = [];
   
   profil!: IUser;
+  debateSelected?: IDebate;
+  displayDebateSource: boolean = false;
 
   newPost: String | undefined;
   commentSide: Boolean = false;
+  source = {
+    s1: '',
+    s2: '',
+    s3: ''
+  };
+  countSource=0;
 
   voteEnded: Array<IVote> = [];
+
+  displaySource: boolean = false;
 
   isLoggedIn = false;
 
@@ -168,11 +178,18 @@ export class DebateComponent implements OnInit {
       politicalParti: this.profil.politicalParti,
       interest_score: 0,
       message: this.newPost,
+      source: this.source,
       comment: [],
       dateTime: new Date()
-    }
+    };
     this.debateService.create(debate).subscribe((data) => {
       this.newPost = "";
+      this.displaySource = false;
+      this.source = {
+        s1: '',
+        s2: '',
+        s3: ''
+      };
       this.getAllDebate();
     }, error => {
       console.log(error);
@@ -192,6 +209,7 @@ export class DebateComponent implements OnInit {
         interest_score: 0,
         comment: form.value.comment,
         side: this.commentSide,
+        source: form.value.source,
         dateTime: new Date(),
       }
       this.commentService.create(comment).subscribe(() => {
@@ -258,6 +276,23 @@ export class DebateComponent implements OnInit {
   deleteComment(debate: IDebate, comment: IComment) {
     this.commentService.delete(comment._id).subscribe();
     debate.comment.splice(debate.comment.indexOf(comment), 1);
+  }
+
+  showSourceDialog() {
+    if (this.newPost){
+      this.displaySource = true;
+    }
+  }
+
+  addInput(){
+    if (this.countSource <= 2){
+      this.countSource += 1;
+    }
+  }
+
+  showDebateSource(debate: IDebate){
+    this.debateSelected = debate;
+    this.displayDebateSource= true;
   }
 }
 

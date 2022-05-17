@@ -41,6 +41,7 @@ import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { BadgeModule } from 'primeng/badge';
+import { SourceComponent } from './components/source/source.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { BadgeModule } from 'primeng/badge';
     ProfilComponent,
     MenuComponent,
     Error404Component,
-    DebateDetailsComponent
+    DebateDetailsComponent,
+    SourceComponent
   ],
   imports: [
     BrowserModule,

@@ -24,7 +24,11 @@ exports.new = function (req, res) {
     debate.politicalParti = req.body.politicalParti;
     debate.message = req.body.message;
     debate.comment = req.body.comment;
+    debate.source = req.body.source;
     debate.dateTime = new Date();
+
+    console.log(debate);
+    console.log(req.body.source);
     
     debate.save(function (err) {
         if (err){
@@ -62,6 +66,7 @@ exports.update = function (req, res) {Debate.findById(req.params.debate_id, func
             debate.politicalParti = req.body.politicalParti;
             debate.message = req.body.message;
             debate.comment = [];
+            debate.source = req.body.source;
             debate.dateTime = req.body.dateTime;
         
             debate.save(function (err) {

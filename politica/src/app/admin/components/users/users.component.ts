@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IUser } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
-import { ImageService } from 'src/app/services/image.service';
 import { NgForm } from '@angular/forms';
 import { VoteService } from 'src/app/services/vote.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
