@@ -151,7 +151,7 @@ export class DebateDetailsComponent implements OnInit {
           profilPicture: this.profil.profilPicture,
         },
         politicalParti: this.profil.politicalParti,
-        interest_score: 1,
+        interest_score: 0,
         comment: form.value.comment,
         side: this.commentSide,
         dateTime: new Date(),
@@ -202,7 +202,6 @@ export class DebateDetailsComponent implements OnInit {
   deleteComment(comment: IComment) {
     this.commentService.delete(comment._id).subscribe();
     this.debate.comment.splice(this.debate.comment.indexOf(comment), 1);
-    console.log(this.debate.comment);
   }
 
   showDebateSource(debate: IDebate){

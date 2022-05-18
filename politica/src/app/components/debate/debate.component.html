@@ -169,7 +169,7 @@
             </div>
             <a class="debate-comments" *ngIf="debate.comment.length > 2" style="text-decoration: underline;" [routerLink]="['/debate-details', debate._id]">Voir plus de commentaires ...</a>
             <div class="p-card" style="display: flex; margin-top: 1%;" >
-                <form #form="ngForm" (submit)="submit(form, debate._id)" style="width: 100%; display: flex; justify-content: space-between;">
+                <form #form="ngForm" (submit)="submit(form, debate)" style="width: 100%; display: flex; justify-content: space-between;">
                     <label for="comment" style="flex: 4;">
                         <input
                         type="text"

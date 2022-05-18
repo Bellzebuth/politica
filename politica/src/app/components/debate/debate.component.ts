@@ -196,10 +196,10 @@ export class DebateComponent implements OnInit {
     });
   }
 
-  submit(form: NgForm, debate_id: String) {
+  submit(form: NgForm, debate: IDebate) {
     if (form.value.comment.length != 0){
       const comment = {
-        debate_id: debate_id,
+        debate_id: debate._id,
         user_id: this.tokenStorageService.getUser().id,
         user: {
           username: this.profil.username,
@@ -212,9 +212,9 @@ export class DebateComponent implements OnInit {
         source: form.value.source,
         dateTime: new Date(),
       }
-      this.commentService.create(comment).subscribe(() => {
-        this.getAllDebate();
-      });
+      debate.comment.push(comment);
+      form.value.comment = '';
+      this.commentService.create(comment).subscribe();
     }
   }
 
