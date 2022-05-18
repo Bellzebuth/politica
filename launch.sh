@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo " Installing x-term"
+
+sudo apt-get install xterm
+
 echo "Starting project..."
 
 cd server
