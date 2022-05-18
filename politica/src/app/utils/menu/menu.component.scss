@@ -3,7 +3,12 @@
 .colorbar {
   display: flex;
   justify-content: center;
-  background-color: $politica-violet-color;
+  background: -webkit-linear-gradient(
+    0.15turn,
+    rgb(47, 47, 252),
+    $politica-violet-color,
+    rgb(255, 35, 35)
+  );
   height: 50px;
 }
 
