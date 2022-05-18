@@ -44,6 +44,9 @@ export class ProfilComponent implements OnInit {
   usernameValid: boolean = true;
   changeProfil!: IUser;
 
+  debateSelected?: IDebate;
+  displayDebateSource: boolean = false;
+
   darkModeOK = false;
 
   constructor(
@@ -275,5 +278,10 @@ export class ProfilComponent implements OnInit {
       frenchDate[1],
       frenchDate[0]
     ].join('/');
+  }
+
+  showDebateSource(debate: IDebate){
+    this.debateSelected = debate;
+    this.displayDebateSource= true;
   }
 }

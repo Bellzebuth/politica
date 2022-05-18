@@ -79,12 +79,15 @@
                         <i [ngClass]= "isDebateLiked(debate._id) ? 'pi pi-star-fill' : 'pi pi-star'"></i>
                     </span>
                 </button>
+                <button pButton pRipple type="button" class="p-button-text" (click)="showDebateSource(debate)">
+                    <i class="pi pi-info-circle"></i>
+                </button>
             </div>
         </div>
     </div>
     <div class="p-card card-container card-display" *ngFor="let news of newsList" (click)="showDialog(news._id)">
         <div class="news-image">
-            <img class="p-avatar p-avatar-lg news-image" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + news.image)" />
+            <img class="p-avatar p-avatar-lg news-image little-picture" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + news.image)" />
         </div>
         <div class="card-content news-content-space" style="--lh: 1.2rem; line-height: var(--lh);">
             <div class="p-card-title" style="word-wrap: break-word; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; min-height: 30px;"> {{ news.title }} </div>
@@ -157,3 +160,5 @@
         <p-button (click)="updateNewUser()" label="Confirmer" styleClass="politica-color p-button-raised p-button-text"></p-button>
     </ng-template>
 </p-dialog>
+
+<app-source [visible]="displayDebateSource" *ngIf="debateSelected" [debate]="debateSelected" (close)="debateSelected = undefined"></app-source>

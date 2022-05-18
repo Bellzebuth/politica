@@ -17,6 +17,10 @@
   text-transform: uppercase;
 }
 
+.card-content {
+  width: 100%;
+}
+
 .card-display {
   display: flex;
   margin: 5%;
@@ -177,6 +181,11 @@
     height: 50px;
   }
 
+  .little-picture {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
   .font-footer {
     font-size: 2.5vw;
   }
@@ -186,8 +195,8 @@
   }
 
   .news-image {
-    width: 120px !important;
-    height: 75px !important;
+    width: 120px;
+    height: 75px;
   }
 
   .news-content-space {
@@ -196,7 +205,7 @@
 
   .news-content-space,
   .news-footer {
-    max-width: calc(100% - 120px);
+    max-width: calc(100% - 50px);
   }
 }
 

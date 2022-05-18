@@ -87,7 +87,6 @@ exports.delete = function (req, res) {
 };
 
 exports.getUserNews = function(req, res) {
-    console.log(req.body.id);
     News.find({
         journalist : {
             id:  req.body.id,

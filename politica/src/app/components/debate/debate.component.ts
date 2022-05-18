@@ -213,7 +213,7 @@ export class DebateComponent implements OnInit {
         dateTime: new Date(),
       }
       debate.comment.push(comment);
-      form.value.comment = '';
+      form.reset();
       this.commentService.create(comment).subscribe();
     }
   }
