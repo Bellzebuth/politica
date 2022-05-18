@@ -1,5 +1,5 @@
 module.exports = {
-    HOST: "localhost",
+    HOST: "mongo",
     PORT: 27017,
     database: "politica-database",
     imgBucket: "photos",

@@ -1,0 +1,26 @@
+version: "2"
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+  app:
+    container_name: app
+    restart: always
+    build: 
+      dockerfile: Dockerfile
+      context: ./server
+    ports:
+      - "8080:8080"
+    links:
+      - mongo
+  politica:
+    container_name: politica
+    build: ./politica
+    volumes:
+      - './politica:/politica'
+    ports:
+      - '4200:4200'
+    command: >
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
