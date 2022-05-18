@@ -42,6 +42,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { BadgeModule } from 'primeng/badge';
 import { SourceComponent } from './components/source/source.component';
+import { DebateSourceComponent } from './components/debate-source/debate-source.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { SourceComponent } from './components/source/source.component';
     MenuComponent,
     Error404Component,
     DebateDetailsComponent,
-    SourceComponent
+    SourceComponent,
+    DebateSourceComponent
   ],
   imports: [
     BrowserModule,

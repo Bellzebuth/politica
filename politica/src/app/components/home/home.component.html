@@ -1,16 +1,68 @@
 <p-toast></p-toast>
+<div class="home">
+    <div class="background-politica" style="flex: 1;">
+
+    </div>
 <div class="politica">
     <span class="title">Politica</span>
     <span class="subtitle">Débattons du futur</span>
 
     <div class="button-group">
         <div class="login">
-            <button pButton pRipple type="button" label="S'inscrire" class="politica-color p-button-raised p-button-text" (click)="showRegisterDialog()"></button>
-            <button pButton pRipple type="button" label="Se connecter" class="politica-color p-button-raised p-button-text" (click)="showLoginDialog()"></button>
+            <button pButton pRipple type="button" label="Inscription" class="politica-color p-button-raised p-button-text" (click)="showRegisterDialog()"></button>
+            <button pButton pRipple type="button" label="Connexion" class="politica-color p-button-raised p-button-text" (click)="showLoginDialog()"></button>
         </div>
     </div>
-</div>
 
+    <div class="synospis">
+        <p>
+            Politica est un réseau social pour débattre de la politique française. Le fil d'actualité principale 
+            vous donnera accès au débats emis par nos utilisateurs, mais aussi de publier vous mêmes un débats, sans oublier d'ajouter
+            des liens d'articles de presse pour permettre aux autres personnes de s'informer sur le sujet dont vous voulez débattre.
+        </p>
+        <p>
+            Lorsque que vous commentez un débat, n'oubliez de dire si votre commentaire argumente en faveur ou contre l'avis de l'auteur
+            principal.
+            Vous aurez accès aux source du débat en appuyant sur le bouton <i class="pi pi-info-circle"></i>.
+            Si un argument vous semble en accord avec ce que vous pensez, aimez-le pour qu'il gagne en visibilté.
+        </p>
+        <p>
+            <span>
+                <h2>Vous cherchez à vous informer ?</h2>
+                Pas de soucis ! Un onglet est disponible pour ça, où les utilisateurs identifié en tant que journaliste vous proposeront 
+                Les dernières nouvelles du jour afin que vous ne ratiez rien !
+                Nos journalistes reçoivent des blams en cas de fake news publiés, afin d'assurer le plus possible des informations toujours vraies.
+            </span>
+            <span>
+                <h2> Envie de rejoindre l'équipe de journaliste ? </h2>
+                Rendez-vous dans l'onglet profil, vous pourrez télécharger votre carte de presse et obtenir le statut de journaliste.
+            </span>
+        </p>
+        <p>
+            <span>
+                <h2>Donnez votre avis</h2>
+                L'onglet vote vous permettra de donner votre avis sur des sujet proposé par l'équipe Politica. 
+                Afin de vous aider à prendre votre décision, un bouton débat <i class="pi pi-book"></i> et infos <i class="pi pi-info-circle"></i> vous donneront
+                accès à une sélection de débats, et d'articles presse, sur le sujet.
+            </span>
+            <span>
+                Les résultats sont publié dans le fil d'actualité principale sur la gauche.
+            </span>
+        </p>
+        <p>
+            <span>
+                <h2>Reprenez le controle de vos données</h2>
+                Dans l'onglet profil, vous pourrez aisément changer vos informations personnels tels que votre photo de profil, votre pseudo, votre genre,
+                ou encore votre parti politique.
+                Vous aurez aussi accès à un panneau de contrôle afin de gérer la diffusion de vos données personnelles au près de nos partenaires.
+            </span>
+        </p>
+    </div>
+</div>
+<div class="background-politica" style="flex: 1;">
+
+</div>
+</div>
 <p-dialog header="Inscription" [(visible)]="displayRegister" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
     [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
         <div class="register-form">

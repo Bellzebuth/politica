@@ -4,7 +4,22 @@
   color: $politica-violet-color;
 }
 
+.home {
+  display: flex;
+  justify-content: center;
+}
+
+.background-politica {
+  background: -webkit-linear-gradient(
+    0.15turn,
+    rgb(47, 47, 252),
+    $politica-violet-color,
+    rgb(255, 35, 35)
+  );
+}
+
 .politica {
+  margin: 0 5% 5% 5%;
   background: -webkit-linear-gradient(
     0.15turn,
     rgb(47, 47, 252),
@@ -16,20 +31,67 @@
   -webkit-text-fill-color: transparent;
   background-color: white;
   display: flex;
+  align-items: center;
   flex-direction: column;
   font-weight: 900;
   height: 100%;
   font-family: "DejaVu Sans Mono", monospace;
+  flex: 2;
 }
 
 .title {
   font-size: 12vw;
-  margin-left: 10%;
 }
 
 .subtitle {
-  font-size: 5vw;
-  margin-left: 10%;
+  font-size: 3vw;
+}
+
+.synospis {
+  font-size: 1vw;
+}
+
+@media screen and (width < 1050px) {
+  .subtitle {
+    font-size: 4vw;
+  }
+
+  .synospis {
+    font-size: 2vw;
+  }
+}
+
+@media screen and (width < 450px) {
+  .subtitle {
+    font-size: 5vw;
+  }
+
+  .synospis {
+    font-size: 3vw;
+  }
+
+  .politica {
+    flex: 10 !important;
+  }
+}
+
+@media screen and (width < 350px) {
+  .login {
+    flex-direction: column;
+    margin-top: 10%;
+  }
+
+  .p-button-text {
+    margin: 2%;
+  }
+
+  .subtitle {
+    font-size: 7vw;
+  }
+
+  .synospis {
+    font-size: 5vw;
+  }
 }
 
 .p-button-politica {
@@ -44,10 +106,9 @@
 }
 
 .login {
-  margin-top: 5%;
-  width: 25%;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .register-form {
@@ -69,45 +130,4 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-@media screen and (width < 1300px) {
-  .login {
-    width: 35%;
-  }
-}
-
-@media screen and (width < 1100px) and (width > 950px) {
-  .input-group {
-    flex-direction: column;
-  }
-}
-
-@media screen and (width < 950px) {
-  .login {
-    width: 50%;
-  }
-}
-
-@media screen and (width < 550px) {
-  .login {
-    width: 70%;
-  }
-}
-
-@media screen and (width < 750px) {
-  .input-group {
-    flex-direction: column;
-  }
-}
-
-@media screen and (width < 350px) {
-  .login {
-    flex-direction: column;
-    margin-top: 10%;
-  }
-
-  .p-button-text {
-    margin: 2%;
-  }
 }

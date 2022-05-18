@@ -17,6 +17,43 @@ var voteSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    source: {
+        s1: {
+            type: String,
+        },
+        s2: {
+            type: String,
+        },
+        s3: {
+            type: String,
+        }
+    },
+    debate: {
+        d1: {
+            link: {
+                type: String,
+            },
+            name: {
+                type: String,
+            }
+        },
+        d2: {
+            link: {
+                type: String,
+            },
+            name: {
+                type: String,
+            }
+        },
+        d3: {
+            link: {
+                type: String,
+            },
+            name: {
+                type: String,
+            }
+        }
+    },
     dateTime: {
         type: Date,
         required: true

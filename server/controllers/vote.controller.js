@@ -24,6 +24,8 @@ exports.new = function (req, res) {
     vote.author = req.body.author;
     vote.dateTime = new Date();
     vote.closeDate = req.body.closeDate;
+    vote.source = req.body.source;
+    vote.debate = req.body.debate;
     
     vote.save(function (err) {
         if (err){
@@ -59,6 +61,8 @@ exports.update = function (req, res) {Vote.findById(req.params.vote_id, function
             vote.against_vote = req.body.against_vote ? req.body.against_vote : vote.against_vote;
             vote.author = req.body.author ? req.body.author : vote.author;
             vote.closeDate = req.body.closeDate ? req.body.closeDate : vote.closeDate;
+            vote.source = req.body.source ? req.body.source : vote.source;
+            vote.debate = req.body.debate ? req.body.debate : vote.debate;
         
             vote.save(function (err) {
                 if (err) {

@@ -1,0 +1,22 @@
+<p-dialog *ngIf="vote" header="Source" [(visible)]="visible" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
+    [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true" [closable]="false">
+        <div class="debate-source" *ngIf="vote.debate.d1 !== '' || vote.debate.d2 !== '' || vote.debate.d3 !== ''">
+            <ul>
+                <li *ngIf="vote.debate.d1.name !== ''">
+                    <a [href]="vote.debate.d1.link">{{ vote.debate.d1.name }}</a>
+                </li>
+                <li *ngIf="vote.debate.d2.name !== ''">
+                    <a [href]="vote.debate.d2.link">{{ vote.debate.d2.name }}</a>
+                </li>
+                <li *ngIf="vote.debate.d3.name !== ''">
+                    <a [href]="vote.debate.d3.link">{{ vote.debate.d3.name }}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="debate-source" *ngIf="vote.debate.d1 === '' && vote.debate.d2 === '' && vote.debate.d3 === ''">
+            Désolé, l'auteur n'a renseigné aucune source pour ce vote...
+        </div>
+        <ng-template pTemplate="footer">
+        <p-button (click)="close.emit()" label="ok" styleClass="politica-color p-button-raised p-button-text"></p-button>
+        </ng-template>
+</p-dialog>

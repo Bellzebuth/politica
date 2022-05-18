@@ -26,8 +26,8 @@
             <div class="card-content">
                 <div class="p-card-title title-vote"> {{ vote.label }} </div>
                 <div class="p-card-content vote-content-space">
-                    <p-button label="débats" icon="pi pi-book" styleClass="p-button-sm" class="vote-button"></p-button>
-                    <p-button label="infos" icon="pi pi-info-circle" styleClass="p-button-sm" class="vote-button" ></p-button>
+                    <p-button label="débats" icon="pi pi-book" (click)="showVoteSource(vote)" styleClass="p-button-sm" class="vote-button"></p-button>
+                    <p-button label="infos" icon="pi pi-info-circle" (click)="showDebateSource(vote)" styleClass="p-button-sm" class="vote-button" ></p-button>
                 </div>
                 <div class="p-card-footer vote-footer">
                     <button pButton pRipple type="button" (click)="updateVote(true, vote._id)" class="p-button-success p-button-text">
@@ -55,3 +55,7 @@
     <div class="news">
     </div>
 </div>
+
+<app-source [visible]="displayDebateSource" *ngIf="debateSelected" [debate]="debateSelected" (close)="debateSelected = undefined"></app-source>
+
+<app-debate-source [visible]="displayVoteSource" *ngIf="voteSelected" [vote]="voteSelected" (close)="voteSelected = undefined"></app-debate-source>

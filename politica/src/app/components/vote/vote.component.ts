@@ -6,6 +6,7 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { VoteService } from 'src/app/services/vote.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
+import { IDebate } from 'src/app/interfaces/debate';
 
 @Component({
   selector: 'app-vote',
@@ -18,6 +19,11 @@ export class VoteComponent implements OnInit {
   voteList: Array<IVote> = [];
   profil!: IUser;
   horizontalOptions: any;
+
+  debateSelected?: IVote;
+  displayDebateSource: boolean = false;
+  voteSelected?: IVote;
+  displayVoteSource: boolean = false;
 
   isLoggedIn = false;
 
@@ -91,5 +97,15 @@ export class VoteComponent implements OnInit {
 
   clear() {
     this.messageService.clear();
+  }
+
+  showDebateSource(debate: IVote){
+    this.debateSelected = debate;
+    this.displayDebateSource= true;
+  }
+
+  showVoteSource(vote: IVote){
+    this.voteSelected = vote;
+    this.displayVoteSource= true;
   }
 }

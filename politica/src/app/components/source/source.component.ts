@@ -8,7 +8,7 @@ import { IDebate } from 'src/app/interfaces/debate';
 })
 export class SourceComponent implements OnInit {
 
-  @Input() debate?: IDebate;
+  @Input() debate?: any;
   @Input() visible?: boolean;
 
   @Output() close = new EventEmitter();

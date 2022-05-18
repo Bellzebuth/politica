@@ -17,6 +17,104 @@
                         maxlength="255"
                         placeholder="Ajouter un vote ...">
                     </label>
+                    <div class="debate-source">
+
+                        <span>Debat source 1</span>
+                        <input
+                            type="text"
+                            [(ngModel)]="debate.d1.name"
+                            name="d1-name"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le titre du débats...">
+                        <input
+                            type="text"
+                            [(ngModel)]="debate.d1.link"
+                            name="d1-source"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le lien du débats...">
+
+                        <span>Debat source 2</span>
+                        <input
+                            type="text"
+                            [(ngModel)]="debate.d2.name"
+                            name="d2-name"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le titre du débats...">
+                        <input
+                            type="text"
+                            [(ngModel)]="debate.d2.link"
+                            name="d2-source"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le lien du débats...">
+                        
+                        <span>Debat source 3</span>
+                        <input
+                            type="text"
+                            [(ngModel)]="debate.d3.name"
+                            name="d3-name"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le titre du débats...">
+                        <input
+                            type="text"
+                            [(ngModel)]="debate.d3.link"
+                            name="d3-source"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le lien du débats...">
+                    </div>
+                    <span style="margin-top: 5%;"></span>
+                    <div class="debate-source">
+                        <span>Source 1</span>
+                        <input
+                            type="text"
+                            [(ngModel)]="source.s1"
+                            name="s1"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le lien de la source...">
+                        
+                            <span>Source 2</span>
+                        <input
+                            type="text"
+                            [(ngModel)]="source.s2"
+                            name="s1"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le lien de la source...">
+                        
+                        <span>Source 3</span>
+                        <input
+                            type="text"
+                            [(ngModel)]="source.s3"
+                            name="s1"
+                            class="p-inputtext-sm input-comments"
+                            pInputText
+                            maxlength="255"
+                            style="margin-top: 1%;"
+                            placeholder="Ajouter le lien de la source...">
+                    </div>
+                    <span style="margin-top: 5%;"> Ajouter une date de clotûre du vote</span>
                     <label for="closeDate" style="margin: 2%;">
                         <p-calendar name="closeDate" [(ngModel)]="closeDate" placeholder="Date de clotûre des votes"></p-calendar>
                     </label>
@@ -58,7 +156,7 @@
     </div>
 </div>
 
-<p-dialog [header]="showNews.title" [modal]="true" [(visible)]="display" [dismissableMask]="true">
+<p-dialog *ngIf="showNews" [header]="showNews.title" [modal]="true" [(visible)]="display" [dismissableMask]="true">
     <p>
         {{ showNews.content }}
     </p>

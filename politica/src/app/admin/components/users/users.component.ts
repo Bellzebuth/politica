@@ -23,19 +23,28 @@ export class UsersComponent implements OnInit {
   voteLabel: string = "";
   newsList: Array<any> = [];
   display: boolean = false;
-  showNews: INews = {
-    _id: "",
-    title: "",
-    content: "",
-    source: "",
-    sourceName: "",
-    image: "",
-    journalist: {
-      id: "",
-      username: ""
-    },
-    dateTime: new Date(),
+  showNews?: INews;
+
+  source= {
+    s1: "",
+    s2:"",
+    s3: ""
   };
+
+  debate= {
+    d1: {
+      link: "",
+      name: "",
+    },
+    d2: {
+      link: "",
+      name: "",
+    },
+    d3: {
+      link: "",
+      name: "",
+    }
+  }
 
   constructor(
     private authService: AuthService,
@@ -60,18 +69,42 @@ export class UsersComponent implements OnInit {
   }
 
   submit(form: NgForm) {
+    console.log(this.source);
+    console.log(this.debate);
     if (form.value.vote != undefined && this.closeDate != undefined){
       const vote= {
         label: form.value.vote,
         for_vote: 0,
         against_vote: 0,
         author: this.tokenStorage.getUser().id,
+        source: this.source,
+        debate: this.debate,
         dateTime: new Date(),
         closeDate: new Date(this.closeDate),
       }
       this.voteService.create(vote).subscribe( data => {
         console.log(data);
         this.addSingle(true);
+        form.reset();
+        this.source= {
+          s1: "",
+          s2:"",
+          s3: ""
+        };
+        this.debate= {
+          d1: {
+            link: "",
+            name: "",
+          },
+          d2: {
+            link: "",
+            name: "",
+          },
+          d3: {
+            link: "",
+            name: "",
+          }
+        }
       }, error => {
         console.log(error);
       });
