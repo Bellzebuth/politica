@@ -4,6 +4,7 @@ export interface INews {
     content: string,
     source: string,
     image: string,
+    sourceName: string,
     journalist: {
         id: string,
         username: string,

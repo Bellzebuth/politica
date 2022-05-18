@@ -24,6 +24,9 @@ export class DebateDetailsComponent implements OnInit {
 
   mainNews: Array<any> = [];
 
+  debateSelected?: IDebate;
+  displayDebateSource: boolean = false;
+
   isLoggedIn = false;
 
   constructor(private authService: AuthService,
@@ -200,5 +203,10 @@ export class DebateDetailsComponent implements OnInit {
     this.commentService.delete(comment._id).subscribe();
     this.debate.comment.splice(this.debate.comment.indexOf(comment), 1);
     console.log(this.debate.comment);
+  }
+
+  showDebateSource(debate: IDebate){
+    this.debateSelected = debate;
+    this.displayDebateSource= true;
   }
 }

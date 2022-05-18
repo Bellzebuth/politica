@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-    <div class="debate-feed">
+    <div class="debate-feed" *ngIf="voteList.length !== 0">
         <div class="p-card card-display" *ngFor="let vote of voteList">
             <div class="card-content">
                 <div class="p-card-title title-vote"> {{ vote.label }} </div>
@@ -37,18 +37,18 @@
                     <i class="pi pi-times" style="margin-left: 15px;"> {{ vote.against_vote }} </i>
                     </button>
                 </div>
-                <!-- 
-                <div class="p-card-footer" *ngIf="vote.voted">
-                    <span style="margin: 1%;">
-                        <p-progressBar [value]="vote.percentageFor"></p-progressBar>
-                        Pour
-                    </span>
-                    <span style="margin: 1%">
-                        <p-progressBar [value]="vote.percentageAgainst"></p-progressBar>
-                        Contre
-                    </span>
+            </div>
+        </div>
+    </div>
+    <div class="debate-feed" *ngIf="voteList.length === 0">
+        <div class="p-card card-display">
+            <div class="card-content">
+                <div class="p-card-title title-vote"> Vous avez répondu à tous les votes ! </div>
+                <div class="p-card-content vote-content-space">
+                    Revenez plus tard.
                 </div>
-                -->
+                <div class="p-card-footer vote-footer">
+                </div>
             </div>
         </div>
     </div>

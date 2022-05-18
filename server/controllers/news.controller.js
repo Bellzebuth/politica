@@ -23,6 +23,7 @@ exports.new = function (req, res) {
     news.title = req.body.title;
     news.content = req.body.content;
     news.source = req.body.source;
+    news.sourceName = req.body.sourceName;
     news.image = req.body.image;
     news.journalist = req.body.journalist;
     news.dateTime = new Date();
@@ -58,6 +59,7 @@ exports.update = function (req, res) {News.findById(req.params.news_id, function
         news.title = req.body.title ? req.body.title : news.title;
         news.content = req.body.content ? req.body.content : news.content;
         news.source = req.body.source ? req.body.source : news.source;
+        news.sourceName = req.body.sourceName ? req.body.sourceName : news.sourceName;
         news.image = req.body.image ? req.body.image : news.image;
         news.journalist = req.body.journalist ? req.body.journalist : news.journalist;
         
@@ -83,3 +85,22 @@ exports.delete = function (req, res) {
         });
     });
 };
+
+exports.getUserNews = function(req, res) {
+    console.log(req.body.id);
+    News.find({
+        journalist : {
+            id:  req.body.id,
+            username: req.body.username
+        }
+    }, function (err, news) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json({
+                status: "success",
+                data: news
+            });
+        }
+    });
+}

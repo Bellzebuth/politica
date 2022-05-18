@@ -31,4 +31,8 @@ export class NewsService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${baseUrl}/${id}`);
   }
+
+  getUserNews(journalist: any): Observable<any> {
+    return this.http.post(`${baseUrl}/user`, journalist);
+  }
 }

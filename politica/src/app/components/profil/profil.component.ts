@@ -11,6 +11,8 @@ import { Observable } from 'rxjs';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { CommentService } from 'src/app/services/comment.service';
 import { DialogService } from 'primeng/dynamicdialog';
+import { INews } from 'src/app/interfaces/news';
+import { NewsService } from 'src/app/services/news.service';
 
 @Component({
   selector: 'app-profil',
@@ -22,6 +24,7 @@ export class ProfilComponent implements OnInit {
 
   profil!: IUser;
   debateList: Array<IDebate> = [];
+  newsList: Array<INews> = [];
 
   journalistImage: string ="";
   selectedFiles?: FileList;
@@ -31,6 +34,8 @@ export class ProfilComponent implements OnInit {
   fileInfos?: Observable<any>;
   
   isLoggedIn = false;
+  showNews?: INews;
+  display: boolean = false;
 
   genreOptions: Array<string> = [ 'Homme', 'Femme'];
   partiOptions: Array<string> = [ 'Sans parti', 'Indécis', 'Reconquête', 'RN', 'LR', 'LREM', 'MoDem', 'PS', 'EELV', 'LFI', 'PCF'];
@@ -50,12 +55,12 @@ export class ProfilComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private commentService: CommentService,
+    private newsService: NewsService,
     ) {
   }
 
   ngOnInit(): void {
     this.getUser(this.tokenStorageService.getUser().id);
-    this.getAllUserDebate();
   }
 
   getUser(userId: string) {
@@ -63,6 +68,11 @@ export class ProfilComponent implements OnInit {
         this.profil = data.data;
         this.changeProfil = Object.assign({}, data.data);
         this.isLoggedIn = !!this.tokenStorageService.getToken();
+        if (this.profil.journalist){
+          this.getUserNews();
+        } else {
+          this.getAllUserDebate();
+        }
       }, error => {
       console.log(error);
     });
@@ -76,6 +86,17 @@ export class ProfilComponent implements OnInit {
           debate.comment = data.data;
         })
       })
+    }, error => {
+      console.log(error);
+    })
+  }
+
+  getUserNews() {
+    this.newsService.getUserNews({
+      id: this.tokenStorageService.getUser().id,
+      username: this.profil.username
+    }).subscribe(data => {
+      this.newsList = data.data;
     }, error => {
       console.log(error);
     })
@@ -236,5 +257,23 @@ export class ProfilComponent implements OnInit {
   logout(): void {
     this.tokenStorageService.signOut();
     window.location.replace('');
+  }
+
+  showDialog(id: any) {
+    this.newsService.get(id).subscribe((data) => {
+      this.showNews = data.data;
+      this.display = true;
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  formatDate(date: any) {
+    const frenchDate = date.toString().split('T')[0].split('-');
+    return [
+      frenchDate[2],
+      frenchDate[1],
+      frenchDate[0]
+    ].join('/');
   }
 }

@@ -28,6 +28,7 @@ export class UsersComponent implements OnInit {
     title: "",
     content: "",
     source: "",
+    sourceName: "",
     image: "",
     journalist: {
       id: "",

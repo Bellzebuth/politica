@@ -16,4 +16,5 @@ module.exports = function(app) {
     app.patch("/api/news", newsController.update);
     app.put("/api/news/:news_id", newsController.update);
     app.delete("/api/news/:news_id", newsController.delete);
+    app.post("/api/news/user", newsController.getUserNews);
   };

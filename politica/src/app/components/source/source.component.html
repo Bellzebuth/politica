@@ -1,6 +1,6 @@
 <p-dialog *ngIf="debate" header="Source" [(visible)]="visible" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
     [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true" [closable]="false">
-        <div class="debate-source">
+        <div class="debate-source" *ngIf="debate.source.s1 !== '' || debate.source.s2 !== '' || debate.source.s3 !== ''">
             <ul>
                 <li *ngIf="debate.source.s1 !== ''">
                     <a target="_blank" [href]="debate.source.s1">{{ debate.source.s1 }}</a>
@@ -12,6 +12,9 @@
                     <a target="_blank" [href]="debate.source.s3">{{ debate.source.s3 }}</a>
                 </li>
             </ul>
+        </div>
+        <div class="debate-source" *ngIf="debate.source.s1 === '' && debate.source.s2 === '' && debate.source.s3 === ''">
+            Désolé, l'auteur n'a renseigné aucune source pour ce débat...
         </div>
         <ng-template pTemplate="footer">
         <p-button (click)="close.emit()" label="ok" styleClass="politica-color p-button-raised p-button-text"></p-button>

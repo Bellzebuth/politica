@@ -39,6 +39,9 @@
                                 <i [ngClass]= "isDebateLiked(debate._id) ? 'pi pi-star-fill' : 'pi pi-star'"></i>
                             </span>
                         </button>
+                        <button pButton pRipple type="button" class="p-button-text" (click)="showDebateSource(debate)">
+                            <i class="pi pi-info-circle"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -122,3 +125,5 @@
         </div>
     </div>
 </div>
+
+<app-source [visible]="displayDebateSource" *ngIf="debateSelected" [debate]="debateSelected" (close)="debateSelected = undefined"></app-source>

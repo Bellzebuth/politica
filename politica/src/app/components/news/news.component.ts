@@ -26,6 +26,7 @@ export class NewsComponent implements OnInit {
     title: "",
     content: "",
     source: "",
+    sourceName: "",
     image: "",
     journalist: {
       id: "",
@@ -37,6 +38,7 @@ export class NewsComponent implements OnInit {
   newPost = {
     title: "",
     content: "",
+    sourceName: "",
     source: "",
     image: "",
   };
@@ -120,6 +122,7 @@ export class NewsComponent implements OnInit {
         title: this.newPost.title,
         content: this.newPost.content,
         source: this.newPost.source,
+        sourceName: this.newPost.sourceName,
         image: "",
         journalist: {
           id: this.tokenStorageService.getUser().id,
@@ -133,6 +136,7 @@ export class NewsComponent implements OnInit {
           this.newPost = {
             title: "",
             content: "",
+            sourceName: "",
             source: "",
             image: "",
           };

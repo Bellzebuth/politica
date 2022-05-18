@@ -29,8 +29,11 @@
   min-height: 100px;
 }
 
-.card-content {
+.card-content,
+.news-footer {
+  position: relative;
   padding: 2%;
+  max-width: calc(100% - 250px);
 }
 
 .footer-news-display {
@@ -52,12 +55,6 @@
 .p-button-politica {
   background-color: $politica-violet-color;
   border: $politica-violet-color;
-}
-
-.card-content {
-  position: relative;
-  padding: 0 0 0 2%;
-  width: 100%;
 }
 
 .p-card-title,
@@ -163,7 +160,7 @@
 
 @media screen and (width < 350px) {
   .font-footer {
-    font-size: 5vw;
+    font-size: 2.5vw;
   }
 
   .p-card-title {
@@ -173,6 +170,11 @@
   .news-image {
     width: 120px !important;
     height: 75px !important;
+  }
+
+  .card-content,
+  .news-footer {
+    max-width: calc(100% - 120px);
   }
 }
 
@@ -187,14 +189,7 @@
   }
 }
 
-@media screen and (width < 560px) and (width > 430px) {
-  .news-content-space {
-    height: 40px;
-    font-size: 10px;
-  }
-}
-
-@media screen and (width < 650px) {
+@media screen and (width < 650px) and (width > 430px) {
   .card-display-add {
     flex-direction: column;
   }
@@ -206,5 +201,15 @@
   .news-image {
     width: 150px;
     height: 115px;
+  }
+
+  .card-content,
+  .news-footer {
+    max-width: calc(100% - 150px);
+  }
+
+  .news-content-space {
+    height: 40px;
+    font-size: 10px;
   }
 }

@@ -82,6 +82,27 @@
             </div>
         </div>
     </div>
+    <div class="p-card card-container card-display" *ngFor="let news of newsList" (click)="showDialog(news._id)">
+        <div class="news-image">
+            <img class="p-avatar p-avatar-lg news-image" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + news.image)" />
+        </div>
+        <div class="card-content news-content-space" style="--lh: 1.2rem; line-height: var(--lh);">
+            <div class="p-card-title" style="word-wrap: break-word; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; min-height: 30px;"> {{ news.title }} </div>
+            <div class="p-card-subtitle"></div>
+            <div class="p-card-content truncate-overflow"> {{ news.content }} </div>
+            <div class="p-card-footer news-footer">
+                <span class="font-footer"> <a target="_blank" [href]="news.source" style="text-decoration: none;">{{ news.sourceName }}</a>- {{ news.journalist.username }} - {{ formatDate(news.dateTime) }} </span>
+            </div>
+        </div>
+    </div>
+    <p-dialog *ngIf="showNews" [header]="showNews.title" [modal]="true" [(visible)]="display" [dismissableMask]="true">
+        <p>
+            {{ showNews.content }}
+        </p>
+        <ng-template pTemplate="footer">
+            <a target="_blank" [href]="showNews.source" style="text-decoration: none;">{{ showNews.sourceName }}</a> - {{ showNews.journalist.username }} - {{ formatDate(showNews.dateTime) }}
+        </ng-template>
+    </p-dialog>
 </div>
 
 <p-dialog header="Editer le profil" *ngIf="changeProfil" [(visible)]="displayEdit" [breakpoints]="{'960px': '100vw'}" [style]="{'width': '50vw', 'min-height': '500px'}"

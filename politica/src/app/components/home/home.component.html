@@ -88,9 +88,6 @@
                     [(ngModel)]="profilPicture"
                     (change)="selectFile($event)"
                 />
-                <button pButton pRipple class="p-button p-button-sm" [disabled]="!selectedFiles" (click)="upload()">
-                    Upload
-                </button>
                 <div *ngIf="currentFile" class="progress my-3" style="margin-top: 1%;">
                     <p-progressBar [value]="progress"></p-progressBar>
                 </div>

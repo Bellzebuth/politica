@@ -12,6 +12,9 @@ var newsSchema = mongoose.Schema({
     source: {
         type: String,
     },
+    sourceName: {
+        type:String,
+    },
     image: {
         type: String
     },

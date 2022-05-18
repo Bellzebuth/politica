@@ -104,7 +104,6 @@
                         <button pButton pRipple type="button" class="p-button-text" (click)="showDebateSource(debate)">
                             <i class="pi pi-info-circle"></i>
                         </button>
-                        <app-source [visible]="displayDebateSource" *ngIf="debateSelected" [debate]="debateSelected" (close)="debateSelected = undefined"></app-source>
                     </div>
                 </div>
             </div>
@@ -222,3 +221,5 @@
         </div>
     </div>
 </div>
+
+<app-source [visible]="displayDebateSource" *ngIf="debateSelected" [debate]="debateSelected" (close)="debateSelected = undefined"></app-source>

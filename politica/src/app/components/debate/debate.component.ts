@@ -256,7 +256,7 @@ export class DebateComponent implements OnInit {
       }
       this.voteEnded.forEach((vote, index) => {
         this.widthBar[index].for = this.percentage(vote.for_vote, vote.against_vote).toString() + '%';
-        this.widthBar[index].against = this.percentage(vote.for_vote, vote.against_vote).toString() + '%';
+        this.widthBar[index].against = this.percentage(vote.against_vote, vote.for_vote).toString() + '%';
       });
     })
   }

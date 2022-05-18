@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit {
             this.emailValid = false;
           } else {
             if (this.checkEmail(this.email)) {
-              this.register();
+              this.upload();
             } else {
               this.addSingle(false, "L'email n'est pas conforme !");
               this.emailValid = false;
@@ -221,6 +221,7 @@ export class HomeComponent implements OnInit {
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpResponse) {
               this.fileInfos = this.imageService.getFiles();
+              this.register();
             }
           },
           (err: any) => {
@@ -234,7 +235,10 @@ export class HomeComponent implements OnInit {
             }
           });
       }
+    } else {
+      this.register();
     }
+
   }
 
   addSingle(bool: Boolean, message: string) {
