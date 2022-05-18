@@ -24,11 +24,11 @@
     </div>
     <div class="debate-feed" *ngIf="isLoggedIn">
         <div class="p-card card-container card-display-add" *ngIf="profil.journalist">
-            <div class="modify-width" style="width: 30%;">
+            <div class="modify-width" style="width: 30% !important; padding-top: 40px;">
                 <p-image [src]="sanitize('data:image/jpg;base64, ' + imagePreview)" *ngIf="!(currentFile === undefined)" alt="Image" width="100%" [preview]="true"></p-image>
                 <p-image src="../../../assets/imageVide.png" *ngIf="currentFile === undefined" alt="Image" width="100%" [preview]="true"></p-image>
             </div>
-            <div class="card-content modify-width">
+            <div class="card-content modify-width" style="padding-top: 0%;">
                 <span class="p-float-label modify-width">
                     <input id="float-input" class="modify-width" type="text" pInputText [(ngModel)]="newPost.title" maxlength="255"> 
                     <label for="float-input">Titre</label>

@@ -137,7 +137,11 @@
 }
 
 :host ::ng-deep .p-float-label {
-  margin-top: 4%;
+  margin-top: 30px;
+}
+
+.modify-width {
+  width: 100% !important;
 }
 
 @media screen and (width < 1050px) {
