@@ -217,3 +217,22 @@
     font-size: 10px;
   }
 }
+
+// on personnalise le label comme on veut
+.label-file {
+  cursor: pointer;
+  color: $politica-violet-color;
+  font-weight: bold;
+}
+.label-file:hover {
+  color: $politica-violet-color;
+}
+
+// et on masque le input
+.input-file {
+  display: none;
+}
+
+:host ::ng-deep .p-progressbar .p-progressbar-value {
+  background: $politica-violet-color;
+}

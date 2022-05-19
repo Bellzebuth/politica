@@ -61,6 +61,21 @@
   }
 }
 
+@media screen and (width < 715px) {
+  .input-group {
+    flex-direction: column !important;
+    align-items: center;
+  }
+
+  .profil-preview {
+    order: 1;
+  }
+
+  .second-order {
+    order: 2;
+  }
+}
+
 @media screen and (width < 450px) {
   .subtitle {
     font-size: 5vw;
@@ -117,8 +132,8 @@
 }
 
 .p-float-label {
-  margin: 2%;
-  margin-top: 4%;
+  margin: 0 2% 0 2%;
+  margin-top: 40px;
 }
 
 .input-group {
@@ -130,4 +145,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+// on personnalise le label comme on veut
+.label-file {
+  cursor: pointer;
+  color: $politica-violet-color;
+  font-weight: bold;
+}
+.label-file:hover {
+  color: $politica-violet-color;
+}
+
+// et on masque le input
+.input-file {
+  display: none;
+}
+
+.profil-preview {
+  width: 85px;
+  height: 85px;
+  margin: 0 10% 0 2%;
+}
+
+.top-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+:host ::ng-deep .p-progressbar .p-progressbar-value {
+  background: $politica-violet-color;
 }

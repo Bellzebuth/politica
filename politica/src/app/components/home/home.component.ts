@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
   progress = 0;
   message = '';
   fileInfos?: Observable<any>;
+  imagePreview: any;
 
   isLoggedIn = false;
   isLoginFailed = false;
@@ -115,7 +116,7 @@ export class HomeComponent implements OnInit {
             this.emailValid = false;
           } else {
             if (this.checkEmail(this.email)) {
-              this.upload();
+              this.register();
             } else {
               this.addSingle(false, "L'email n'est pas conforme !");
               this.emailValid = false;
@@ -204,24 +205,26 @@ export class HomeComponent implements OnInit {
 
   selectFile(event: any): void {
     this.selectedFiles = event.target.files;
+    this.upload();
   }
 
   upload(): void {
     this.progress = 0;
-
     if (this.selectedFiles) {
       const file: File | null = this.selectedFiles.item(0);
-
       if (file) {
         this.currentFile = file;
-
         this.imageService.upload(this.currentFile).subscribe(
           (event: any) => {
             if (event.type === HttpEventType.UploadProgress) {
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpResponse) {
               this.fileInfos = this.imageService.getFiles();
-              this.register();
+              if (this.currentFile != undefined){
+                this.imageService.get(this.currentFile.name).subscribe(image => {
+                  this.imagePreview = this.arrayBufferToBase64(image);
+                })
+              }
             }
           },
           (err: any) => {
@@ -238,7 +241,6 @@ export class HomeComponent implements OnInit {
     } else {
       this.register();
     }
-
   }
 
   addSingle(bool: Boolean, message: string) {

@@ -66,28 +66,32 @@
 <p-dialog header="Inscription" [(visible)]="displayRegister" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
     [draggable]="false" [resizable]="false" [modal]="true" [blockScroll]="true">
         <div class="register-form">
-            <span class="p-float-label" *ngIf="usernameValid">
-                <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="username"> 
-                <label for="float-input">Pseudo</label>
-            </span>
-            <span class="p-float-label" *ngIf="!usernameValid">
-                    <input
-                    id="float-input-invalid"
-                    type="text"
-                    pInputText
-                    pTooltip="Essayer un autre pseudo"
-                    [(ngModel)]="username"
-                    class="ng-invalid ng-dirty"
-                    > 
-                    <label for="float-input-invalid">Pseudo</label>
-            </span>
+            <div class="input-group top-form">
+                <span class="p-float-label second-order" *ngIf="usernameValid">
+                    <input type="text" pInputText pTooltip="Entrer votre pseudo" [(ngModel)]="username"> 
+                    <label for="float-input">Pseudo</label>
+                </span>
+                <span class="p-float-label" *ngIf="!usernameValid">
+                        <input
+                        id="float-input-invalid"
+                        type="text"
+                        pInputText
+                        pTooltip="Essayer un autre pseudo"
+                        [(ngModel)]="username"
+                        class="ng-invalid ng-dirty"
+                        > 
+                        <label for="float-input-invalid">Pseudo</label>
+                </span>
+                <img class="p-avatar p-avatar-lg profil-preview" *ngIf="!(currentFile === undefined)" _ngcontent-qqs-c76="" [src]="sanitize('data:image/jpg;base64, ' + imagePreview)"/>
+                <img class="p-avatar p-avatar-lg profil-preview" *ngIf="currentFile === undefined"  _ngcontent-qqs-c76="" src="../../../assets/PDP.webp"/>
+            </div>
             <div class="input-group">
                 <span class="p-float-label">
-                    <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="firstname"> 
+                    <input type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="firstname"> 
                     <label for="float-input">Prénom</label>
                 </span>
                 <span class="p-float-label">
-                    <input id="float-input" type="text" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="lastname"> 
+                    <input type="text" pInputText pTooltip="Entrer votre nom" [(ngModel)]="lastname"> 
                     <label for="float-input">Nom</label>
                 </span>
             </div>
@@ -101,13 +105,15 @@
                     <label for="float-input">Parti politique</label>
                 </span>
             </div>
-            <span class="p-float-label">
-                <p-inputNumber inputId="integeronly" [(ngModel)]="age"></p-inputNumber>
-                <label for="float-input">Age</label>
-            </span>
+            <div class="input-group">
+                <span class="p-float-label">
+                    <p-inputNumber inputId="integeronly" pTooltip="Entrer votre age" [(ngModel)]="age"></p-inputNumber>
+                    <label for="float-input">Age</label>
+                </span>
+            </div>
             <div class="input-group">
                 <span class="p-float-label" *ngIf="emailValid">
-                    <input id="float-input" type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
+                    <input type="email" pInputText pTooltip="Entrer votre prénom" [(ngModel)]="email"> 
                     <label for="float-input">Email</label>
                 </span>
                 <span class="p-float-label" *ngIf="!emailValid">
@@ -131,15 +137,16 @@
                 </span>
             </div>
             <div class="form-group" style="margin: 2%;">
-                <input
-                    type="file"
+                <label for="file" class="label-file">Ajouter une photo de profil</label>
+                <input 
+                    id="file"
+                    class="input-file"
                     name="file"
-                    id="input-files"
-                    class=""
-                    style="margin-top: 4%;"
+                    type="file"
+                    style="margin-top: 20px;"
                     [(ngModel)]="profilPicture"
                     (change)="selectFile($event)"
-                />
+                >
                 <div *ngIf="currentFile" class="progress my-3" style="margin-top: 1%;">
                     <p-progressBar [value]="progress"></p-progressBar>
                 </div>
