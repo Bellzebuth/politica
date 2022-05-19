@@ -18,6 +18,13 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true }, {limit: '50mb'}));
 const db = require("./models");
 const Role = db.role;
+const Comments = db.comments;
+const Debates = db.debates;
+const News = db.news;
+const Votes = db.votes;
+const User = db.user;
+const PhotosChunks = db.photosChunks;
+const PhotosFiles = db.photosFiles;
 
 db.mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/politica-database?readPreference=primary&appname=MongoDB%20Compass&ssl=false`, {
@@ -61,7 +68,6 @@ function initial() {
         if (err) {
           console.log("error", err);
         }
-
         console.log("added 'user' to roles collection");
       });
 
@@ -71,11 +77,73 @@ function initial() {
         if (err) {
           console.log("error", err);
         }
-
         console.log("added 'admin' to roles collection");
       });
     }
   });
+  Comments.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0){
+      const comments = require('./database/comments.json');
+      Comments.insertMany(comments, null, function (error, results) {
+        if (error) throw error;
+        console.log("Commentaire initial chargé");    
+    });
+    }
+  })
+  Debates.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0){
+      const debates = require('./database/debates.json');
+      Debates.insertMany(debates, null, function (error, results) {
+        if (error) throw error;
+        console.log("Débats initial chargé");    
+    });
+    }
+  })
+  News.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0){
+      const news = require('./database/news.json');
+      News.insertMany(news, null, function (error, results) {
+        if (error) throw error;
+        console.log("News initial chargé");    
+    });
+    }
+  })
+  User.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0){
+      const users = require('./database/users.json');
+      User.insertMany(users, null, function (error, results) {
+        if (error) throw error;
+        console.log("Users initial chargé");    
+    });
+    }
+  })
+  Votes.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0){
+      const votes = require('./database/votes.json');
+      Votes.insertMany(votes, null, function (error, results) {
+        if (error) throw error;
+        console.log("Votes initial chargé");    
+    });
+    }
+  })
+  PhotosChunks.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0){
+      const photosChunks = require('./database/photos.chunks.json');
+      PhotosChunks.insertMany(photosChunks, null, function (error, results) {
+        if (error) throw error;
+        console.log("photosChunks initial chargé");    
+    });
+    }
+  })
+  PhotosFiles.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0){
+      const photosFiles = require('./database/photos.files.json');
+      PhotosFiles.insertMany(photosFiles, null, function (error, results) {
+        if (error) throw error;
+        console.log("photosFiles initial chargé");    
+    });
+    }
+  })
 }
 
 

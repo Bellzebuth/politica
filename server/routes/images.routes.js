@@ -8,9 +8,7 @@ module.exports = function(app) {
       );
       next();
     });
-
     app.post("/api/files/upload", uploadController.uploadFiles);
     app.get("/api/files", uploadController.getListFiles);
     app.get("/api/files/:name", uploadController.download);
-
   };
