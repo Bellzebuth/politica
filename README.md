@@ -4,18 +4,13 @@ Réseau social pour échanger sur la politique française.
 
 # Lancer l'application
 
-Pour lancer l'application, à la racin du projet lancer la commande :
+Pour lancer le projet dans un docker, lancer la commande:
 
-    bash launch.sh
-
-Elle lancera les commandes suivantes :
-npm install
-ng serve
-mongo --dbpath data/db
-nodemon sreve.js
+docker-compose up -d
 
 Puis rendez-vous à l'adresse:
-localhost:4200/
+
+http://localhost:4200/
 
 # Technologie utilisée
 
