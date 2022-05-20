@@ -100,25 +100,6 @@ function initial() {
   })
   User.estimatedDocumentCount((err, count) => {
     if (!err && count === 0){
-      new User ({
-          username: "admin",
-          password: "admin",
-          lastName: "admin",
-          firstName: "admin",
-          genre: "admin",
-          email: "root@root.fr",
-          politicalParti: "admin",
-          age: 100,
-          journalist: true,
-          indicator: 5,
-          shareOne: false,
-          shareAll: false,
-          shareApp: false,
-          darkMode: false,
-          roles: {
-            name: "admin"
-          }
-      });
       const users = require('./database/users.json');
       User.insertMany(users, null, function (error, results) {
         if (error) throw error;
