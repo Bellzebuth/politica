@@ -18,7 +18,6 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true }, {limit: '50mb'}));
 const db = require("./models");
 const Role = db.role;
-const Comments = db.comments;
 const Debates = db.debates;
 const News = db.news;
 const Votes = db.votes;
@@ -81,15 +80,6 @@ function initial() {
       });
     }
   });
-  Comments.estimatedDocumentCount((err, count) => {
-    if (!err && count === 0){
-      const comments = require('./database/comments.json');
-      Comments.insertMany(comments, null, function (error, results) {
-        if (error) throw error;
-        console.log("Commentaire initial chargé");    
-    });
-    }
-  })
   Debates.estimatedDocumentCount((err, count) => {
     if (!err && count === 0){
       const debates = require('./database/debates.json');
@@ -110,6 +100,25 @@ function initial() {
   })
   User.estimatedDocumentCount((err, count) => {
     if (!err && count === 0){
+      new User ({
+          username: "admin",
+          password: "admin",
+          lastName: "admin",
+          firstName: "admin",
+          genre: "admin",
+          email: "root@root.fr",
+          politicalParti: "admin",
+          age: 100,
+          journalist: true,
+          indicator: 5,
+          shareOne: false,
+          shareAll: false,
+          shareApp: false,
+          darkMode: false,
+          roles: {
+            name: "admin"
+          }
+      });
       const users = require('./database/users.json');
       User.insertMany(users, null, function (error, results) {
         if (error) throw error;

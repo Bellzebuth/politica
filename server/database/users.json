@@ -271,26 +271,6 @@
   "fakeNewsPosted": 0,
   "darkMode": false
 },{
-  "username": "Admin",
-  "password": "$2a$08$ymGXC4MJcjXSYXsw51p7/O1v3TlMs.tYZ2bBvFUWOQAQtyvzmjVyG",
-  "lastName": "Admin",
-  "firstName": "Admin",
-  "genre": "Homme",
-  "email": "root@root.fr",
-  "politicalParti": "Sans parti",
-  "age": 0,
-  "debate_liked_id": [],
-  "comment_liked": [],
-  "votedList": [],
-  "journalist": false,
-  "indicator": 5,
-  "shareOne": true,
-  "shareAll": true,
-  "shareApp": true,
-  "newsPosted": 0,
-  "fakeNewsPosted": 0,
-  "darkMode": false
-},{
   "username": "G-Pompidou",
   "password": "$2a$08$/JMUETvSHgBPMJyXmZLct.RntmOCit9x4ID/Bkv8IKRKWIPXYf5ri",
   "lastName": "Pompidou",
